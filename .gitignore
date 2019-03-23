@@ -1,0 +1,13 @@
+build/
+dist/
+chispa.egg-info/
+.cache/
+tmp/
+.idea/
+.DS_Store
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+.pytest_cache/
