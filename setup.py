@@ -6,7 +6,7 @@ tests_require = ['pytest']
 
 setup(
     name='chispa',
-    version='0.0.1',
+    version='0.0.2',
     author='Matthew Powers',
     author_email='matthewkevinpowers@gmail.com',
     url='https://github.com/MrPowers/chispa',
