@@ -9,8 +9,8 @@ class TestColumnComparer:
         data = [("jose", "jose"), ("li", "li"), ("luisa", "laura")]
         df = spark.createDataFrame(data, ["name", "expected_name"])
 
-        with pytest.raises(ColumnsNotEqualError) as e_info:
-        	assert_column_equality(df, "name", "expected_name")
+        # with pytest.raises(ColumnsNotEqualError) as e_info:
+        assert_column_equality(df, "name", "expected_name")
 
 
     def test_assert_column_equality_no_mismatches(self):
