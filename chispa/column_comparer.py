@@ -13,7 +13,6 @@ def assert_column_equality(df, col_name1, col_name2):
     colName2Elements = list(map(lambda x: x[1], elements))
     if colName1Elements != colName2Elements:
         zipped = list(zip(colName1Elements, colName2Elements))
-        lines = [""]
         t = PrettyTable([col_name1, col_name2])
         for elements in zipped:
             if elements[0] == elements[1]:
