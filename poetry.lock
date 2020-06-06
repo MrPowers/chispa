@@ -1,5 +1,5 @@
 [[package]]
-category = "main"
+category = "dev"
 description = "Cross-platform colored terminal text."
 marker = "sys_platform == \"win32\""
 name = "colorama"
@@ -16,7 +16,7 @@ python-versions = "*"
 version = "0.7.2"
 
 [[package]]
-category = "main"
+category = "dev"
 description = "library with cross-python path, ini-parsing, io, code, log facilities"
 name = "py"
 optional = false
@@ -37,7 +37,7 @@ description = "Apache Spark Python API"
 name = "pyspark"
 optional = false
 python-versions = "*"
-version = "2.4.0"
+version = "2.4.6"
 
 [package.dependencies]
 py4j = "0.10.7"
@@ -48,7 +48,7 @@ mllib = ["numpy (>=1.7)"]
 sql = ["pandas (>=0.19.2)", "pyarrow (>=0.8.0)"]
 
 [[package]]
-category = "main"
+category = "dev"
 description = "pytest: simple powerful testing with Python"
 name = "pytest"
 optional = false
@@ -61,8 +61,8 @@ py = ">=1.4.33"
 setuptools = "*"
 
 [metadata]
-content-hash = "b90aa90f4cdbdc6aa2648b6e2cd94ebbace6c98b9094bbad50f1474c99232ee9"
-python-versions = "^3.7"
+content-hash = "291b135365ab77b282fd54a941ad4cd8a414d0c5cc01ca9a6ab492458c0e67c5"
+python-versions = "^3.6"
 
 [metadata.files]
 colorama = [
@@ -83,7 +83,7 @@ py4j = [
     {file = "py4j-0.10.7.zip", hash = "sha256:721189616b3a7d28212dfb2e7c6a1dd5147b03105f1fc37ff2432acd0e863fa5"},
 ]
 pyspark = [
-    {file = "pyspark-2.4.0.tar.gz", hash = "sha256:c9d7b7c5e91b13488b657e364ff392a80b2e374b182138e5ec8702a1822bffdc"},
+    {file = "pyspark-2.4.6.tar.gz", hash = "sha256:b4b319a3ffd187a3019f654ae1c8ac38048bcec2940f8cecdef829302d166feb"},
 ]
 pytest = [
     {file = "pytest-3.2.2-py2.py3-none-any.whl", hash = "sha256:b84f554f8ddc23add65c411bf112b2d88e2489fd45f753b1cae5936358bdf314"},

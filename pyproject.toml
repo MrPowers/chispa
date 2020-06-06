@@ -5,9 +5,8 @@ description = "Pyspark test helper library"
 authors = ["MrPowers <matthewkevinpowers@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
-pytest = "3.2.2"
-pyspark = "2.4.0"
+python = "^3.6"
+pyspark = "^2.0.0"
 PrettyTable = "^0.7.2"
 
 [tool.poetry.dev-dependencies]
