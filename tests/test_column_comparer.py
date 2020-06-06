@@ -16,3 +16,18 @@ def test_assert_column_equality_no_mismatches():
     df = spark.createDataFrame(data, ["name", "expected_name"])
 
     assert_column_equality(df, "name", "expected_name")
+
+
+def test_assert_approx_column_equality_no_mismatches():
+    data = [(1.1, 1.1), (1.0004, 1.0005), (.4, .45)]
+    df = spark.createDataFrame(data, ["num1", "num2"])
+
+    assert_approx_column_equality(df, "num1", "num2", 0.1)
+
+
+def test_assert_approx_column_equality_with_mismatch():
+    data = [(1.5, 1.1), (1.0004, 1.0005), (.4, .45)]
+    df = spark.createDataFrame(data, ["num1", "num2"])
+
+    with pytest.raises(ColumnsNotEqualError) as e_info:
+        assert_approx_column_equality(df, "num1", "num2", 0.1)
