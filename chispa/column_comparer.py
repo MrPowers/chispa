@@ -16,12 +16,9 @@ def assert_column_equality(df, col_name1, col_name2):
         t = PrettyTable([col_name1, col_name2])
         for elements in zipped:
             if elements[0] == elements[1]:
-                t.add_row(
-                    [
-                        bcolors.LightBlue + str(elements[0]) + bcolors.LightRed,
-                        bcolors.LightBlue + str(elements[1]) + bcolors.LightRed
-                    ]
-                )
+                first = bcolors.LightBlue + str(elements[0]) + bcolors.LightRed
+                second = bcolors.LightBlue + str(elements[1]) + bcolors.LightRed
+                t.add_row([first, second])
             else:
                 t.add_row([str(elements[0]), str(elements[1])])
         raise ColumnsNotEqualError("\n" + t.get_string())

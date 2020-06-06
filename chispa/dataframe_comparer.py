@@ -11,8 +11,14 @@ class SchemasNotEqualError(Exception):
 
 
 def assert_df_equality(df1, df2):
-    if df1.schema != df2.schema:
-        raise SchemasNotEqualError("These schemas aren't equal")
+    s1 = df1.schema
+    s2 = df2.schema
+    if s1 != s2:
+        t = PrettyTable(["schema1", "schema2"])
+        zipped = list(zip(s1, s2))
+        for elements in zipped:
+            t.add_row([elements[0], elements[1]])
+        raise SchemasNotEqualError("\n" + t.get_string())
 
     df1e = df1.collect()
     # df1e = list(map(lambda r: r.asDict().values(), df1.collect()))
