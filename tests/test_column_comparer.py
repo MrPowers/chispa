@@ -3,6 +3,7 @@ import pytest
 from chispa.spark import *
 from chispa.column_comparer import *
 
+
 def test_assert_column_equality_with_mismatch():
     data = [("jose", "jose"), ("li", "li"), ("luisa", "laura")]
     df = spark.createDataFrame(data, ["name", "expected_name"])
