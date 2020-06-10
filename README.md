@@ -4,6 +4,12 @@ chispa provides PySpark testing helper methods that run quickly and output descr
 
 Fun fact: "chispa" means Spark in Spanish ;)
 
+## Installation
+
+Install the latest version with `pip install chispa`.
+
+It's better to manage your PySpark project with Poetry and add this library as a development dependency with `poetry add chispa --dev`.
+
 ## Column equality
 
 Suppose you have a function that removes all the whitespace in a string.
@@ -133,27 +139,132 @@ This'll return a nicely formatted error message:
 
 ## Approximate column equality
 
+We can check if columns are approximately equal, which is especially useful for floating number comparisons.
 
+Here's a test that creates a DataFrame with two floating point columns and verifies that the columns are approximately equal.  In this example, values are considered approximately equal if the difference is less than 0.1.
+
+```python
+def test_approx_col_equality_same():
+    data = [
+        (1.1, 1.1),
+        (2.2, 2.15),
+        (3.3, 3.37),
+        (None, None)
+    ]
+    df = spark.createDataFrame(data, ["num1", "num2"])
+    assert_approx_column_equality(df, "num1", "num2", 0.1)
+```
+
+Here's an example of a test with columns that are not approximately equal.
+
+```python
+def test_approx_col_equality_different():
+    data = [
+        (1.1, 1.1),
+        (2.2, 2.15),
+        (3.3, 5.0),
+        (None, None)
+    ]
+    df = spark.createDataFrame(data, ["num1", "num2"])
+    assert_approx_column_equality(df, "num1", "num2", 0.1)
+```
+
+This failing test will output a readable error message so the issue is easy to debug.
+
+![ColumnsNotEqualError](https://github.com/MrPowers/chispa/blob/master/images/columns_not_approx_equal.png)
 
 ## Approximate DataFrame equality
 
+Let's create two DataFrames and confirm they're approximately equal.
 
+```python
+def test_approx_df_equality_same():
+    data1 = [
+        (1.1, "a"),
+        (2.2, "b"),
+        (3.3, "c"),
+        (None, None)
+    ]
+    df1 = spark.createDataFrame(data1, ["num", "letter"])
 
-## Schema error messages
+    data2 = [
+        (1.05, "a"),
+        (2.13, "b"),
+        (3.3, "c"),
+        (None, None)
+    ]
+    df2 = spark.createDataFrame(data2, ["num", "letter"])
 
+    assert_approx_df_equality(df1, df2, 0.1)
+```
 
+The `assert_approx_df_equality` method is smart and will only perform approximate equality operations for floating point numbers in DataFrames.  It'll perform regular equality for strings and other types.
+
+Let's perform an approximate equality comparison for two DataFrames that are not equal.
+
+```python
+def test_approx_df_equality_different():
+    data1 = [
+        (1.1, "a"),
+        (2.2, "b"),
+        (3.3, "c"),
+        (None, None)
+    ]
+    df1 = spark.createDataFrame(data1, ["num", "letter"])
+
+    data2 = [
+        (1.1, "a"),
+        (5.0, "b"),
+        (3.3, "z"),
+        (None, None)
+    ]
+    df2 = spark.createDataFrame(data2, ["num", "letter"])
+
+    assert_approx_df_equality(df1, df2, 0.1)
+```
+
+Here's the pretty error message that's outputted:
+
+![DataFramesNotEqualError](https://github.com/MrPowers/chispa/blob/master/images/dfs_not_approx_equal.png)
+
+## Schema mismatch messages
+
+DataFrame equality messages peform schema comparisons before analyzing the actual content of the DataFrames.  DataFrames that don't have the same schemas should error out as fast as possible.
+
+Let's compare a DataFrame that has a string column an integer column with a DataFrame that has two integer columns to observe the schema mismatch message.
+
+```python
+def test_schema_mismatch_message():
+    data1 = [
+        (1, "a"),
+        (2, "b"),
+        (3, "c"),
+        (None, None)
+    ]
+    df1 = spark.createDataFrame(data1, ["num", "letter"])
+
+    data2 = [
+        (1, 6),
+        (2, 7),
+        (3, 8),
+        (None, None)
+    ]
+    df2 = spark.createDataFrame(data2, ["num", "num2"])
+
+    assert_df_equality(df1, df2)
+```
+
+Here's the error message:
+
+![SchemasNotEqualError](https://github.com/MrPowers/chispa/blob/master/images/schemas_not_approx_equal.png)
 
 ## Benchmarks
 
-
-
-## Limitations
-
-
+TODO: Need to benchmark these methods vs. the spark-testing-base ones
 
 ## Developing on your local machine
 
-We encourage cloning and forking this repo.
+You are encouraged to clone and/or fork this repo.
 
 Clone the repo, run the test suite, and study the code.  This repo is a great way to learn about PySpark!
 
@@ -161,5 +272,5 @@ Clone the repo, run the test suite, and study the code.  This repo is a great wa
 
 Anyone is encouraged to submit a pull request.
 
-
+We're happy to promote folks to be library maintainers if they make good contributions.
 

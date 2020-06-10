@@ -88,3 +88,89 @@ def test_remove_non_word_characters_long_error():
 
     with pytest.raises(DataFramesNotEqualError) as e_info:
         assert_df_equality(actual_df, expected_df)
+
+
+def test_approx_col_equality_same():
+    data = [
+        (1.1, 1.1),
+        (2.2, 2.15),
+        (3.3, 3.37),
+        (None, None)
+    ]
+    df = spark.createDataFrame(data, ["num1", "num2"])
+    assert_approx_column_equality(df, "num1", "num2", 0.1)
+
+
+def test_approx_col_equality_different():
+    data = [
+        (1.1, 1.1),
+        (2.2, 2.15),
+        (3.3, 5.0),
+        (None, None)
+    ]
+    df = spark.createDataFrame(data, ["num1", "num2"])
+    with pytest.raises(ColumnsNotEqualError) as e_info:
+        assert_approx_column_equality(df, "num1", "num2", 0.1)
+
+
+def test_approx_df_equality_same():
+    data1 = [
+        (1.1, "a"),
+        (2.2, "b"),
+        (3.3, "c"),
+        (None, None)
+    ]
+    df1 = spark.createDataFrame(data1, ["num", "letter"])
+
+    data2 = [
+        (1.05, "a"),
+        (2.13, "b"),
+        (3.3, "c"),
+        (None, None)
+    ]
+    df2 = spark.createDataFrame(data2, ["num", "letter"])
+
+    assert_approx_df_equality(df1, df2, 0.1)
+
+
+def test_approx_df_equality_different():
+    data1 = [
+        (1.1, "a"),
+        (2.2, "b"),
+        (3.3, "c"),
+        (None, None)
+    ]
+    df1 = spark.createDataFrame(data1, ["num", "letter"])
+
+    data2 = [
+        (1.1, "a"),
+        (5.0, "b"),
+        (3.3, "z"),
+        (None, None)
+    ]
+    df2 = spark.createDataFrame(data2, ["num", "letter"])
+
+    with pytest.raises(DataFramesNotEqualError) as e_info:
+        assert_approx_df_equality(df1, df2, 0.1)
+
+
+def test_schema_mismatch_message():
+    data1 = [
+        (1, "a"),
+        (2, "b"),
+        (3, "c"),
+        (None, None)
+    ]
+    df1 = spark.createDataFrame(data1, ["num", "letter"])
+
+    data2 = [
+        (1, 6),
+        (2, 7),
+        (3, 8),
+        (None, None)
+    ]
+    df2 = spark.createDataFrame(data2, ["num", "num2"])
+
+    with pytest.raises(SchemasNotEqualError) as e_info:
+        assert_df_equality(df1, df2)
+

@@ -1,6 +1,6 @@
 from prettytable import PrettyTable
 from chispa.bcolors import *
-import pyspark
+from pyspark.sql import Row
 
 class DataFramesNotEqualError(Exception):
    """The DataFrames are not equal"""
@@ -12,29 +12,36 @@ class SchemasNotEqualError(Exception):
    pass
 
 
+def blue(s: str) -> str:
+  return bcolors.LightBlue + str(s) + bcolors.LightRed
+
+
 def assert_schema_equality(df1, df2):
     s1 = df1.schema
     s2 = df2.schema
     if s1 != s2:
         t = PrettyTable(["schema1", "schema2"])
         zipped = list(zip(s1, s2))
-        for elements in zipped:
-            t.add_row([elements[0], elements[1]])
+        for sf1, sf2 in zipped:
+            if sf1 == sf2:
+                t.add_row([blue(sf1), blue(sf2)])
+            else:
+                t.add_row([sf1, sf2])
         raise SchemasNotEqualError("\n" + t.get_string())
 
 
 def assert_df_equality(df1, df2):
     assert_schema_equality(df1, df2)
-
-    df1e = df1.collect()
-    # df1e = list(map(lambda r: r.asDict().values(), df1.collect()))
-    df2e = df2.collect()
-    # df2e = list(map(lambda r: r.asDict().values(), df2.collect()))
-    if df1e != df2e:
+    rows1 = df1.collect()
+    rows2 = df2.collect()
+    if rows1 != rows2:
         t = PrettyTable(["df1", "df2"])
-        zipped = list(zip(df1e, df2e))
-        for elements in zipped:
-            t.add_row([elements[0], elements[1]])
+        zipped = list(zip(rows1, rows2))
+        for r1, r2 in zipped:
+            if r1 == r2:
+                t.add_row([blue(r1), blue(r2)])
+            else:
+                t.add_row([r1, r2])
         raise DataFramesNotEqualError("\n" + t.get_string())
 
 
@@ -46,11 +53,11 @@ def are_dfs_equal(df1, df2):
     return True
 
 
-def are_rows_equal(r1: pyspark.sql.Row, r2: pyspark.sql.Row) -> bool:
+def are_rows_equal(r1: Row, r2: Row) -> bool:
     return r1 == r2
 
 
-def are_rows_approx_equal(r1: pyspark.sql.Row, r2: pyspark.sql.Row, precision: float) -> bool:
+def are_rows_approx_equal(r1: Row, r2: Row, precision: float) -> bool:
     d1 = r1.asDict()
     d2 = r2.asDict()
     allEqual = True
