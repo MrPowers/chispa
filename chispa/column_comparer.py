@@ -34,11 +34,17 @@ def assert_approx_column_equality(df, col_name1, col_name2, precision):
     for elements in zipped:
         first = bcolors.LightBlue + str(elements[0]) + bcolors.LightRed
         second = bcolors.LightBlue + str(elements[1]) + bcolors.LightRed
+        # when one is None and the other isn't, they're not equal
         if (elements[0] == None and elements[1] != None) or (elements[0] != None and elements[1] == None):
             all_rows_equal = False
             t.add_row([str(elements[0]), str(elements[1])])
-        elif (elements[0] == None and elements[1] == None) or (abs(elements[0] - elements[1]) < precision):
+        # when both are None, they're equal
+        elif elements[0] == None and elements[1] == None:
             t.add_row([first, second])
+        # when the diff is less than the threshhold, they're approximately equal
+        elif abs(elements[0] - elements[1]) < precision:
+            t.add_row([first, second])
+        # otherwise, they're not equal
         else:
             all_rows_equal = False
             t.add_row([str(elements[0]), str(elements[1])])

@@ -1,6 +1,6 @@
 import pytest
 
-from chispa.spark import *
+from spark import *
 from chispa.dataframe_comparer import *
 
 
