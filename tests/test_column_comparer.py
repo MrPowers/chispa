@@ -1,7 +1,7 @@
 import pytest
 
 from spark import *
-from chispa.column_comparer import *
+from chispa import *
 
 
 def test_assert_column_equality_with_mismatch():

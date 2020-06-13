@@ -1,7 +1,6 @@
 import pytest
 
-from chispa.dataframe_comparer import *
-from chispa.column_comparer import *
+from chispa import *
 import pyspark.sql.functions as F
 
 def remove_non_word_characters(col):

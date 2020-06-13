@@ -1,7 +1,8 @@
 import pytest
 
 from spark import *
-from chispa.dataframe_comparer import *
+from chispa import *
+from chispa.dataframe_comparer import are_rows_approx_equal, are_rows_equal, are_dfs_equal
 
 
 def test_assert_df_equality_with_schema_mismatch():
