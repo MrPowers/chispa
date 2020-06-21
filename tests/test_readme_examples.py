@@ -2,6 +2,7 @@ import pytest
 
 from chispa import *
 import pyspark.sql.functions as F
+from chispa.schema_comparer import SchemasNotEqualError
 
 def remove_non_word_characters(col):
     return F.regexp_replace(col, "[^\\w\\s]+", "")

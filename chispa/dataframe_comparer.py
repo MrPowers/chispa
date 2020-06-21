@@ -1,37 +1,19 @@
 from prettytable import PrettyTable
 from chispa.bcolors import *
-from pyspark.sql import Row
+from chispa.schema_comparer import assert_schema_equality, assert_schema_equality_ignore_nullable, are_schemas_equal_ignore_nullable
+from chispa.row_comparer import are_rows_approx_equal
+
 
 class DataFramesNotEqualError(Exception):
    """The DataFrames are not equal"""
    pass
 
 
-class SchemasNotEqualError(Exception):
-   """The DataFrames are not equal"""
-   pass
-
-
-def blue(s: str) -> str:
-  return bcolors.LightBlue + str(s) + bcolors.LightRed
-
-
-def assert_schema_equality(df1, df2):
-    s1 = df1.schema
-    s2 = df2.schema
-    if s1 != s2:
-        t = PrettyTable(["schema1", "schema2"])
-        zipped = list(zip(s1, s2))
-        for sf1, sf2 in zipped:
-            if sf1 == sf2:
-                t.add_row([blue(sf1), blue(sf2)])
-            else:
-                t.add_row([sf1, sf2])
-        raise SchemasNotEqualError("\n" + t.get_string())
-
-
-def assert_df_equality(df1, df2):
-    assert_schema_equality(df1, df2)
+def assert_df_equality(df1, df2, ignore_nullable = False):
+    if ignore_nullable:
+        assert_schema_equality_ignore_nullable(df1, df2)
+    else:
+        assert_schema_equality(df1, df2)
     rows1 = df1.collect()
     rows2 = df2.collect()
     if rows1 != rows2:
@@ -51,23 +33,6 @@ def are_dfs_equal(df1, df2):
     if df1.collect() != df2.collect():
         return False
     return True
-
-
-def are_rows_equal(r1: Row, r2: Row) -> bool:
-    return r1 == r2
-
-
-def are_rows_approx_equal(r1: Row, r2: Row, precision: float) -> bool:
-    d1 = r1.asDict()
-    d2 = r2.asDict()
-    allEqual = True
-    for key in d1.keys() & d2.keys():
-        if isinstance(d1[key], float) and isinstance(d2[key], float):
-            if abs(d1[key] - d2[key]) > precision:
-                allEqual = False
-        elif d1[key] != d2[key]:
-            allEqual = False
-    return allEqual
 
 
 def assert_approx_df_equality(df1, df2, precision):

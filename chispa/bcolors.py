@@ -24,3 +24,7 @@ class bcolors:
     LightCyan='\033[36m'
     White='\033[97m'
 
+
+def blue(s: str) -> str:
+  return bcolors.LightBlue + str(s) + bcolors.LightRed
+

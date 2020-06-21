@@ -1,0 +1,19 @@
+from pyspark.sql import Row
+
+
+def are_rows_equal(r1: Row, r2: Row) -> bool:
+    return r1 == r2
+
+
+def are_rows_approx_equal(r1: Row, r2: Row, precision: float) -> bool:
+    d1 = r1.asDict()
+    d2 = r2.asDict()
+    allEqual = True
+    for key in d1.keys() & d2.keys():
+        if isinstance(d1[key], float) and isinstance(d2[key], float):
+            if abs(d1[key] - d2[key]) > precision:
+                allEqual = False
+        elif d1[key] != d2[key]:
+            allEqual = False
+    return allEqual
+
