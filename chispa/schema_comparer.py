@@ -1,6 +1,6 @@
 from prettytable import PrettyTable
 from chispa.bcolors import *
-import six
+import chispa.six as six
 
 
 class SchemasNotEqualError(Exception):

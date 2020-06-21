@@ -8,7 +8,6 @@ authors = ["MrPowers <matthewkevinpowers@gmail.com>"]
 python = "^3.6"
 pyspark = "^2.0.0"
 PrettyTable = "^0.7.2"
-six = "^1.15.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "3.2.2"
