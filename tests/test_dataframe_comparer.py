@@ -24,6 +24,15 @@ def test_assert_df_equality_with_content_mismatch():
         assert_df_equality(df1, df2)
 
 
+def test_assert_df_equality_with_length_mismatch():
+    data1 = [("jose", "jose"), ("li", "li"), ("laura", "laura")]
+    df1 = spark.createDataFrame(data1, ["name", "expected_name"])
+    data2 = [("jose", "jose"), ("li", "li")]
+    df2 = spark.createDataFrame(data2, ["name", "expected_name"])
+    with pytest.raises(DataFramesNotEqualError) as e_info:
+        assert_df_equality(df1, df2)
+
+
 def test_are_dfs_equal_with_schema_mismatch():
     data1 = [(1, "jose"), (2, "li"), (3, "laura")]
     df1 = spark.createDataFrame(data1, ["num", "expected_name"])
@@ -57,9 +66,19 @@ def test_assert_approx_df_equality_with_content_mismatch():
         assert_approx_df_equality(df1, df2, 0.1)
 
 
+def test_assert_df_equality_with_length_mismatch():
+    data1 = [(1.0, "jose"), (1.1, "li"), (1.2, "laura"), (None, None)]
+    df1 = spark.createDataFrame(data1, ["num", "expected_name"])
+    data2 = [(1.0, "jose"), (1.05, "li")]
+    df2 = spark.createDataFrame(data2, ["num", "expected_name"])
+    with pytest.raises(DataFramesNotEqualError) as e_info:
+        assert_approx_df_equality(df1, df2, 0.1)
+
+
 def test_assert_approx_df_equality_with_no_mismatch():
     data1 = [(1.0, "jose"), (1.1, "li"), (1.2, "laura"), (None, None)]
     df1 = spark.createDataFrame(data1, ["num", "expected_name"])
     data2 = [(1.0, "jose"), (1.05, "li"), (1.2, "laura"), (None, None)]
     df2 = spark.createDataFrame(data2, ["num", "expected_name"])
     assert_approx_df_equality(df1, df2, 0.1)
+
