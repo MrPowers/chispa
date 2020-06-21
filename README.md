@@ -262,6 +262,13 @@ Here's the error message:
 
 TODO: Need to benchmark these methods vs. the spark-testing-base ones
 
+## Vendored dependencies
+
+These dependencies are vendored to minimize version conflicts:
+
+* [six](https://github.com/benjaminp/six)
+* [PrettyTable](https://github.com/jazzband/prettytable)
+
 ## Developing on your local machine
 
 You are encouraged to clone and/or fork this repo.
