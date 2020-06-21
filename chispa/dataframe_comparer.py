@@ -10,10 +10,12 @@ class DataFramesNotEqualError(Exception):
 
 
 def assert_df_equality(df1, df2, ignore_nullable = False):
+    s1 = df1.schema
+    s2 = df2.schema
     if ignore_nullable:
-        assert_schema_equality_ignore_nullable(df1, df2)
+        assert_schema_equality_ignore_nullable(s1, s2)
     else:
-        assert_schema_equality(df1, df2)
+        assert_schema_equality(s1, s2)
     rows1 = df1.collect()
     rows2 = df2.collect()
     if rows1 != rows2:
@@ -36,11 +38,11 @@ def are_dfs_equal(df1, df2):
 
 
 def assert_approx_df_equality(df1, df2, precision):
-    assert_schema_equality(df1, df2)
-
+    s1 = df1.schema
+    s2 = df2.schema
+    assert_schema_equality(s1, s2)
     df1_rows = df1.collect()
     df2_rows = df2.collect()
-
     zipped = list(zip(df1_rows, df2_rows))
     t = PrettyTable(["df1", "df2"])
     allRowsEqual = True
@@ -52,7 +54,6 @@ def assert_approx_df_equality(df1, df2, precision):
         else:
             allRowsEqual = False
             t.add_row([r1, r2])
-
     if allRowsEqual == False:
         raise DataFramesNotEqualError("\n" + t.get_string())
 
