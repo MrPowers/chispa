@@ -1,4 +1,4 @@
-from prettytable import PrettyTable
+from chispa.prettytable import PrettyTable
 from chispa.bcolors import *
 import chispa.six as six
 

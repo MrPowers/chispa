@@ -8,14 +8,6 @@ python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 version = "0.4.3"
 
 [[package]]
-category = "main"
-description = "A simple Python library for easily displaying tabular data in a visually appealing ASCII table format."
-name = "prettytable"
-optional = false
-python-versions = "*"
-version = "0.7.2"
-
-[[package]]
 category = "dev"
 description = "library with cross-python path, ini-parsing, io, code, log facilities"
 name = "py"
@@ -61,18 +53,13 @@ py = ">=1.4.33"
 setuptools = "*"
 
 [metadata]
-content-hash = "291b135365ab77b282fd54a941ad4cd8a414d0c5cc01ca9a6ab492458c0e67c5"
+content-hash = "cdde1cd09ea67917495550353631fb44aa9fe8164c3a910d253a3bb4972db25d"
 python-versions = "^3.6"
 
 [metadata.files]
 colorama = [
     {file = "colorama-0.4.3-py2.py3-none-any.whl", hash = "sha256:7d73d2a99753107a36ac6b455ee49046802e59d9d076ef8e47b61499fa29afff"},
     {file = "colorama-0.4.3.tar.gz", hash = "sha256:e96da0d330793e2cb9485e9ddfd918d456036c7149416295932478192f4436a1"},
-]
-prettytable = [
-    {file = "prettytable-0.7.2.tar.bz2", hash = "sha256:853c116513625c738dc3ce1aee148b5b5757a86727e67eff6502c7ca59d43c36"},
-    {file = "prettytable-0.7.2.tar.gz", hash = "sha256:2d5460dc9db74a32bcc8f9f67de68b2c4f4d2f01fa3bd518764c69156d9cacd9"},
-    {file = "prettytable-0.7.2.zip", hash = "sha256:a53da3b43d7a5c229b5e3ca2892ef982c46b7923b51e98f0db49956531211c4f"},
 ]
 py = [
     {file = "py-1.8.1-py2.py3-none-any.whl", hash = "sha256:c20fdd83a5dbc0af9efd622bee9a5564e278f6380fffcacc43ba6f43db2813b0"},
