@@ -6,6 +6,10 @@ def are_rows_equal(r1: Row, r2: Row) -> bool:
 
 
 def are_rows_approx_equal(r1: Row, r2: Row, precision: float) -> bool:
+    if r1 is None and r2 is None:
+        return True
+    if (r1 is None and r2 is not None) or (r2 is None and r1 is not None):
+        return False
     d1 = r1.asDict()
     d2 = r2.asDict()
     allEqual = True
