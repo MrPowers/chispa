@@ -52,8 +52,19 @@ colorama = "*"
 py = ">=1.4.33"
 setuptools = "*"
 
+[[package]]
+category = "dev"
+description = "Describe-style plugin for pytest"
+name = "pytest-describe"
+optional = false
+python-versions = "*"
+version = "1.0.0"
+
+[package.dependencies]
+pytest = ">=2.6.0"
+
 [metadata]
-content-hash = "cdde1cd09ea67917495550353631fb44aa9fe8164c3a910d253a3bb4972db25d"
+content-hash = "8176376ff5f9e298dffb0e1749a99b1bef123e25f479f69a42b1262325a506e2"
 python-versions = "^3.6"
 
 [metadata.files]
@@ -75,4 +86,9 @@ pyspark = [
 pytest = [
     {file = "pytest-3.2.2-py2.py3-none-any.whl", hash = "sha256:b84f554f8ddc23add65c411bf112b2d88e2489fd45f753b1cae5936358bdf314"},
     {file = "pytest-3.2.2.tar.gz", hash = "sha256:f46e49e0340a532764991c498244a60e3a37d7424a532b3ff1a6a7653f1a403a"},
+]
+pytest-describe = [
+    {file = "pytest-describe-1.0.0.tar.gz", hash = "sha256:3e2ea0e77efa09edb98cf90423bf1da21a462ed90bd3120f8f98fe7519a167d5"},
+    {file = "pytest_describe-1.0.0-py2-none-any.whl", hash = "sha256:cc3862662faa5a6fb721927aaef46b46cf787e4a8163e5459fc8778e650fabad"},
+    {file = "pytest_describe-1.0.0-py3-none-any.whl", hash = "sha256:95fe78639d4d16c4a1e7d62c70f63030b217c08d2ee6dca49559fe6e730c6696"},
 ]
