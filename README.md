@@ -1,5 +1,7 @@
 # chispa
 
+![CI](https://github.com/MrPowers/chispa/workflows/CI/badge.svg?branch=master)
+
 chispa provides PySpark testing helper methods that run quickly and output descriptive error messages to make development a breeze.
 
 Fun fact: "chispa" means Spark in Spanish ;)
