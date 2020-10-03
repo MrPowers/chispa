@@ -16,6 +16,26 @@ def describe_assert_column_equality():
             assert_df_equality(df1, df2)
 
 
+    def it_throws_with_schema_column_order_mismatch():
+        data1 = [(1, "jose"), (2, "li")]
+        df1 = spark.createDataFrame(data1, ["num", "name"])
+        data2 = [("jose", 1), ("li", 1)]
+        df2 = spark.createDataFrame(data2, ["name", "num"])
+        with pytest.raises(SchemasNotEqualError) as e_info:
+            assert_df_equality(df1, df2)
+
+
+    def it_does_not_throw_on_schema_column_order_mismatch_with_transforms():
+        data1 = [(1, "jose"), (2, "li")]
+        df1 = spark.createDataFrame(data1, ["num", "expected_name"])
+        data2 = [("jose", 1), ("li", 1)]
+        df2 = spark.createDataFrame(data2, ["name", "num"])
+        with pytest.raises(SchemasNotEqualError) as e_info:
+            assert_df_equality(df1, df2, transforms=[
+                lambda df: df.select(sorted(df.columns))
+            ])
+
+
     def it_throws_with_content_mismatches():
         data1 = [("jose", "jose"), ("li", "li"), ("luisa", "laura")]
         df1 = spark.createDataFrame(data1, ["name", "expected_name"])
