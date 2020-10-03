@@ -3,14 +3,16 @@ from chispa.bcolors import *
 from chispa.schema_comparer import assert_schema_equality, assert_schema_equality_ignore_nullable, are_schemas_equal_ignore_nullable
 from chispa.row_comparer import are_rows_approx_equal
 import chispa.six as six
-
+from functools import reduce
 
 class DataFramesNotEqualError(Exception):
    """The DataFrames are not equal"""
    pass
 
 
-def assert_df_equality(df1, df2, ignore_nullable = False):
+def assert_df_equality(df1, df2, ignore_nullable = False, transforms=[]):
+    df1 = reduce(lambda acc, fn: fn(acc), transforms, df1)
+    df2 = reduce(lambda acc, fn: fn(acc), transforms, df2)
     s1 = df1.schema
     s2 = df2.schema
     if ignore_nullable:
