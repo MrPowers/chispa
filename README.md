@@ -139,6 +139,20 @@ This'll return a nicely formatted error message:
 
 ![DataFramesNotEqualError](https://github.com/MrPowers/chispa/blob/master/images/dfs_not_equal_error.png)
 
+### Order independent DataFrame comparisons
+
+here's how you can compare DataFrames, ignoring the row order (see [this commit](https://github.com/MrPowers/chispa/commit/e2469ef4bab509b50f6dd628734b45b468132e1b)):
+
+```python
+assert_df_equality(df1, df2, transforms=[lambda df: df.sort(df.columns)])
+```
+
+Here's how you can compare two DataFrames, ignoring the column order:
+
+```python
+assert_df_equality(df1, df2, transforms=[lambda df: df.select(sorted(df.columns))])
+```
+
 ## Approximate column equality
 
 We can check if columns are approximately equal, which is especially useful for floating number comparisons.
