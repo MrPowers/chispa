@@ -21,10 +21,9 @@ def assert_schema_equality(s1, s2):
 
 
 def assert_schema_equality_ignore_nullable(s1, s2):
-    zipped = list(six.moves.zip_longest(s1, s2))
     if are_schemas_equal_ignore_nullable(s1, s2) == False:
         t = PrettyTable(["schema1", "schema2"])
-        zipped = list(zip(s1, s2))
+        zipped = list(six.moves.zip_longest(s1, s2))
         for sf1, sf2 in zipped:
             if sf1 == sf2:
                 t.add_row([blue(sf1), blue(sf2)])
