@@ -39,6 +39,20 @@ def describe_assert_schema_equality():
 
 
 def describe_assert_schema_equality_ignore_nullable():
+    def it_has_good_error_messages_for_different_sized_schemas():
+        s1 = StructType([
+           StructField("name", StringType(), True),
+           StructField("age", IntegerType(), True)])
+        s2 = StructType([
+           StructField("name", StringType(), True),
+           StructField("age", IntegerType(), True),
+           StructField("something", IntegerType(), True),
+           StructField("else", IntegerType(), True)
+        ])
+        with pytest.raises(SchemasNotEqualError) as e_info:
+            assert_schema_equality_ignore_nullable(s1, s2)
+
+
     def it_does_nothing_when_equal():
         s1 = StructType([
            StructField("name", StringType(), True),
