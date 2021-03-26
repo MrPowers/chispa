@@ -6,7 +6,7 @@ from chispa.dataframe_comparer import are_dfs_equal
 from chispa.schema_comparer import SchemasNotEqualError
 
 
-def describe_assert_column_equality():
+def describe_assert_df_equality():
     def it_throws_with_schema_mismatches():
         data1 = [(1, "jose"), (2, "li"), (3, "laura")]
         df1 = spark.createDataFrame(data1, ["num", "expected_name"])
@@ -77,6 +77,23 @@ def describe_assert_column_equality():
         df2 = spark.createDataFrame(data2, ["name", "expected_name"])
         with pytest.raises(DataFramesNotEqualError) as e_info:
             assert_df_equality(df1, df2)
+
+
+    def it_can_consider_nan_values_equal():
+        data1 = [(float('nan'), "jose"), (2.0, "li")]
+        df1 = spark.createDataFrame(data1, ["num", "name"])
+        data2 = [(float('nan'), "jose"), (2.0, "li")]
+        df2 = spark.createDataFrame(data2, ["num", "name"])
+        assert_df_equality(df1, df2, allow_nan_equality=True)
+
+
+    def it_does_not_consider_nan_values_equal_by_default():
+        data1 = [(float('nan'), "jose"), (2.0, "li")]
+        df1 = spark.createDataFrame(data1, ["num", "name"])
+        data2 = [(float('nan'), "jose"), (2.0, "li")]
+        df2 = spark.createDataFrame(data2, ["num", "name"])
+        with pytest.raises(DataFramesNotEqualError) as e_info:
+            assert_df_equality(df1, df2, allow_nan_equality=False)
 
 
 def describe_are_dfs_equal():

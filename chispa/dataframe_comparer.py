@@ -1,7 +1,7 @@
 from chispa.prettytable import PrettyTable
 from chispa.bcolors import *
 from chispa.schema_comparer import assert_schema_equality, assert_schema_equality_ignore_nullable, are_schemas_equal_ignore_nullable
-from chispa.row_comparer import are_rows_approx_equal
+from chispa.row_comparer import *
 import chispa.six as six
 from functools import reduce
 
@@ -10,7 +10,7 @@ class DataFramesNotEqualError(Exception):
    pass
 
 
-def assert_df_equality(df1, df2, ignore_nullable = False, transforms=[]):
+def assert_df_equality(df1, df2, ignore_nullable = False, transforms = [], allow_nan_equality = False):
     df1 = reduce(lambda acc, fn: fn(acc), transforms, df1)
     df2 = reduce(lambda acc, fn: fn(acc), transforms, df2)
     s1 = df1.schema
@@ -21,15 +21,36 @@ def assert_df_equality(df1, df2, ignore_nullable = False, transforms=[]):
         assert_schema_equality(s1, s2)
     rows1 = df1.collect()
     rows2 = df2.collect()
-    if rows1 != rows2:
-        t = PrettyTable(["df1", "df2"])
+    if allow_nan_equality:
         zipped = list(six.moves.zip_longest(rows1, rows2))
+        t = PrettyTable(["df1", "df2"])
+        allRowsEqual = True
         for r1, r2 in zipped:
-            if r1 == r2:
-                t.add_row([blue(r1), blue(r2)])
-            else:
+            # rows are not equal when one is None and the other isn't
+            if (r1 is not None and r2 is None) or (r2 is not None and r1 is None):
+                allRowsEqual = False
                 t.add_row([r1, r2])
-        raise DataFramesNotEqualError("\n" + t.get_string())
+            # rows are equal
+            elif are_rows_equal_enhanced(r1, r2, True):
+                first = bcolors.LightBlue + str(r1) + bcolors.LightRed
+                second = bcolors.LightBlue + str(r2) + bcolors.LightRed
+                t.add_row([first, second])
+            # otherwise, rows aren't equal
+            else:
+                allRowsEqual = False
+                t.add_row([r1, r2])
+        if allRowsEqual == False:
+            raise DataFramesNotEqualError("\n" + t.get_string())
+    else:
+        if rows1 != rows2:
+            t = PrettyTable(["df1", "df2"])
+            zipped = list(six.moves.zip_longest(rows1, rows2))
+            for r1, r2 in zipped:
+                if r1 == r2:
+                    t.add_row([blue(r1), blue(r2)])
+                else:
+                    t.add_row([r1, r2])
+            raise DataFramesNotEqualError("\n" + t.get_string())
 
 
 def are_dfs_equal(df1, df2):
