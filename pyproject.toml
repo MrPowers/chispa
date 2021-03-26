@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "chispa"
-version = "0.7.1"
+version = "0.8.0"
 description = "Pyspark test helper library"
 authors = ["MrPowers <matthewkevinpowers@gmail.com>"]
 license = "MIT"
