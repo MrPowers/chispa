@@ -4,7 +4,7 @@ import math
 def isnan(x):
     try:
         return math.isnan(x)
-    except:
+    except TypeError:
         return False
 
 
