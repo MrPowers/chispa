@@ -11,9 +11,10 @@ class DataFramesNotEqualError(Exception):
    pass
 
 
-def assert_df_equality(df1, df2, ignore_nullable = False, transforms = [], allow_nan_equality = False):
-    df1 = reduce(lambda acc, fn: fn(acc), transforms, df1)
-    df2 = reduce(lambda acc, fn: fn(acc), transforms, df2)
+def assert_df_equality(df1, df2, ignore_nullable=False, transforms=None, allow_nan_equality=False):
+    if transforms is not None:
+        df1 = reduce(lambda acc, fn: fn(acc), transforms, df1)
+        df2 = reduce(lambda acc, fn: fn(acc), transforms, df2)
     s1 = df1.schema
     s2 = df2.schema
     if ignore_nullable:
