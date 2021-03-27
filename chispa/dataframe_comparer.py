@@ -5,6 +5,7 @@ from chispa.row_comparer import *
 import chispa.six as six
 from functools import reduce
 
+
 class DataFramesNotEqualError(Exception):
    """The DataFrames are not equal"""
    pass
@@ -22,25 +23,7 @@ def assert_df_equality(df1, df2, ignore_nullable = False, transforms = [], allow
     rows1 = df1.collect()
     rows2 = df2.collect()
     if allow_nan_equality:
-        zipped = list(six.moves.zip_longest(rows1, rows2))
-        t = PrettyTable(["df1", "df2"])
-        allRowsEqual = True
-        for r1, r2 in zipped:
-            # rows are not equal when one is None and the other isn't
-            if (r1 is not None and r2 is None) or (r2 is not None and r1 is None):
-                allRowsEqual = False
-                t.add_row([r1, r2])
-            # rows are equal
-            elif are_rows_equal_enhanced(r1, r2, True):
-                first = bcolors.LightBlue + str(r1) + bcolors.LightRed
-                second = bcolors.LightBlue + str(r2) + bcolors.LightRed
-                t.add_row([first, second])
-            # otherwise, rows aren't equal
-            else:
-                allRowsEqual = False
-                t.add_row([r1, r2])
-        if allRowsEqual == False:
-            raise DataFramesNotEqualError("\n" + t.get_string())
+        assert_generic_df_equality(df1, df2, are_rows_equal_enhanced, [True])
     else:
         if rows1 != rows2:
             t = PrettyTable(["df1", "df2"])
@@ -62,6 +45,10 @@ def are_dfs_equal(df1, df2):
 
 
 def assert_approx_df_equality(df1, df2, precision):
+    assert_generic_df_equality(df1, df2, are_rows_approx_equal, [precision])
+
+
+def assert_generic_df_equality(df1, df2, row_equality_fun, row_equality_fun_args):
     s1 = df1.schema
     s2 = df2.schema
     assert_schema_equality(s1, s2)
@@ -76,7 +63,7 @@ def assert_approx_df_equality(df1, df2, precision):
             allRowsEqual = False
             t.add_row([r1, r2])
         # rows are equal
-        elif are_rows_approx_equal(r1, r2, precision):
+        elif row_equality_fun(r1, r2, *row_equality_fun_args):
             first = bcolors.LightBlue + str(r1) + bcolors.LightRed
             second = bcolors.LightBlue + str(r2) + bcolors.LightRed
             t.add_row([first, second])
@@ -86,4 +73,3 @@ def assert_approx_df_equality(df1, df2, precision):
             t.add_row([r1, r2])
     if allRowsEqual == False:
         raise DataFramesNotEqualError("\n" + t.get_string())
-
