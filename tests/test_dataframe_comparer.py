@@ -24,6 +24,22 @@ def describe_assert_df_equality():
         assert_df_equality(df1, df2, transforms=[lambda df: df.sort(df.columns)])
 
 
+    def it_can_work_with_different_row_orders_with_a_flag():
+        data1 = [(1, "jose"), (2, "li")]
+        df1 = spark.createDataFrame(data1, ["num", "name"])
+        data2 = [(2, "li"), (1, "jose")]
+        df2 = spark.createDataFrame(data2, ["num", "name"])
+        assert_df_equality(df1, df2, ignore_row_order=True)
+
+
+    def it_can_work_with_different_row_and_column_orders():
+        data1 = [(1, "jose"), (2, "li")]
+        df1 = spark.createDataFrame(data1, ["num", "name"])
+        data2 = [("li", 2), ("jose", 1)]
+        df2 = spark.createDataFrame(data2, ["name", "num"])
+        assert_df_equality(df1, df2, ignore_row_order=True, ignore_column_order=True)
+
+
     def it_raises_for_row_insensitive_with_diff_content():
         data1 = [(1, "XXXX"), (2, "li")]
         df1 = spark.createDataFrame(data1, ["num", "name"])

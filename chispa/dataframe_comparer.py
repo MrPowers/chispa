@@ -11,7 +11,13 @@ class DataFramesNotEqualError(Exception):
    pass
 
 
-def assert_df_equality(df1, df2, ignore_nullable=False, transforms=None, allow_nan_equality=False):
+def assert_df_equality(df1, df2, ignore_nullable=False, transforms=None, allow_nan_equality=False, ignore_column_order=False, ignore_row_order=False):
+    if transforms is None:
+        transforms = []
+    if ignore_column_order:
+        transforms.append(lambda df: df.select(sorted(df.columns)))
+    if ignore_row_order:
+        transforms.append(lambda df: df.sort(df.columns))
     if transforms is not None:
         df1 = reduce(lambda acc, fn: fn(acc), transforms, df1)
         df2 = reduce(lambda acc, fn: fn(acc), transforms, df2)
