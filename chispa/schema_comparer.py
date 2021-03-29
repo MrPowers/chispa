@@ -8,7 +8,14 @@ class SchemasNotEqualError(Exception):
    pass
 
 
-def assert_schema_equality(s1, s2):
+def assert_schema_equality(s1, s2, ignore_nullable=False):
+    if ignore_nullable:
+        assert_schema_equality_ignore_nullable(s1, s2)
+    else:
+        assert_basic_schema_equality(s1, s2)
+
+
+def assert_basic_schema_equality(s1, s2):
     if s1 != s2:
         t = PrettyTable(["schema1", "schema2"])
         zipped = list(six.moves.zip_longest(s1, s2))

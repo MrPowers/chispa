@@ -20,16 +20,11 @@ def assert_df_equality(df1, df2, ignore_nullable=False, transforms=None, allow_n
         transforms.append(lambda df: df.sort(df.columns))
     df1 = reduce(lambda acc, fn: fn(acc), transforms, df1)
     df2 = reduce(lambda acc, fn: fn(acc), transforms, df2)
-    s1 = df1.schema
-    s2 = df2.schema
-    if ignore_nullable:
-        assert_schema_equality_ignore_nullable(s1, s2)
-    else:
-        assert_schema_equality(s1, s2)
+    assert_schema_equality(df1.schema, df2.schema, ignore_nullable)
     if allow_nan_equality:
-        assert_generic_df_equality(df1, df2, are_rows_equal_enhanced, [True])
+        assert_generic_rows_equality(df1, df2, are_rows_equal_enhanced, [True])
     else:
-        assert_basic_df_equality(df1, df2)
+        assert_basic_rows_equality(df1, df2)
 
 
 def are_dfs_equal(df1, df2):
@@ -40,14 +35,12 @@ def are_dfs_equal(df1, df2):
     return True
 
 
-def assert_approx_df_equality(df1, df2, precision):
-    assert_generic_df_equality(df1, df2, are_rows_approx_equal, [precision])
+def assert_approx_df_equality(df1, df2, precision, ignore_nullable=False):
+    assert_schema_equality(df1.schema, df2.schema, ignore_nullable)
+    assert_generic_rows_equality(df1, df2, are_rows_approx_equal, [precision])
 
 
-def assert_generic_df_equality(df1, df2, row_equality_fun, row_equality_fun_args):
-    s1 = df1.schema
-    s2 = df2.schema
-    assert_schema_equality(s1, s2)
+def assert_generic_rows_equality(df1, df2, row_equality_fun, row_equality_fun_args):
     df1_rows = df1.collect()
     df2_rows = df2.collect()
     zipped = list(six.moves.zip_longest(df1_rows, df2_rows))
@@ -71,7 +64,7 @@ def assert_generic_df_equality(df1, df2, row_equality_fun, row_equality_fun_args
         raise DataFramesNotEqualError("\n" + t.get_string())
 
 
-def assert_basic_df_equality(df1, df2):
+def assert_basic_rows_equality(df1, df2):
     rows1 = df1.collect()
     rows2 = df2.collect()
     if rows1 != rows2:
