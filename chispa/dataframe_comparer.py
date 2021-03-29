@@ -18,29 +18,18 @@ def assert_df_equality(df1, df2, ignore_nullable=False, transforms=None, allow_n
         transforms.append(lambda df: df.select(sorted(df.columns)))
     if ignore_row_order:
         transforms.append(lambda df: df.sort(df.columns))
-    if transforms is not None:
-        df1 = reduce(lambda acc, fn: fn(acc), transforms, df1)
-        df2 = reduce(lambda acc, fn: fn(acc), transforms, df2)
+    df1 = reduce(lambda acc, fn: fn(acc), transforms, df1)
+    df2 = reduce(lambda acc, fn: fn(acc), transforms, df2)
     s1 = df1.schema
     s2 = df2.schema
     if ignore_nullable:
         assert_schema_equality_ignore_nullable(s1, s2)
     else:
         assert_schema_equality(s1, s2)
-    rows1 = df1.collect()
-    rows2 = df2.collect()
     if allow_nan_equality:
         assert_generic_df_equality(df1, df2, are_rows_equal_enhanced, [True])
     else:
-        if rows1 != rows2:
-            t = PrettyTable(["df1", "df2"])
-            zipped = list(six.moves.zip_longest(rows1, rows2))
-            for r1, r2 in zipped:
-                if r1 == r2:
-                    t.add_row([blue(r1), blue(r2)])
-                else:
-                    t.add_row([r1, r2])
-            raise DataFramesNotEqualError("\n" + t.get_string())
+        assert_basic_df_equality(df1, df2)
 
 
 def are_dfs_equal(df1, df2):
@@ -79,4 +68,18 @@ def assert_generic_df_equality(df1, df2, row_equality_fun, row_equality_fun_args
             allRowsEqual = False
             t.add_row([r1, r2])
     if allRowsEqual == False:
+        raise DataFramesNotEqualError("\n" + t.get_string())
+
+
+def assert_basic_df_equality(df1, df2):
+    rows1 = df1.collect()
+    rows2 = df2.collect()
+    if rows1 != rows2:
+        t = PrettyTable(["df1", "df2"])
+        zipped = list(six.moves.zip_longest(rows1, rows2))
+        for r1, r2 in zipped:
+            if r1 == r2:
+                t.add_row([blue(r1), blue(r2)])
+            else:
+                t.add_row([r1, r2])
         raise DataFramesNotEqualError("\n" + t.get_string())
