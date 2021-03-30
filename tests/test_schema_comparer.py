@@ -44,7 +44,7 @@ def describe_assert_schema_equality_ignore_nullable():
            StructField("name", StringType(), True),
            StructField("age", IntegerType(), True)])
         s2 = StructType([
-           StructField("name", StringType(), True),
+           StructField("name", StringType(), False),
            StructField("age", IntegerType(), True),
            StructField("something", IntegerType(), True),
            StructField("else", IntegerType(), True)

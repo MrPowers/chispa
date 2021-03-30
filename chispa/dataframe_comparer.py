@@ -1,6 +1,6 @@
 from chispa.prettytable import PrettyTable
 from chispa.bcolors import *
-from chispa.schema_comparer import assert_schema_equality, assert_schema_equality_ignore_nullable, are_schemas_equal_ignore_nullable
+from chispa.schema_comparer import assert_schema_equality
 from chispa.row_comparer import *
 import chispa.six as six
 from functools import reduce

@@ -1,10 +1,11 @@
 from chispa.prettytable import PrettyTable
 from chispa.bcolors import *
 import chispa.six as six
+from chispa.structfield_comparer import are_structfields_equal
 
 
 class SchemasNotEqualError(Exception):
-   """The DataFrames are not equal"""
+   """The schemas are not equal"""
    pass
 
 
@@ -32,7 +33,7 @@ def assert_schema_equality_ignore_nullable(s1, s2):
         t = PrettyTable(["schema1", "schema2"])
         zipped = list(six.moves.zip_longest(s1, s2))
         for sf1, sf2 in zipped:
-            if sf1 == sf2:
+            if are_structfields_equal(sf1, sf2, True):
                 t.add_row([blue(sf1), blue(sf2)])
             else:
                 t.add_row([sf1, sf2])
