@@ -10,7 +10,7 @@ Fun fact: "chispa" means Spark in Spanish ;)
 
 Install the latest version with `pip install chispa`.
 
-It's better to manage your PySpark project with Poetry and add this library as a development dependency with `poetry add chispa --dev`.
+If you use Poetry, add this library as a development dependency with `poetry add chispa --dev`.
 
 ## Column equality
 
@@ -26,10 +26,10 @@ Let's start by creating a `SparkSession` accessible via the `spark` variable so 
 ```python
 from pyspark.sql import SparkSession
 
-spark = SparkSession.builder \
-  .master("local") \
-  .appName("chispa") \
-  .getOrCreate()
+spark = (SparkSession.builder
+  .master("local")
+  .appName("chispa")
+  .getOrCreate())
 ```
 
 Create a DataFrame with a column that contains a lot of non-word characters, run the `remove_non_word_characters` function, and check that all these characters are removed with the chispa `assert_column_equality` method.
@@ -47,8 +47,8 @@ def test_remove_non_word_characters_short():
         ("#::luisa", "luisa"),
         (None, None)
     ]
-    df = spark.createDataFrame(data, ["name", "expected_name"])\
-        .withColumn("clean_name", remove_non_word_characters(F.col("name")))
+    df = (spark.createDataFrame(data, ["name", "expected_name"])
+        .withColumn("clean_name", remove_non_word_characters(F.col("name"))))
     assert_column_equality(df, "clean_name", "expected_name")
 ```
 
@@ -64,8 +64,8 @@ def test_remove_non_word_characters_nice_error():
         ("isabela*", "isabela"),
         (None, None)
     ]
-    df = spark.createDataFrame(data, ["name", "expected_name"])\
-        .withColumn("clean_name", remove_non_word_characters(F.col("name")))
+    df = (spark.createDataFrame(data, ["name", "expected_name"])
+        .withColumn("clean_name", remove_non_word_characters(F.col("name"))))
     assert_column_equality(df, "clean_name", "expected_name")
 ```
 
@@ -93,7 +93,7 @@ def test_remove_non_word_characters_long():
 
     actual_df = source_df.withColumn(
         "clean_name",
-        remove_non_word_characters(F.col("name"))
+        remove_non_word_characters(col("name"))
     )
 
     expected_data = [
@@ -139,7 +139,7 @@ This'll return a nicely formatted error message:
 
 ![DataFramesNotEqualError](https://github.com/MrPowers/chispa/blob/master/images/dfs_not_equal_error.png)
 
-### Order independent DataFrame comparisons
+### Row order independent DataFrame comparisons
 
 here's how you can compare DataFrames, ignoring the row order (see [this commit](https://github.com/MrPowers/chispa/commit/e2469ef4bab509b50f6dd628734b45b468132e1b)):
 
@@ -147,11 +147,21 @@ here's how you can compare DataFrames, ignoring the row order (see [this commit]
 assert_df_equality(df1, df2, transforms=[lambda df: df.sort(df.columns)])
 ```
 
+### Column order independent DataFrame comparisons
+
 Here's how you can compare two DataFrames, ignoring the column order:
 
 ```python
 assert_df_equality(df1, df2, transforms=[lambda df: df.select(sorted(df.columns))])
 ```
+
+### Ignore nullability
+
+TODO
+
+### Allow NaN equality
+
+TODO
 
 ## Approximate column equality
 
@@ -280,20 +290,23 @@ TODO: Need to benchmark these methods vs. the spark-testing-base ones
 
 ## Vendored dependencies
 
-These dependencies are vendored to minimize version conflicts:
+These dependencies are vendored:
 
 * [six](https://github.com/benjaminp/six)
 * [PrettyTable](https://github.com/jazzband/prettytable)
 
-## Developing on your local machine
+The dependencies are vendored to save you from dependency hell.
+
+## Developing chispa on your local machine
 
 You are encouraged to clone and/or fork this repo.
 
-Clone the repo, run the test suite, and study the code.  This repo is a great way to learn about PySpark!
+Clone the repo, run the test suite, and study the code.
+
+This codebase is a great way to learn about PySpark!
 
 ## Contributing
 
-Anyone is encouraged to submit a pull request.
+Anyone is encouraged to submit a pull request, open an issue, or submit a bug report.
 
 We're happy to promote folks to be library maintainers if they make good contributions.
-
