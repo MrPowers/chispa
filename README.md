@@ -73,7 +73,7 @@ def test_remove_non_word_characters_nice_error():
 
 Here's the nicely formatted error message:
 
-![ColumnsNotEqualError](https://github.com/MrPowers/chispa/blob/master/images/columns_not_equal_error.png)
+![ColumnsNotEqualError](https://github.com/MrPowers/chispa/blob/main/images/columns_not_equal_error.png)
 
 You can see the `matt7` / `matt` row of data is what's causing the error (note it's highlighted in red).  The other rows are colored blue because they're equal.
 
@@ -141,7 +141,7 @@ def test_remove_non_word_characters_long_error():
 
 Here's the nicely formatted error message:
 
-![DataFramesNotEqualError](https://github.com/MrPowers/chispa/blob/master/images/dfs_not_equal_error.png)
+![DataFramesNotEqualError](https://github.com/MrPowers/chispa/blob/main/images/dfs_not_equal_error.png)
 
 ### Ignore row order
 
@@ -179,7 +179,7 @@ assert_df_equality(df1, df2, ignore_row_order=True)
 
 If you don't specify to `ignore_row_order` then the test will error out with this message:
 
-![ignore_row_order_false](https://github.com/MrPowers/chispa/blob/master/images/ignore_row_order_false.png)
+![ignore_row_order_false](https://github.com/MrPowers/chispa/blob/main/images/ignore_row_order_false.png)
 
 The rows aren't ordered by default because sorting slows down the function.
 
@@ -219,7 +219,7 @@ assert_df_equality(df1, df2, ignore_column_order=True)
 
 Here's the error message you'll see if you run `assert_df_equality(df1, df2)`, without ignoring the column order.
 
-![ignore_column_order_false](https://github.com/MrPowers/chispa/blob/master/images/ignore_column_order_false.png)
+![ignore_column_order_false](https://github.com/MrPowers/chispa/blob/main/images/ignore_column_order_false.png)
 
 ### Ignore nullability
 
@@ -251,7 +251,7 @@ And this `df2`:
 
 You might be surprised to find that in this example, `df1` and `df2` are not equal and will error out with this message:
 
-![nullable_off_error](https://github.com/MrPowers/chispa/blob/master/images/nullable_off_error.png)
+![nullable_off_error](https://github.com/MrPowers/chispa/blob/main/images/nullable_off_error.png)
 
 Examine the code in this contrived example to better understand the error:
 
@@ -326,7 +326,7 @@ def test_approx_col_equality_different():
 
 This failing test will output a readable error message so the issue is easy to debug.
 
-![ColumnsNotEqualError](https://github.com/MrPowers/chispa/blob/master/images/columns_not_approx_equal.png)
+![ColumnsNotEqualError](https://github.com/MrPowers/chispa/blob/main/images/columns_not_approx_equal.png)
 
 ## Approximate DataFrame equality
 
@@ -380,7 +380,7 @@ def test_approx_df_equality_different():
 
 Here's the pretty error message that's outputted:
 
-![DataFramesNotEqualError](https://github.com/MrPowers/chispa/blob/master/images/dfs_not_approx_equal.png)
+![DataFramesNotEqualError](https://github.com/MrPowers/chispa/blob/main/images/dfs_not_approx_equal.png)
 
 ## Schema mismatch messages
 
@@ -411,7 +411,7 @@ def test_schema_mismatch_message():
 
 Here's the error message:
 
-![SchemasNotEqualError](https://github.com/MrPowers/chispa/blob/master/images/schemas_not_approx_equal.png)
+![SchemasNotEqualError](https://github.com/MrPowers/chispa/blob/main/images/schemas_not_approx_equal.png)
 
 ## Benchmarks
 
