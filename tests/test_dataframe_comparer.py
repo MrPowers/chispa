@@ -112,6 +112,14 @@ def describe_assert_df_equality():
             assert_df_equality(df1, df2, allow_nan_equality=False)
 
 
+    def it_can_ignore_order_and_columns():
+        data1 = [("apple", {"fruit": True}), ("carrot", {"fruit": False})]
+        df1 = spark.createDataFrame(data1, ["name", "properties"])
+        data2 = [("carrot", {"veg": True}), ("apple", {"veg": False})]
+        df2 = spark.createDataFrame(data2, ["name", "properties"])
+        assert_df_equality(df1, df2, ignore_row_order=True, ignore_columns=["properties"])
+
+
 def describe_are_dfs_equal():
     def it_returns_false_with_schema_mismatches():
         data1 = [(1, "jose"), (2, "li"), (3, "laura")]

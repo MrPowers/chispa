@@ -274,6 +274,19 @@ You can ignore the nullable property when assessing equality by adding a flag:
 assert_df_equality(df1, df2, ignore_nullable=True)
 ```
 
+### Ignore a column
+
+Sometimes you may wish to compare only a subset of the columns in your DataFrame.  You can specify
+the columns to exclude from comparison with a flag:
+
+```python
+data1 = [("apple", {"fruit": True}), ("carrot", {"fruit": False})]
+df1 = spark.createDataFrame(data1, ["name", "properties"])
+data2 = [("apple", {"veg": False}), ("carrot", {"veg": True})]
+df2 = spark.createDataFrame(data2, ["name", "properties"])
+assert_df_equality(df1, df2, ignore_columns=["properties"])
+```
+
 ### Allow NaN equality
 
 Python has NaN (not a number) values and two NaN values are not considered equal by default.  Create two NaN values, compare them, and confirm they're not considered equal by default.

@@ -114,6 +114,14 @@ def describe_dataframe_equality():
         assert_df_equality(df1, df2, ignore_nullable=True)
 
 
+    def ignore_a_column():
+        data1 = [("apple", {"fruit": True}), ("carrot", {"fruit": False})]
+        df1 = spark.createDataFrame(data1, ["name", "properties"])
+        data2 = [("apple", {"veg": False}), ("carrot", {"veg": True})]
+        df2 = spark.createDataFrame(data2, ["name", "properties"])
+        assert_df_equality(df1, df2, ignore_columns=["properties"])
+
+
     def consider_nan_values_equal():
         data1 = [(float('nan'), "jose"), (2.0, "li")]
         df1 = spark.createDataFrame(data1, ["num", "name"])
