@@ -1,6 +1,7 @@
 import pytest
 
 from spark import *
+from pyspark.sql.utils import AnalysisException
 from chispa import *
 from chispa.dataframe_comparer import are_dfs_equal
 from chispa.schema_comparer import SchemasNotEqualError
@@ -38,6 +39,16 @@ def describe_assert_df_equality():
         data2 = [("li", 2), ("jose", 1)]
         df2 = spark.createDataFrame(data2, ["name", "num"])
         assert_df_equality(df1, df2, ignore_row_order=True, ignore_column_order=True)
+
+
+    def it_can_work_with_different_row_orders_and_unsortable_columns():
+        df1 = spark.createDataFrame([(1,{"a": 1}), (2,{"a": 1}), (3,{"a": 1})],
+                ["sort_me", "cant_sort"])
+        df2 = spark.createDataFrame([(2,{"a": 1}), (1,{"a": 1}), (3,{"a": 1})],
+                ["sort_me", "cant_sort"])
+        with pytest.raises(AnalysisException):
+            assert_df_equality(df1, df2, ignore_row_order=True)
+        assert_df_equality(df1, df2, ignore_row_order=["sort_me"])
 
 
     def it_raises_for_row_insensitive_with_diff_content():

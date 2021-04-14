@@ -16,8 +16,10 @@ def assert_df_equality(df1, df2, ignore_nullable=False, transforms=None, allow_n
         transforms = []
     if ignore_column_order:
         transforms.append(lambda df: df.select(sorted(df.columns)))
-    if ignore_row_order:
+    if ignore_row_order is True:
         transforms.append(lambda df: df.sort(df.columns))
+    elif ignore_row_order:
+        transforms.append(lambda df: df.sort(ignore_row_order))
     df1 = reduce(lambda acc, fn: fn(acc), transforms, df1)
     df2 = reduce(lambda acc, fn: fn(acc), transforms, df2)
     assert_schema_equality(df1.schema, df2.schema, ignore_nullable)
