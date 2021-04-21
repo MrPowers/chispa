@@ -77,11 +77,27 @@ def describe_are_schemas_equal_ignore_nullable():
     def it_returns_true_when_only_nullable_flag_is_different():
         s1 = StructType([
            StructField("name", StringType(), True),
-           StructField("age", IntegerType(), True)])
+           StructField("age", IntegerType(), True),
+           StructField("coords", ArrayType(DoubleType(), True), True),
+        ])
         s2 = StructType([
            StructField("name", StringType(), True),
-           StructField("age", IntegerType(), False)])
+           StructField("age", IntegerType(), False),
+           StructField("coords", ArrayType(DoubleType(), True), False),
+        ])
         assert are_schemas_equal_ignore_nullable(s1, s2) == True
+
+
+    def it_returns_true_when_only_nullable_flag_is_different_within_array_element():
+        s1 = StructType([StructField("coords", ArrayType(DoubleType(), True), True)])
+        s2 = StructType([StructField("coords", ArrayType(DoubleType(), False), True)])
+        assert are_schemas_equal_ignore_nullable(s1, s2) == True
+
+
+    def it_returns_false_when_the_element_type_is_different_within_array():
+        s1 = StructType([StructField("coords", ArrayType(DoubleType(), True), True)])
+        s2 = StructType([StructField("coords", ArrayType(IntegerType(), True), True)])
+        assert are_schemas_equal_ignore_nullable(s1, s2) == False
 
 
     def it_returns_false_when_column_names_differ():
