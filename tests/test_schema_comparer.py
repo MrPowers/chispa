@@ -108,3 +108,16 @@ def describe_are_schemas_equal_ignore_nullable():
            StructField("name", StringType(), True),
            StructField("age", IntegerType(), False)])
         assert are_schemas_equal_ignore_nullable(s1, s2) == False
+
+
+def describe_are_structfield_types_equal_ignore_nullable():
+    def it_returns_true_when_only_nullable_flag_is_different_within_array_element():
+        s1 = StructField("coords", ArrayType(DoubleType(), True), True)
+        s2 = StructField("coords", ArrayType(DoubleType(), False), True)
+        assert check_type_equal_ignore_nullable(s1, s2) == True
+
+
+    def it_returns_false_when_the_element_type_is_different_within_array():
+        s1 = StructField("coords", ArrayType(DoubleType(), True), True)
+        s2 = StructField("coords", ArrayType(IntegerType(), True), True)
+        assert check_type_equal_ignore_nullable(s1, s2) == False
