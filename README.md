@@ -274,6 +274,23 @@ You can ignore the nullable property when assessing equality by adding a flag:
 assert_df_equality(df1, df2, ignore_nullable=True)
 ```
 
+Elements contained within an `ArrayType()` also have a nullable property, in addition to the nullable property of the column schema. These are also ignored when passing `ignore_nullable=True`.
+
+Again, examine the following code to understand the error that `ignore_nullable=True` bypasses:
+
+```python
+def ignore_nullable_property_array():
+    s1 = StructType([
+        StructField("name", StringType(), True),
+        StructField("coords", ArrayType(DoubleType(), True), True),])
+    df1 = spark.createDataFrame([("juan", [1.42, 3.5]), ("bruna", [2.76, 3.2])], s1)
+    s2 = StructType([
+        StructField("name", StringType(), True),
+        StructField("coords", ArrayType(DoubleType(), False), True),])
+    df2 = spark.createDataFrame([("juan", [1.42, 3.5]), ("bruna", [2.76, 3.2])], s2)
+    assert_df_equality(df1, df2)
+```
+
 ### Allow NaN equality
 
 Python has NaN (not a number) values and two NaN values are not considered equal by default.  Create two NaN values, compare them, and confirm they're not considered equal by default.
