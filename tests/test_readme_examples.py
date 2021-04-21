@@ -114,6 +114,18 @@ def describe_dataframe_equality():
         assert_df_equality(df1, df2, ignore_nullable=True)
 
 
+    def ignore_nullable_property_array():
+        s1 = StructType([
+           StructField("name", StringType(), True),
+           StructField("coords", ArrayType(DoubleType(), True), True),])
+        df1 = spark.createDataFrame([("juan", [1.42, 3.5]), ("bruna", [2.76, 3.2])], s1)
+        s2 = StructType([
+           StructField("name", StringType(), True),
+           StructField("coords", ArrayType(DoubleType(), False), True),])
+        df2 = spark.createDataFrame([("juan", [1.42, 3.5]), ("bruna", [2.76, 3.2])], s2)
+        assert_df_equality(df1, df2, ignore_nullable=True)
+
+
     def consider_nan_values_equal():
         data1 = [(float('nan'), "jose"), (2.0, "li")]
         df1 = spark.createDataFrame(data1, ["num", "name"])
