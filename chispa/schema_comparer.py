@@ -45,7 +45,24 @@ def are_schemas_equal_ignore_nullable(s1, s2):
         return False
     zipped = list(six.moves.zip_longest(s1, s2))
     for sf1, sf2 in zipped:
-        if sf1.name != sf2.name or sf1.dataType != sf2.dataType:
+        names_equal = sf1.name == sf2.name
+        types_equal = check_type_equal_ignore_nullable(sf1, sf2)
+        if not names_equal or not types_equal:
           return False
     return True
 
+
+def check_type_equal_ignore_nullable(sf1, sf2):
+    """Checks StructField data types ignoring nullables.
+
+    Handles array element types also.
+    """
+    dt1, dt2 = sf1.dataType, sf2.dataType
+    if dt1.typeName() == dt2.typeName():
+        # Account for array types by inspecting elementType.
+        if dt1.typeName() == 'array':
+            return dt1.elementType == dt2.elementType
+        else:
+            return True
+    else:
+        return False
