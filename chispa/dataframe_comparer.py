@@ -49,9 +49,3 @@ def assert_df_equality(
     # Check schema and row equality.
     assert_schema_equality(df1.schema, df2.schema, ignore_nullable)
     assert_rows_equality(df1, df2, precision, allow_nan_equality)
-
-
-# Keeping this in for consistency in API but it can go now.
-def assert_approx_df_equality(df1, df2, precision, ignore_nullable=False):
-    """Asserts approx df equality."""
-    assert_df_equality(df1, df2, precision, ignore_nullable)
