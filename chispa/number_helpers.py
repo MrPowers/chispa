@@ -9,7 +9,7 @@ def isnan(x):
         return False
 
 
-def equality(
+def check_equal(
     x, y,
     precision: Optional[float] = None,
     allow_nan_equality: bool = False,

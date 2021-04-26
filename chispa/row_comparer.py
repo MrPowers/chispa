@@ -4,7 +4,7 @@ from pyspark.sql import Row, DataFrame
 
 from chispa.bcolors import blue
 import chispa.six as six
-from chispa.number_helpers import equality
+from chispa.number_helpers import check_equal
 from chispa.prettytable import PrettyTable
 
 
@@ -72,6 +72,6 @@ def are_rows_equal(
 
     # Compare the values for each row. Order matters.
     for v1, v2 in zip(r1.asDict().values(), r2.asDict().values()):
-        if not equality(v1, v2, precision, allow_nan_equality):
+        if not check_equal(v1, v2, precision, allow_nan_equality):
             return False
     return True
