@@ -384,7 +384,7 @@ Here's the pretty error message that's outputted:
 
 ## Schema mismatch messages
 
-DataFrame equality messages peform schema comparisons before analyzing the actual content of the DataFrames.  DataFrames that don't have the same schemas should error out as fast as possible.
+DataFrame equality messages perform schema comparisons before analyzing the actual content of the DataFrames.  DataFrames that don't have the same schemas should error out as fast as possible.
 
 Let's compare a DataFrame that has a string column an integer column with a DataFrame that has two integer columns to observe the schema mismatch message.
 
