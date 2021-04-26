@@ -26,5 +26,5 @@ except ImportError:
             exit(-1)
 
 from .dataframe_comparer import assert_df_equality
-from .column_comparer import ColumnsNotEqualError, assert_column_equality, assert_approx_column_equality
+from .column_comparer import assert_column_equality, ColumnsNotEqualError
 from .row_comparer import RowsNotEqualError

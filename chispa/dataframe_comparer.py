@@ -16,7 +16,7 @@ def assert_df_equality(
     ignore_column_order: bool = False,
     ignore_row_order: bool = False,
     transforms: Callable[[DataFrame], DataFrame] = None,
-) -> bool:
+) -> None:
     """Assert that two PySpark DataFrames are equal.
 
     Parameters
