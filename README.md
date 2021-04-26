@@ -307,7 +307,7 @@ def test_approx_col_equality_same():
         (None, None)
     ]
     df = spark.createDataFrame(data, ["num1", "num2"])
-    assert_approx_column_equality(df, "num1", "num2", 0.1)
+    assert_column_equality(df, "num1", "num2", precision=0.1)
 ```
 
 Here's an example of a test with columns that are not approximately equal.
@@ -321,7 +321,7 @@ def test_approx_col_equality_different():
         (None, None)
     ]
     df = spark.createDataFrame(data, ["num1", "num2"])
-    assert_approx_column_equality(df, "num1", "num2", 0.1)
+    assert_column_equality(df, "num1", "num2", precision=0.1)
 ```
 
 This failing test will output a readable error message so the issue is easy to debug.
