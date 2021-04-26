@@ -66,7 +66,6 @@ def are_rows_equal(
     # If both rows are None they are considered equal.
     if r1 is None and r2 is None:
         return True
-    # If one row is None and the other isn't, then they are not equal.
     if (r1 is None and r2 is not None) or (r2 is None and r1 is not None):
         return False
 

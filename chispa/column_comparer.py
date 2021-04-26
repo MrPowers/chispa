@@ -68,9 +68,7 @@ def are_elements_equal(
     # If both elements are None they are considered equal.
     if e1 is None and e2 is None:
         return True
-    # If one element is None and the other isn't, then they are not equal.
     if (e1 is None and e2 is not None) or (e2 is None and e1 is not None):
         return False
 
-    # Compare the elements.
     return check_equal(e1, e2, precision, allow_nan_equality)
