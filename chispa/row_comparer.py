@@ -2,7 +2,7 @@ from typing import Optional
 
 from pyspark.sql import Row, DataFrame
 
-from chispa.bcolors import blue, bcolors
+from chispa.bcolors import blue
 import chispa.six as six
 from chispa.number_helpers import equality
 from chispa.prettytable import PrettyTable
@@ -37,9 +37,7 @@ def assert_rows_equality(
     zipped = six.moves.zip_longest(df1.collect(), df2.collect())
     for r1, r2 in zipped:
         if are_rows_equal(r1, r2, precision, allow_nan_equality):
-            first = bcolors.LightBlue + str(r1) + bcolors.LightRed
-            second = bcolors.LightBlue + str(r2) + bcolors.LightRed
-            t.add_row([first, second])
+            t.add_row([blue(r1), blue(r2)])
         else:
             allRowsEqual = False
             t.add_row([r1, r2])
