@@ -74,22 +74,3 @@ def are_elements_equal(
 
     # Compare the elements.
     return check_equal(e1, e2, precision, allow_nan_equality)
-
-if __name__ == "__main__":
-    from pyspark.sql import SparkSession
-
-    spark = (
-        SparkSession
-        .builder
-        .master("local[2]")
-        .appName("test_context")
-        .config("spark.sql.shuffle.partitions", 1)
-        # .config("spark.jars", jar_path)
-        # This stops progress bars appearing in the console whilst running
-        .config('spark.ui.showConsoleProgress', 'false')
-        .getOrCreate()
-    )
-
-    data = [("jose", "jose"), ("li", "li"), ("luisa", "laura")]
-    df = spark.createDataFrame(data, ["name", "expected_name"])
-    assert_column_equality(df, "name", "expected_name")
