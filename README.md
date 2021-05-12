@@ -430,6 +430,14 @@ Here's the error message:
 
 ![SchemasNotEqualError](https://github.com/MrPowers/chispa/blob/main/images/schemas_not_approx_equal.png)
 
+## Supported PySpark / Python versions
+
+chispa currently supports PySpark 2.4+ and Python 3.5+.
+
+Use chispa v0.8.2 if you're using an older Python version.
+
+PySpark 2 support will be dropped when chispa 1.x is released.
+
 ## Benchmarks
 
 TODO: Need to benchmark these methods vs. the spark-testing-base ones

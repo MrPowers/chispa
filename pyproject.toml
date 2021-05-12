@@ -6,7 +6,7 @@ authors = ["MrPowers <matthewkevinpowers@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = ">2.7"
+python = ">=3.5"
 
 [tool.poetry.dev-dependencies]
 pytest = "3.2.2"
