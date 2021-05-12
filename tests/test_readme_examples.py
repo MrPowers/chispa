@@ -86,7 +86,7 @@ def describe_dataframe_equality():
             (None, None)
         ]
         expected_df = spark.createDataFrame(expected_data, ["name", "clean_name"])
-        with pytest.raises(DataFramesNotEqualError) as e_info:
+        with pytest.raises(RowsNotEqualError) as e_info:
             assert_df_equality(actual_df, expected_df)
 
 
@@ -143,7 +143,7 @@ def describe_assert_approx_column_equality():
             (None, None)
         ]
         df = spark.createDataFrame(data, ["num1", "num2"])
-        assert_approx_column_equality(df, "num1", "num2", 0.1)
+        assert_column_equality(df, "num1", "num2", precision=0.1)
 
 
     def test_approx_col_equality_different():
@@ -155,7 +155,7 @@ def describe_assert_approx_column_equality():
         ]
         df = spark.createDataFrame(data, ["num1", "num2"])
         with pytest.raises(ColumnsNotEqualError) as e_info:
-            assert_approx_column_equality(df, "num1", "num2", 0.1)
+            assert_column_equality(df, "num1", "num2", precision=0.1)
 
 
     def test_approx_df_equality_same():
@@ -173,7 +173,7 @@ def describe_assert_approx_column_equality():
             (None, None)
         ]
         df2 = spark.createDataFrame(data2, ["num", "letter"])
-        assert_approx_df_equality(df1, df2, 0.1)
+        assert_df_equality(df1, df2, precision=0.1)
 
 
     def test_approx_df_equality_different():
@@ -191,8 +191,8 @@ def describe_assert_approx_column_equality():
             (None, None)
         ]
         df2 = spark.createDataFrame(data2, ["num", "letter"])
-        with pytest.raises(DataFramesNotEqualError) as e_info:
-            assert_approx_df_equality(df1, df2, 0.1)
+        with pytest.raises(RowsNotEqualError) as e_info:
+            assert_df_equality(df1, df2, precision=0.1)
 
 
 def describe_schema_mismatch_messages():

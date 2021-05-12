@@ -324,7 +324,7 @@ def test_approx_col_equality_same():
         (None, None)
     ]
     df = spark.createDataFrame(data, ["num1", "num2"])
-    assert_approx_column_equality(df, "num1", "num2", 0.1)
+    assert_column_equality(df, "num1", "num2", precision=0.1)
 ```
 
 Here's an example of a test with columns that are not approximately equal.
@@ -338,7 +338,7 @@ def test_approx_col_equality_different():
         (None, None)
     ]
     df = spark.createDataFrame(data, ["num1", "num2"])
-    assert_approx_column_equality(df, "num1", "num2", 0.1)
+    assert_column_equality(df, "num1", "num2", precision=0.1)
 ```
 
 This failing test will output a readable error message so the issue is easy to debug.
@@ -367,10 +367,10 @@ def test_approx_df_equality_same():
     ]
     df2 = spark.createDataFrame(data2, ["num", "letter"])
 
-    assert_approx_df_equality(df1, df2, 0.1)
+    assert_df_equality(df1, df2, precision=0.1)
 ```
 
-The `assert_approx_df_equality` method is smart and will only perform approximate equality operations for floating point numbers in DataFrames.  It'll perform regular equality for strings and other types.
+The `assert_df_equality` method has a `precision` parameter that let's the user control the absolute tolerance of any floating point errors that are accepted by the assertion method. It is smart and will only perform approximate equality operations for floating point numbers in DataFrames.  It'll perform regular equality for strings and other types.
 
 Let's perform an approximate equality comparison for two DataFrames that are not equal.
 
@@ -392,7 +392,7 @@ def test_approx_df_equality_different():
     ]
     df2 = spark.createDataFrame(data2, ["num", "letter"])
 
-    assert_approx_df_equality(df1, df2, 0.1)
+    assert_df_equality(df1, df2, precision=0.1)
 ```
 
 Here's the pretty error message that's outputted:
@@ -401,7 +401,7 @@ Here's the pretty error message that's outputted:
 
 ## Schema mismatch messages
 
-DataFrame equality messages peform schema comparisons before analyzing the actual content of the DataFrames.  DataFrames that don't have the same schemas should error out as fast as possible.
+DataFrame equality messages perform schema comparisons before analyzing the actual content of the DataFrames.  DataFrames that don't have the same schemas should error out as fast as possible.
 
 Let's compare a DataFrame that has a string column an integer column with a DataFrame that has two integer columns to observe the schema mismatch message.
 
