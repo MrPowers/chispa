@@ -1,6 +1,6 @@
 import pytest
 
-from spark import *
+from .spark import *
 from chispa.row_comparer import *
 from pyspark.sql import Row
 
