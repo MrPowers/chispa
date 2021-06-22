@@ -24,3 +24,8 @@ def describe_are_structfields_equal():
         sf1 = StructField("hi", IntegerType(), False)
         sf2 = StructField("hi", IntegerType(), True)
         assert are_structfields_equal(sf1, sf2, ignore_nullability=True) == True
+
+    def it_can_perform_nullability_insensitive_comparisons_with_arrays():
+        sf1 = StructField("hi", ArrayType(IntegerType(), True), False)
+        sf2 = StructField("hi", ArrayType(IntegerType(), False), True)
+        assert are_structfields_equal(sf1, sf2, ignore_nullability=True) == True
