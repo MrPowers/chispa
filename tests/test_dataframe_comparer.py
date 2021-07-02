@@ -16,6 +16,16 @@ def describe_assert_df_equality():
             assert_df_equality(df1, df2)
 
 
+    def it_can_compare_ignoring_schema():
+        data1 = [(1.0, "jose"), (2.0, "li"), (3.0, "laura")]
+        df1 = spark.createDataFrame(data1, ["num", "expected_name"])
+        print(df1.schema)
+        data2 = [(1, "jose"), (2, "li"), (3, "laura")]
+        df2 = spark.createDataFrame(data2, ["num", "expected_name"])
+        print(df2.schema)
+        assert_df_equality(df1, df2, ignore_schema=True)
+
+
     def it_can_work_with_different_row_orders():
         data1 = [(1, "jose"), (2, "li")]
         df1 = spark.createDataFrame(data1, ["num", "name"])
