@@ -55,13 +55,15 @@ def are_schemas_equal_ignore_nullable(s1, s2):
 def check_type_equal_ignore_nullable(sf1, sf2):
     """Checks StructField data types ignoring nullables.
 
-    Handles array element types also.
+    Handles array and struct element types also.
     """
     dt1, dt2 = sf1.dataType, sf2.dataType
     if dt1.typeName() == dt2.typeName():
         # Account for array types by inspecting elementType.
         if dt1.typeName() == 'array':
             return dt1.elementType == dt2.elementType
+        elif dt1.typeName() == 'struct':
+            return are_structfields_equal(sf1, sf2, True)
         else:
             return True
     else:
