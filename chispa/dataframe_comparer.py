@@ -61,7 +61,7 @@ def assert_generic_rows_equality(df1, df2, row_equality_fun, row_equality_fun_ar
             allRowsEqual = False
             t.add_row([r1, r2])
     if allRowsEqual == False:
-        raise DataFramesNotEqualError("\n" + t.get_string())
+        _fail(df1, df2, t)
 
 
 def assert_basic_rows_equality(df1, df2):
@@ -75,4 +75,14 @@ def assert_basic_rows_equality(df1, df2):
                 t.add_row([blue(r1), blue(r2)])
             else:
                 t.add_row([r1, r2])
-        raise DataFramesNotEqualError("\n" + t.get_string())
+        _fail(df1, df2, t)
+
+def _fail(df1, df2, t):
+    raise DataFramesNotEqualError(
+            "\n\n** df1 **\n" + _getShowString(df1) + "\n** df2 ** \n:" + _getShowString(df2) + "\n** Comparison: **\n" +t.get_string())
+
+def _getShowString(df, n=20, truncate=True, vertical=False):
+    if isinstance(truncate, bool) and truncate:
+        return(df._jdf.showString(n, 20, vertical))
+    else:
+        return(df._jdf.showString(n, int(truncate), vertical))
