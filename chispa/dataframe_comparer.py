@@ -35,7 +35,14 @@ def are_dfs_equal(df1, df2):
     return True
 
 
-def assert_approx_df_equality(df1, df2, precision, ignore_nullable=False):
+def assert_approx_df_equality(df1, df2, precision, ignore_nullable=False, ignore_column_order=False, ignore_row_order=False):
+    if ignore_column_order:
+        df1 = df1.select(sorted(df1.columns))
+        df2 = df2.select(sorted(df2.columns))
+    if ignore_row_order:
+        df1 = df1.sort(df1.columns)
+        df2 = df2.sort(df2.columns)
+
     assert_schema_equality(df1.schema, df2.schema, ignore_nullable)
     assert_generic_rows_equality(df1, df2, are_rows_approx_equal, [precision])
 
