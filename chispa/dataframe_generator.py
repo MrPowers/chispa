@@ -1,5 +1,6 @@
 import copy
 from dataclasses import dataclass, field
+from functools import reduce
 from typing import List, Iterator, Any, Optional, Hashable
 
 from faker import Factory, Generator
@@ -7,6 +8,8 @@ from pyspark.sql import DataFrame, SparkSession
 from pyspark.sql.types import StructType, StructField
 
 # TODO add missing Spark types.
+from chispa.prettytable import PrettyTable
+
 DEFAULT_CONFIG: dict = {
     "StringType": {"provider": "pystr"},
     "ByteType": {"provider": "pyint", "kwargs": {"min_value": -128, "max_value": 127}},
@@ -38,7 +41,7 @@ class PropertyCheckException(Exception):
 
 
 @dataclass
-class Report:
+class PropertyResult:
     property_check: bool
     dataframe: DataFrame
 
@@ -141,33 +144,50 @@ class DataFrameGenerator:
         return spark.createDataFrame(data=data, schema=self.schema)
 
 
-def for_all(dfs: Iterator[DataFrame], property_to_check: Any) -> Iterator[Report]:
+def for_all(dfs: Iterator[DataFrame], property_to_check: Any) -> Iterator[PropertyResult]:
     """
     Method that will run a property over all the DataFrames in the iterator and returns an iterator
     with the boolean result.
 
     :param dfs: A generator with DataFrames.
     :param property_to_check: A function that has a DataFrame as a parameter and returns a bool.
-    :return: An iterator of Report objects.
+    :return: An iterator of PropertyResult objects.
     """
-    return map(lambda df: Report(property_check=property_to_check(df), dataframe=df), dfs)
+    return map(lambda df: PropertyResult(property_check=property_to_check(df), dataframe=df), dfs)
 
 
-def check_property(reports: Iterator[Report], function_to_run_in_failure: Optional[Any] = None) -> bool:
+def pretty_table_dataframe(df: DataFrame) -> str:
+    """
+    Method that will return the DataFrame collected rows as a pretty table string.
+
+    :param df: The DataFrame to get the records from.
+    :return: A pretty table.
+    """
+    t = PrettyTable()
+    t.field_names = df.columns
+    rows = [elem.asDict() for elem in df.collect()]
+    for dct in rows:
+        t.add_row([dct.get(c, "") for c in t.field_names])
+    return t.get_string()
+
+
+def check_property(property_results: Iterator[PropertyResult],
+                   function_to_run_in_failure: Optional[Any] = None) -> bool:
     """
     Method that will assert if the property that ran over the DataFrames is true for all of them.
 
-    :param reports: The reports that contains the property result with the corresponding DataFrame.
+    :param property_results: The results that contains the property result with the corresponding DataFrame.
     :param function_to_run_in_failure: Optional function to run over the failed DataFrames.
     :return: True if the property checked is true for all DataFrames, raises PropertyCheckException with the list
     of failed DataFrames.
     """
-    l: List[Report] = list(reports)
+    l: List[PropertyResult] = list(property_results)
     failed: List[DataFrame] = [elem.dataframe for elem in l if elem.property_check is False]
     if failed:
         if function_to_run_in_failure is not None:
             for df in failed:
                 function_to_run_in_failure(df)
-        raise PropertyCheckException(f"\n{[elem.collect() for elem in failed]}")
+        failed_tables: str = reduce(lambda x, df: x + f"{pretty_table_dataframe(df)}\n", [elem for elem in failed], "")
+        raise PropertyCheckException(f"\n{failed_tables}")
     else:
         return True

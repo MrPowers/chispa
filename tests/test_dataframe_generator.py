@@ -7,7 +7,7 @@ from pyspark.sql.functions import lit
 from pyspark.sql.types import StringType, StructType, StructField, LongType, DateType, ByteType, ShortType, IntegerType, \
     DecimalType, FloatType, DoubleType, BooleanType, BinaryType, TimestampType, ArrayType
 
-from chispa.dataframe_generator import DataFrameGenerator, for_all, check_property, DataConfig, Report, \
+from chispa.dataframe_generator import DataFrameGenerator, for_all, check_property, DataConfig, PropertyResult, \
     PropertyCheckException, DataTypeMissingException
 from .spark import *
 
@@ -39,57 +39,57 @@ class TestDataFrameGenerator(TestCase):
     def test_for_all_given_no_dataframe_and_invalid_property_should_return_empty_list(self):
         dfs: Iterator[DataFrame] = iter([])
 
-        actual: List[Report] = list(for_all(
+        actual: List[PropertyResult] = list(for_all(
             dfs=dfs,
             property_to_check=None)
         )
-        expected: List[Report] = []
+        expected: List[PropertyResult] = []
 
         self.assertEquals(expected, actual)
 
-    def test_for_all_given_single_dataframe_and_valid_property_should_return_correct_report(self):
+    def test_for_all_given_single_dataframe_and_valid_property_should_return_correct_result(self):
         dfs: Iterator[DataFrame] = iter([self.test_df])
 
-        actual: List[Report] = list(for_all(
+        actual: List[PropertyResult] = list(for_all(
             dfs=dfs,
             property_to_check=lambda df: df.schema == self.test_data_schema and df.count() == 3)
         )
-        expected: List[Report] = [Report(property_check=True, dataframe=self.test_df)]
+        expected: List[PropertyResult] = [PropertyResult(property_check=True, dataframe=self.test_df)]
 
         self.assertEquals(expected, actual)
 
-    def test_for_all_given_multiple_dataframes_and_valid_property_should_return_correct_report(self):
+    def test_for_all_given_multiple_dataframes_and_valid_property_should_return_correct_result(self):
         dfs: Iterator[DataFrame] = iter([self.test_df, self.test_df])
 
-        actual: List[Report] = list(for_all(
+        actual: List[PropertyResult] = list(for_all(
             dfs=dfs,
             property_to_check=lambda df: df.schema == self.test_data_schema and df.count() == 3)
         )
-        expected: List[Report] = [
-            Report(property_check=True, dataframe=self.test_df),
-            Report(property_check=True, dataframe=self.test_df)
+        expected: List[PropertyResult] = [
+            PropertyResult(property_check=True, dataframe=self.test_df),
+            PropertyResult(property_check=True, dataframe=self.test_df)
         ]
 
         self.assertEquals(expected, actual)
 
-    def test_check_property_given_no_report_should_return_true(self):
-        reports: Iterator[Report] = iter([])
+    def test_check_property_given_no_result_should_return_true(self):
+        results: Iterator[PropertyResult] = iter([])
 
-        actual: bool = check_property(reports=reports)
-
-        self.assertTrue(actual)
-
-    def test_check_property_given_valid_report_should_return_true(self):
-        reports: Iterator[Report] = iter([Report(property_check=True, dataframe=self.test_df)])
-
-        actual: bool = check_property(reports=reports)
+        actual: bool = check_property(property_results=results)
 
         self.assertTrue(actual)
 
-    def test_check_property_given_invalid_report_should_raise_exception(self):
-        reports: Iterator[Report] = iter([Report(property_check=False, dataframe=self.test_df)])
+    def test_check_property_given_valid_result_should_return_true(self):
+        results: Iterator[PropertyResult] = iter([PropertyResult(property_check=True, dataframe=self.test_df)])
 
-        self.assertRaises(PropertyCheckException, check_property, reports=reports)
+        actual: bool = check_property(property_results=results)
+
+        self.assertTrue(actual)
+
+    def test_check_property_given_invalid_results_should_raise_exception(self):
+        results: Iterator[PropertyResult] = iter([PropertyResult(property_check=False, dataframe=self.test_df)])
+
+        self.assertRaises(PropertyCheckException, check_property, property_results=results)
 
     def test_arbitrary_dataframes_should_return_correct_default_values_for_dataframes(self):
         actual: List[DataFrame] = list(self.df_gen.arbitrary_dataframes())
@@ -150,7 +150,7 @@ class TestDataFrameGenerator(TestCase):
         self.assertEquals(expected, actual)
 
     def test_get_datatype_and_provider_given_a_schema_field_and_config_should_return_correct_data_config_object(self):
-        config = {"expected_name": {
+        config: dict = {"expected_name": {
             "data_type": StringType(),
             "provider": "random_element",
             "kwargs": {
