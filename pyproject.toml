@@ -1,13 +1,13 @@
 [tool.poetry]
 name = "chispa"
-version = "0.8.2"
+version = "0.8.3"
 description = "Pyspark test helper library"
 authors = ["MrPowers <matthewkevinpowers@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
 python = ">=3.7"
-Faker = "^8.14.0"
+Faker = "8.14.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "3.2.2"
@@ -16,5 +16,5 @@ pyspark = ">2.0.0"
 findspark = "1.4.2"
 
 [build-system]
-requires = ["poetry>=0.12"]
-build-backend = "poetry.masonry.api"
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

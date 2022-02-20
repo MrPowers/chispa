@@ -1,18 +1,10 @@
 [[package]]
-name = "cloudpickle"
-version = "2.0.0"
-description = "Extended pickling support for Python objects"
-category = "main"
-optional = false
-python-versions = ">=3.6"
-
-[[package]]
 name = "colorama"
-version = "0.4.4"
+version = "0.3.9"
 description = "Cross-platform colored terminal text."
 category = "dev"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
+python-versions = "*"
 
 [[package]]
 name = "faker"
@@ -36,11 +28,11 @@ python-versions = "*"
 
 [[package]]
 name = "py"
-version = "1.10.0"
+version = "1.4.34"
 description = "library with cross-python path, ini-parsing, io, code, log facilities"
 category = "dev"
 optional = false
-python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+python-versions = "*"
 
 [[package]]
 name = "py4j"
@@ -52,11 +44,11 @@ python-versions = "*"
 
 [[package]]
 name = "pyspark"
-version = "3.1.2"
+version = "3.0.2"
 description = "Apache Spark Python API"
 category = "dev"
 optional = false
-python-versions = ">=3.6"
+python-versions = "*"
 
 [package.dependencies]
 py4j = "0.10.9"
@@ -64,7 +56,7 @@ py4j = "0.10.9"
 [package.extras]
 ml = ["numpy (>=1.7)"]
 mllib = ["numpy (>=1.7)"]
-sql = ["pandas (>=0.23.2)", "pyarrow (>=1.0.0)"]
+sql = ["pandas (>=0.23.2)", "pyarrow (>=0.15.1)"]
 
 [[package]]
 name = "pytest"
@@ -119,16 +111,12 @@ python-versions = "*"
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7"
-content-hash = "ff7f4e1657eda6e55f16cbcde32fc0f455e720bf7fe6f04062eec1e3dde49fec"
+content-hash = "ab19a69f8dbf37c08501a5e7496def3b2cfce7b6aefebf03507314f8ab46ea6e"
 
 [metadata.files]
-cloudpickle = [
-    {file = "cloudpickle-2.0.0-py3-none-any.whl", hash = "sha256:6b2df9741d06f43839a3275c4e6632f7df6487a1f181f5f46a052d3c917c3d11"},
-    {file = "cloudpickle-2.0.0.tar.gz", hash = "sha256:5cd02f3b417a783ba84a4ec3e290ff7929009fe51f6405423cfccfadd43ba4a4"},
-]
 colorama = [
-    {file = "colorama-0.4.4-py2.py3-none-any.whl", hash = "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"},
-    {file = "colorama-0.4.4.tar.gz", hash = "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"},
+    {file = "colorama-0.3.9-py2.py3-none-any.whl", hash = "sha256:463f8483208e921368c9f306094eb6f725c6ca42b0f97e313cb5d5512459feda"},
+    {file = "colorama-0.3.9.tar.gz", hash = "sha256:48eb22f4f8461b1df5734a074b57042430fb06e1d61bd1e11b078c0fe6d7a1f1"},
 ]
 faker = [
     {file = "Faker-8.14.0-py3-none-any.whl", hash = "sha256:7b116034973a9a977a34a8a380354028150edf69f6cfbe55c03a852dd0a4116b"},
@@ -139,15 +127,15 @@ findspark = [
     {file = "findspark-1.4.2.tar.gz", hash = "sha256:6d52971f4417e976aea21aea0f4ac7e470fa365d6139100e03fb76b76eb97da0"},
 ]
 py = [
-    {file = "py-1.10.0-py2.py3-none-any.whl", hash = "sha256:3b80836aa6d1feeaa108e046da6423ab8f6ceda6468545ae8d02d9d58d18818a"},
-    {file = "py-1.10.0.tar.gz", hash = "sha256:21b81bda15b66ef5e1a777a21c4dcd9c20ad3efd0b3f817e7a809035269e1bd3"},
+    {file = "py-1.4.34-py2.py3-none-any.whl", hash = "sha256:2ccb79b01769d99115aa600d7eed99f524bf752bba8f041dc1c184853514655a"},
+    {file = "py-1.4.34.tar.gz", hash = "sha256:0f2d585d22050e90c7d293b6451c83db097df77871974d90efd5a30dc12fcde3"},
 ]
 py4j = [
     {file = "py4j-0.10.9-py2.py3-none-any.whl", hash = "sha256:859ba728a7bb43e9c2bf058832759fb97a598bb28cc12f34f5fc4abdec08ede6"},
     {file = "py4j-0.10.9.tar.gz", hash = "sha256:36ec57f43ff8ced260a18aa9a4e46c3500a730cac8860e259cbaa546c2b9db2f"},
 ]
 pyspark = [
-    {file = "pyspark-3.1.2.tar.gz", hash = "sha256:5e25ebb18756e9715f4d26848cc7e558035025da74b4fc325a0ebc05ff538e65"},
+    {file = "pyspark-3.0.2.tar.gz", hash = "sha256:d4f2ced43394ad773f7b516a4bbcb5821a940462a17b1a25f175c83771b62ebc"},
 ]
 pytest = [
     {file = "pytest-3.2.2-py2.py3-none-any.whl", hash = "sha256:b84f554f8ddc23add65c411bf112b2d88e2489fd45f753b1cae5936358bdf314"},
