@@ -10,17 +10,17 @@ python-versions = "*"
 name = "findspark"
 version = "1.4.2"
 description = "Find pyspark to make it importable."
-category = "main"
+category = "dev"
 optional = false
 python-versions = "*"
 
 [[package]]
 name = "py"
-version = "1.4.34"
+version = "1.10.0"
 description = "library with cross-python path, ini-parsing, io, code, log facilities"
 category = "dev"
 optional = false
-python-versions = "*"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
 
 [[package]]
 name = "py4j"
@@ -71,8 +71,8 @@ pytest = ">=2.6.0"
 
 [metadata]
 lock-version = "1.1"
-python-versions = ">2.7"
-content-hash = "e888a725f6eb21703e2161d14026ba97594ec29b67a07583d05e94a137c97456"
+python-versions = ">=3.5"
+content-hash = "0d199e7bb1817d78cf938c6903447772050151e2b4abeab0f59b8e8627e516d3"
 
 [metadata.files]
 colorama = [
@@ -84,8 +84,8 @@ findspark = [
     {file = "findspark-1.4.2.tar.gz", hash = "sha256:6d52971f4417e976aea21aea0f4ac7e470fa365d6139100e03fb76b76eb97da0"},
 ]
 py = [
-    {file = "py-1.4.34-py2.py3-none-any.whl", hash = "sha256:2ccb79b01769d99115aa600d7eed99f524bf752bba8f041dc1c184853514655a"},
-    {file = "py-1.4.34.tar.gz", hash = "sha256:0f2d585d22050e90c7d293b6451c83db097df77871974d90efd5a30dc12fcde3"},
+    {file = "py-1.10.0-py2.py3-none-any.whl", hash = "sha256:3b80836aa6d1feeaa108e046da6423ab8f6ceda6468545ae8d02d9d58d18818a"},
+    {file = "py-1.10.0.tar.gz", hash = "sha256:21b81bda15b66ef5e1a777a21c4dcd9c20ad3efd0b3f817e7a809035269e1bd3"},
 ]
 py4j = [
     {file = "py4j-0.10.9-py2.py3-none-any.whl", hash = "sha256:859ba728a7bb43e9c2bf058832759fb97a598bb28cc12f34f5fc4abdec08ede6"},
