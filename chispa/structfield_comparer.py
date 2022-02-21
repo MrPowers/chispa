@@ -1,4 +1,4 @@
-import six
+import chispa.six as six
 from pyspark.sql.types import StructType
 
 def are_structfields_equal(sf1, sf2, ignore_nullability=False):
