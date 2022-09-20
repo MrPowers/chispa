@@ -309,6 +309,10 @@ This library requires you to set a flag to consider two NaN values to be equal.
 assert_df_equality(df1, df2, allow_nan_equality=True)
 ```
 
+### Compare columns on error
+
+If this argument is set to an integer n, the first n columns will be compared seperately in case the Dataframes are not equal. The diff of the n columns will each be printed out, before the original error is raised. This improves readability for Dataframes with many columns, especially if important information like ID or timestamp are among the first columns.
+
 ## Approximate column equality
 
 We can check if columns are approximately equal, which is especially useful for floating number comparisons.
