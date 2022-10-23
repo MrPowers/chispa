@@ -1,5 +1,5 @@
 import chispa.six as six
-from pyspark.sql.types import StructType
+from pyspark.sql.types import StructType, ArrayType
 
 def are_structfields_equal(sf1, sf2, ignore_nullability=False):
     if ignore_nullability:
@@ -9,6 +9,8 @@ def are_structfields_equal(sf1, sf2, ignore_nullability=False):
             return False
         elif sf1.name != sf2.name:
             return False
+        elif isinstance(sf1.dataType, ArrayType) and isinstance(sf2.dataType, ArrayType):
+            return True
         elif isinstance(sf1.dataType, StructType) and isinstance(sf2.dataType, StructType):
             for t1, t2 in six.moves.zip_longest(sf1.dataType, sf2.dataType):
                 if not are_structfields_equal(t1, t2, ignore_nullability):
