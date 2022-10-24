@@ -1,5 +1,6 @@
 from pyspark.sql import Row
-from chispa.number_helpers import nan_safe_equality
+from chispa.number_helpers import nan_safe_equality, nan_safe_approx_equality
+import math
 
 
 def are_rows_equal(r1: Row, r2: Row) -> bool:
@@ -22,7 +23,7 @@ def are_rows_equal_enhanced(r1: Row, r2: Row, allow_nan_equality: bool) -> bool:
         return r1 == r2
 
 
-def are_rows_approx_equal(r1: Row, r2: Row, precision: float) -> bool:
+def are_rows_approx_equal(r1: Row, r2: Row, precision: float, allow_nan_equality=False) -> bool:
     if r1 is None and r2 is None:
         return True
     if (r1 is None and r2 is not None) or (r2 is None and r1 is not None):
@@ -32,7 +33,15 @@ def are_rows_approx_equal(r1: Row, r2: Row, precision: float) -> bool:
     allEqual = True
     for key in d1.keys() & d2.keys():
         if isinstance(d1[key], float) and isinstance(d2[key], float):
-            if abs(d1[key] - d2[key]) > precision:
+            # print("nan check {} {} if test {}".format(d1[key], d2[key], allow_nan_equality
+            #                                          and not(nan_safe_approx_equality(d1[key], d2[key], precision))))
+            # print("allow_nan_equality {} nan_data_test {}".format(allow_nan_equality, not(nan_safe_approx_equality(d1[key], d2[key], precision))))
+            # print("float_diff {}".format(abs(d1[key] - d2[key]) ))
+            if allow_nan_equality and not(nan_safe_approx_equality(d1[key], d2[key], precision)):
+                allEqual = False
+            elif not(allow_nan_equality) and math.isnan(abs(d1[key] - d2[key])):
+                allEqual = False
+            elif abs(d1[key] - d2[key]) > precision:
                 allEqual = False
         elif d1[key] != d2[key]:
             allEqual = False
