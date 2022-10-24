@@ -4,6 +4,7 @@ from .spark import *
 from chispa import *
 from chispa.dataframe_comparer import are_dfs_equal
 from chispa.schema_comparer import SchemasNotEqualError
+import math
 
 
 def describe_assert_df_equality():
@@ -173,3 +174,26 @@ def describe_assert_approx_df_equality():
         df2 = spark.createDataFrame(data2, ["num", "expected_name"])
         assert_approx_df_equality(df1, df2, 0.1)
 
+
+    def it_does_not_throw_with_different_row_col_order():
+        data1 = [(1.0, "jose"), (1.1, "li"), (1.2, "laura"), (None, None)]
+        df1 = spark.createDataFrame(data1, ["num", "expected_name"])
+        data2 = [("li", 1.05), ("laura", 1.2), (None, None), ("jose", 1.0)]
+        df2 = spark.createDataFrame(data2, ["expected_name", "num"])
+        assert_approx_df_equality(df1, df2, 0.1, ignore_row_order=True, ignore_column_order=True)
+
+
+    def it_does_not_throw_with_different_schema():
+        data1 = [(1.0, "jose"), (1.1, "li"), (1.2, "laura"), (None, None)]
+        df1 = spark.createDataFrame(data1, ["num", "expected_name"])
+        data2 = [("li", 1.05), ("laura", 1.2), (None, None), ("jose", 1.0)]
+        df2 = spark.createDataFrame(data2, ["another_name", "same_num"])
+        assert_approx_df_equality(df1, df2, 0.1, ignore_schema=True)
+
+
+    def it_does_not_throw_with_nan_values():
+        data1 = [(1.0, "jose"), (1.1, "li"), (1.2, "laura"), (None, None), (float("nan"), "buk")]
+        df1 = spark.createDataFrame(data1, ["num", "expected_name"])
+        data2 = [(1.0, "jose"), (1.05, "li"), (1.2, "laura"), (None, None), (math.nan, "buk")]
+        df2 = spark.createDataFrame(data2, ["num", "expected_name"])
+        assert_approx_df_equality(df1, df2, 0.1, allow_nan_equality=True)

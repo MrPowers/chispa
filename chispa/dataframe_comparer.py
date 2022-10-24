@@ -12,7 +12,7 @@ class DataFramesNotEqualError(Exception):
 
 
 def assert_df_equality(df1, df2, ignore_nullable=False, transforms=None, allow_nan_equality=False,
-                       ignore_column_order=False, ignore_row_order=False, ignore_schema=False):
+                       ignore_column_order=False, ignore_row_order=False, ignore_schema=False, precision=0):
     if transforms is None:
         transforms = []
     if ignore_column_order:
@@ -23,7 +23,9 @@ def assert_df_equality(df1, df2, ignore_nullable=False, transforms=None, allow_n
     df2 = reduce(lambda acc, fn: fn(acc), transforms, df2)
     if not ignore_schema:
         assert_schema_equality(df1.schema, df2.schema, ignore_nullable)
-    if allow_nan_equality:
+    if precision != 0:
+        assert_generic_rows_equality(df1, df2, are_rows_approx_equal, [precision, allow_nan_equality])
+    elif allow_nan_equality:
         assert_generic_rows_equality(df1, df2, are_rows_equal_enhanced, [True])
     else:
         assert_basic_rows_equality(df1, df2)
@@ -37,9 +39,10 @@ def are_dfs_equal(df1, df2):
     return True
 
 
-def assert_approx_df_equality(df1, df2, precision, ignore_nullable=False):
-    assert_schema_equality(df1.schema, df2.schema, ignore_nullable)
-    assert_generic_rows_equality(df1, df2, are_rows_approx_equal, [precision])
+def assert_approx_df_equality(df1, df2, precision, ignore_nullable=False, transforms=None, allow_nan_equality=False,
+                       ignore_column_order=False, ignore_row_order=False, ignore_schema=False):
+    assert_df_equality(df1, df2, ignore_nullable, transforms, allow_nan_equality,
+                       ignore_column_order, ignore_row_order, ignore_schema, precision=precision)
 
 
 def assert_generic_rows_equality(df1, df2, row_equality_fun, row_equality_fun_args):
@@ -64,6 +67,7 @@ def assert_generic_rows_equality(df1, df2, row_equality_fun, row_equality_fun_ar
             t.add_row([r1, r2])
     if allRowsEqual == False:
         raise DataFramesNotEqualError("\n" + t.get_string())
+
 
 
 def assert_basic_rows_equality(df1, df2):
