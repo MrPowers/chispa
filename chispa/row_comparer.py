@@ -33,10 +33,6 @@ def are_rows_approx_equal(r1: Row, r2: Row, precision: float, allow_nan_equality
     allEqual = True
     for key in d1.keys() & d2.keys():
         if isinstance(d1[key], float) and isinstance(d2[key], float):
-            # print("nan check {} {} if test {}".format(d1[key], d2[key], allow_nan_equality
-            #                                          and not(nan_safe_approx_equality(d1[key], d2[key], precision))))
-            # print("allow_nan_equality {} nan_data_test {}".format(allow_nan_equality, not(nan_safe_approx_equality(d1[key], d2[key], precision))))
-            # print("float_diff {}".format(abs(d1[key] - d2[key]) ))
             if allow_nan_equality and not(nan_safe_approx_equality(d1[key], d2[key], precision)):
                 allEqual = False
             elif not(allow_nan_equality) and math.isnan(abs(d1[key] - d2[key])):
