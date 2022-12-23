@@ -12,7 +12,7 @@ Fun fact: "chispa" means Spark in Spanish ;)
 
 Install the latest version with `pip install chispa`.
 
-If you use Poetry, add this library as a development dependency with `poetry add chispa --dev`.
+If you use Poetry, add this library as a development dependency with `poetry add chispa -G dev`.
 
 ## Column equality
 
