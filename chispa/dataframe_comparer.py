@@ -12,7 +12,7 @@ class DataFramesNotEqualError(Exception):
 
 
 def assert_df_equality(df1, df2, ignore_nullable=False, transforms=None, allow_nan_equality=False,
-                       ignore_column_order=False, ignore_row_order=False, ignore_schema=False):
+                       ignore_column_order=False, ignore_row_order=False, ignore_schema=False, compare_columns_on_error=None):
     if transforms is None:
         transforms = []
     if ignore_column_order:
@@ -23,6 +23,8 @@ def assert_df_equality(df1, df2, ignore_nullable=False, transforms=None, allow_n
     df2 = reduce(lambda acc, fn: fn(acc), transforms, df2)
     if not ignore_schema:
         assert_schema_equality(df1.schema, df2.schema, ignore_nullable)
+    if compare_columns_on_error:
+        assert_generic_rows_equality(df1, df2, are_rows_equal_enhanced, [True], compare_columns_on_error)
     if allow_nan_equality:
         assert_generic_rows_equality(df1, df2, are_rows_equal_enhanced, [True])
     else:
@@ -57,7 +59,7 @@ def assert_approx_df_equality(df1, df2, precision, ignore_nullable=False, transf
         assert_basic_rows_equality(df1, df2)
 
 
-def assert_generic_rows_equality(df1, df2, row_equality_fun, row_equality_fun_args):
+def assert_generic_rows_equality(df1, df2, row_equality_fun, row_equality_fun_args, compare_columns_on_error):
     df1_rows = df1.collect()
     df2_rows = df2.collect()
     zipped = list(six.moves.zip_longest(df1_rows, df2_rows))
@@ -77,7 +79,15 @@ def assert_generic_rows_equality(df1, df2, row_equality_fun, row_equality_fun_ar
         else:
             allRowsEqual = False
             t.add_row([r1, r2])
-    if allRowsEqual == False:
+    if allRowsEqual == False and not compare_columns_on_error:
+        raise DataFramesNotEqualError("\n" + t.get_string())
+    if allRowsEqual == False and compare_columns_on_error:
+        for name in df1.schema.names[0:compare_columns_on_error]:
+            try:
+                assert_df_equality(df1.select(name), df2.select(name), ignore_row_order=True)
+            except DataFramesNotEqualError as e:
+                print(e)
+                continue
         raise DataFramesNotEqualError("\n" + t.get_string())
 
 
