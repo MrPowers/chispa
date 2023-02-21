@@ -1,6 +1,8 @@
 # chispa
 
-![CI](https://github.com/MrPowers/chispa/workflows/CI/badge.svg?branch=master)
+![![image](https://github.com/MrPowers/chispa/workflows/build/badge.svg)](https://github.com/MrPowers/chispa/actions/workflows/ci.yml/badge.svg)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/chispa)
+[![PyPI version](https://badge.fury.io/py/chispa.svg)](https://badge.fury.io/py/chispa)
 
 chispa provides fast PySpark test helper methods that output descriptive error messages.
 
