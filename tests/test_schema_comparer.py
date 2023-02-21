@@ -109,6 +109,15 @@ def describe_are_schemas_equal_ignore_nullable():
            StructField("age", IntegerType(), False)])
         assert are_schemas_equal_ignore_nullable(s1, s2) == False
 
+    def it_returns_false_when_columns_have_different_order():
+        s1 = StructType([
+           StructField("blah", StringType(), True),
+           StructField("age", IntegerType(), True)])
+        s2 = StructType([
+           StructField("age", IntegerType(), False),
+           StructField("blah", StringType(), True)])
+        assert are_schemas_equal_ignore_nullable(s1, s2) == False
+
 
 def describe_are_structfield_types_equal_ignore_nullable():
     def it_returns_true_when_only_nullable_flag_is_different_within_array_element():

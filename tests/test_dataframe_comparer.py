@@ -27,6 +27,15 @@ def describe_assert_df_equality():
         assert_df_equality(df1, df2, ignore_schema=True)
 
 
+    def it_raises_when_ignoring_schema_for_mismatched_dfs():
+        data1 = [(1.0, "jose"), (1.1, "li"), (1.2, "laura"), (None, None)]
+        df1 = spark.createDataFrame(data1, ["num", "expected_name"])
+        data2 = [("li", 1.05), ("laura", 1.2), (None, None), ("jose", 1.0)]
+        df2 = spark.createDataFrame(data2, ["another_name", "same_num"])
+        with pytest.raises(DataFramesNotEqualError):
+            assert_df_equality(df1, df2, 0.1, ignore_schema=True)
+
+
     def it_can_work_with_different_row_orders():
         data1 = [(1, "jose"), (2, "li")]
         df1 = spark.createDataFrame(data1, ["num", "name"])
@@ -165,6 +174,15 @@ def describe_assert_approx_df_equality():
         df2 = spark.createDataFrame(data2, ["num", "expected_name"])
         with pytest.raises(DataFramesNotEqualError) as e_info:
             assert_approx_df_equality(df1, df2, 0.1)
+
+
+    def it_throws_with_with_mismatch_when_schema_is_ignored():
+        data1 = [(1.0, "jose"), (1.1, "li"), (1.2, "laura"), (None, None)]
+        df1 = spark.createDataFrame(data1, ["num", "expected_name"])
+        data2 = [("li", 1.05), ("laura", 1.2), (None, None), ("jose", 1.0)]
+        df2 = spark.createDataFrame(data2, ["another_name", "same_num"])
+        with pytest.raises(DataFramesNotEqualError) as e_info:
+            assert_approx_df_equality(df1, df2, 0.1, ignore_schema=True)
 
 
     def it_does_not_throw_with_no_mismatch():
