@@ -1,6 +1,9 @@
-name: CI
+name: Unit tests
 
-on: [push]
+on:
+  push:
+    branches:
+    - main
 
 jobs:
 
@@ -12,13 +15,13 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Set up Python 3.7
+      - name: Set up Python 3.9
         uses: actions/setup-python@v2
         with:
-          python-version: 3.7
+          python-version: 3.9
 
       - name: Install Poetry
-        uses: snok/install-poetry@v1.1.1
+        uses: snok/install-poetry@v1
 
       - name: Cache Poetry virtualenv
         uses: actions/cache@v1
@@ -26,6 +29,14 @@ jobs:
         with:
           path: ~/.virtualenvs
           key: poetry-${{ hashFiles('**/poetry.lock') }}
+          restore-keys: |
+            poetry-${{ hashFiles('**/poetry.lock') }}
+      - name: Install dependencies
+        run: poetry install
+        if: steps.cache.outputs.cache-hit != 'true'
+
+      - name: Run tests with pytest
+        run: poetry run pytest
           restore-keys: |
             poetry-${{ hashFiles('**/poetry.lock') }}
 
