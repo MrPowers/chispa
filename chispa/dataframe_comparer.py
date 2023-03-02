@@ -50,7 +50,7 @@ def assert_approx_df_equality(df1, df2, precision, ignore_nullable=False, transf
     if not ignore_schema:
         assert_schema_equality(df1.schema, df2.schema, ignore_nullable)
     if precision != 0:
-        assert_generic_rows_equality(df1, df2, are_rows_approx_equal, [precision, allow_nan_equality])
+        assert_generic_rows_equality(df1, df2, are_rows_approx_equal, [precision, allow_nan_equality, ignore_schema])
     elif allow_nan_equality:
         assert_generic_rows_equality(df1, df2, are_rows_equal_enhanced, [True])
     else:
