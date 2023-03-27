@@ -6,13 +6,24 @@ authors = ["MrPowers <matthewkevinpowers@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = ">=3.5"
+python = ">=3.7,<4.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "3.2.2"
 pytest_describe = "^1.0.0"
 pyspark = ">2.0.0"
 findspark = "1.4.2"
+
+[tool.poetry.group.mkdocs]
+optional = true
+
+[tool.poetry.group.mkdocs.dependencies]
+mkdocstrings-python = "^0.8.3"
+mkdocs-gen-files = "^0.4.0"
+mkdocs-literate-nav = "^0.6.0"
+mkdocs-section-index = "^0.3.5"
+markdown-include = "^0.8.1"
+mkdocs = "^1.4.2"
 
 [build-system]
 requires = ["poetry-core"]

@@ -1,0 +1,28 @@
+site_name: Chispa
+
+theme:
+  name: "readthedocs"
+
+plugins:
+  - search
+  - gen-files:
+      scripts:
+        - docs/gen_ref_pages.py
+  - section-index
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          options:
+            docstring_style: sphinx
+            docstring_options:
+              show_if_no_docstring: true
+            show_source: true
+
+nav:
+  - Chispa: index.md
+  - API Docs: reference/SUMMARY.md
+
+markdown_extensions:
+    - markdown_include.include:
+        base_path: .

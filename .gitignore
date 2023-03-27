@@ -11,3 +11,12 @@ __pycache__/
 *.py[cod]
 
 .pytest_cache/
+
+# MKDocs
+site
+
+# VSCode
+.vscode
+
+# Emacs
+.dir-locals.el
