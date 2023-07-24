@@ -311,6 +311,14 @@ This library requires you to set a flag to consider two NaN values to be equal.
 assert_df_equality(df1, df2, allow_nan_equality=True)
 ```
 
+### Underline differences within rows
+
+You can choose to underline columns within a row that are different by setting `underline_cells` to True, i.e.:
+
+```python
+assert_df_equality(df1, df2, underline_cells=True)
+```
+
 ## Approximate column equality
 
 We can check if columns are approximately equal, which is especially useful for floating number comparisons.
