@@ -10,7 +10,7 @@ class DataFramesNotEqualError(Exception):
 
 
 def assert_df_equality(df1, df2, ignore_nullable=False, transforms=None, allow_nan_equality=False,
-                       ignore_column_order=False, ignore_row_order=False):
+                       ignore_column_order=False, ignore_row_order=False, underline_cells=False):
     if transforms is None:
         transforms = []
     if ignore_column_order:
@@ -21,9 +21,11 @@ def assert_df_equality(df1, df2, ignore_nullable=False, transforms=None, allow_n
     df2 = reduce(lambda acc, fn: fn(acc), transforms, df2)
     assert_schema_equality(df1.schema, df2.schema, ignore_nullable)
     if allow_nan_equality:
-        assert_generic_rows_equality(df1.collect(), df2.collect(), are_rows_equal_enhanced, [True])
+        assert_generic_rows_equality(
+            df1.collect(), df2.collect(), are_rows_equal_enhanced, [True], underline_cells=underline_cells)
     else:
-        assert_basic_rows_equality(df1.collect(), df2.collect())
+        assert_basic_rows_equality(
+            df1.collect(), df2.collect(), underline_cells=underline_cells)
 
 
 def are_dfs_equal(df1, df2):
@@ -51,5 +53,3 @@ def assert_approx_df_equality(df1, df2, precision, ignore_nullable=False, transf
         assert_generic_rows_equality(df1.collect(), df2.collect(), are_rows_equal_enhanced, [True])
     else:
         assert_basic_rows_equality(df1.collect(), df2.collect())
-
-
