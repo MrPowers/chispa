@@ -223,11 +223,14 @@ Here's the error message you'll see if you run `assert_df_equality(df1, df2)`, w
 
 ![ignore_column_order_false](https://github.com/MrPowers/chispa/blob/main/images/ignore_column_order_false.png)
 
-### Ignore nullability
+### Ignore field nullability and/or metadata
 
-Each column in a schema has three properties: a name, data type, and nullable property.  The column can accept null values if `nullable` is set to true.
+Each column in a schema has four properties: a name, data type, nullable property, and metadata.  
+The column can accept null values if `nullable` is set to true. It can also have metadata, which 
+is a dictionary of key-value pairs.
 
-You'll sometimes want to ignore the nullable property when making DataFrame comparisons.
+You'll sometimes want to ignore the nullable property and/or metadata when making DataFrame 
+comparisons.
 
 Suppose you have the following `df1`:
 
@@ -274,6 +277,21 @@ You can ignore the nullable property when assessing equality by adding a flag:
 
 ```python
 assert_df_equality(df1, df2, ignore_nullable=True)
+```
+
+You can also ignore the field metadata when assessing equality by adding a flag:
+
+```python
+def ignore_metadata_property():
+    s1 = StructType([
+       StructField("name", StringType(), True),
+       StructField("age", IntegerType(), True)])
+    df1 = spark.createDataFrame([("juan", 7), ("bruna", 8)], s1)
+    s2 = StructType([
+       StructField("name", StringType(), True),
+       StructField("age", IntegerType(), True, metadata={"some": "metadata"})])
+    df2 = spark.createDataFrame([("juan", 7), ("bruna", 8)], s2)
+    assert_df_equality(df1, df2, ignore_metadata=True)
 ```
 
 Elements contained within an `ArrayType()` also have a nullable property, in addition to the nullable property of the column schema. These are also ignored when passing `ignore_nullable=True`.
