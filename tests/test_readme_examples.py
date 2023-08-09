@@ -44,6 +44,7 @@ def describe_column_equality():
             assert_column_equality(df, "clean_name", "expected_name")
 
 
+
 def describe_dataframe_equality():
     def test_remove_non_word_characters_long():
         source_data = [
@@ -132,6 +133,23 @@ def describe_dataframe_equality():
         data2 = [(float('nan'), "jose"), (2.0, "li")]
         df2 = spark.createDataFrame(data2, ["num", "name"])
         assert_df_equality(df1, df2, allow_nan_equality=True)
+
+    # def it_prints_underline_message():
+    #     data = [
+    #         ("jose", 42),
+    #         ("li", 99),
+    #         ("rick", 28),
+    #         (None, None)
+    #     ]
+    #     df1 = spark.createDataFrame(data, ["firstname", "age"])
+    #     data = [
+    #         ("lou", 42),
+    #         ("li", 99),
+    #         ("rick", 66),
+    #         (None, None)
+    #     ]
+    #     df2 = spark.createDataFrame(data, ["firstname", "age"])
+    #     assert_df_equality(df1, df2, underline_cells=True)
 
 
 def describe_assert_approx_column_equality():

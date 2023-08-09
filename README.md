@@ -319,6 +319,8 @@ You can choose to underline columns within a row that are different by setting `
 assert_df_equality(df1, df2, underline_cells=True)
 ```
 
+![DfsNotEqualUnderlined](https://github.com/MrPowers/chispa/blob/main/images/df_not_equal_underlined.png)
+
 ## Approximate column equality
 
 We can check if columns are approximately equal, which is especially useful for floating number comparisons.
