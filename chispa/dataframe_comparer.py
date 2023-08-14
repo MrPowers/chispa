@@ -59,8 +59,8 @@ def assert_approx_df_equality(df1, df2, precision, ignore_nullable=False, transf
     df2 = reduce(lambda acc, fn: fn(acc), transforms, df2)
     assert_schema_equality(df1.schema, df2.schema, ignore_nullable)
     if precision != 0:
-        assert_generic_rows_equality(df1.collect(), df2.collect(), are_rows_approx_equal, [precision, allow_nan_equality])
+        assert_generic_rows_equality(df1.collect(), df2.collect(), are_rows_approx_equal, [precision, allow_nan_equality], color_scheme=default_colour_scheme)
     elif allow_nan_equality:
-        assert_generic_rows_equality(df1.collect(), df2.collect(), are_rows_equal_enhanced, [True])
+        assert_generic_rows_equality(df1.collect(), df2.collect(), are_rows_equal_enhanced, [True], color_scheme=default_colour_scheme)
     else:
         assert_basic_rows_equality(df1.collect(), df2.collect())
