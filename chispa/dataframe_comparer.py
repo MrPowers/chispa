@@ -9,8 +9,19 @@ class DataFramesNotEqualError(Exception):
    pass
 
 
+default_colour_scheme = {
+   "default":"light_red",
+   "matched":"light_blue",
+   "underlined":"green"    
+}
+
 def assert_df_equality(df1, df2, ignore_nullable=False, transforms=None, allow_nan_equality=False,
-                       ignore_column_order=False, ignore_row_order=False, underline_cells=False):
+                       ignore_column_order=False, ignore_row_order=False, underline_cells=False, color_scheme=None):
+    if color_scheme is None:
+        color_scheme = default_colour_scheme
+    else:
+        if ("default" not in color_scheme.keys()) or ("matched" not in color_scheme.keys()) or ("underlined" not in color_scheme.keys()):
+            raise Exception("Color scheme requires keys:'default', 'matched' and 'underlined'.")
     if transforms is None:
         transforms = []
     if ignore_column_order:
@@ -22,10 +33,10 @@ def assert_df_equality(df1, df2, ignore_nullable=False, transforms=None, allow_n
     assert_schema_equality(df1.schema, df2.schema, ignore_nullable)
     if allow_nan_equality:
         assert_generic_rows_equality(
-            df1.collect(), df2.collect(), are_rows_equal_enhanced, [True], underline_cells=underline_cells)
+            df1.collect(), df2.collect(), are_rows_equal_enhanced, [True], color_scheme=color_scheme, underline_cells=underline_cells)
     else:
         assert_basic_rows_equality(
-            df1.collect(), df2.collect(), underline_cells=underline_cells)
+            df1.collect(), df2.collect(), color_scheme=color_scheme, underline_cells=underline_cells)
 
 
 def are_dfs_equal(df1, df2):
