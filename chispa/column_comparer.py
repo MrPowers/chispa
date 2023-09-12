@@ -16,8 +16,8 @@ def assert_column_equality(df, col_name1, col_name2):
         t = PrettyTable([col_name1, col_name2])
         for elements in zipped:
             if elements[0] == elements[1]:
-                first = bcolors.LightBlue + str(elements[0]) + bcolors.LightRed
-                second = bcolors.LightBlue + str(elements[1]) + bcolors.LightRed
+                first = bcolors.light_blue + str(elements[0]) + bcolors.light_red
+                second = bcolors.light_blue + str(elements[1]) + bcolors.light_red
                 t.add_row([first, second])
             else:
                 t.add_row([str(elements[0]), str(elements[1])])
@@ -32,8 +32,8 @@ def assert_approx_column_equality(df, col_name1, col_name2, precision):
     zipped = list(zip(colName1Elements, colName2Elements))
     t = PrettyTable([col_name1, col_name2])
     for elements in zipped:
-        first = bcolors.LightBlue + str(elements[0]) + bcolors.LightRed
-        second = bcolors.LightBlue + str(elements[1]) + bcolors.LightRed
+        first = bcolors.light_blue + str(elements[0]) + bcolors.light_red
+        second = bcolors.light_blue + str(elements[1]) + bcolors.light_red
         # when one is None and the other isn't, they're not equal
         if (elements[0] == None and elements[1] != None) or (elements[0] != None and elements[1] == None):
             all_rows_equal = False

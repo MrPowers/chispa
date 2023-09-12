@@ -321,6 +321,21 @@ assert_df_equality(df1, df2, underline_cells=True)
 
 ![DfsNotEqualUnderlined](https://github.com/MrPowers/chispa/blob/main/images/df_not_equal_underlined.png)
 
+### Changing the default color scheme 
+
+You can choose to change the default color scheme of the output font when comparing dataframes. 
+
+```python
+colour_scheme = {
+   "default":"light_red",
+   "matched":"light_blue",
+   "underlined":"purple"    
+}
+assert_df_equality(df1, df2, allow_nan_equality=False, underline_cells=True, color_scheme=colour_scheme)
+```
+
+A list of available colors are available in the [`bcolors` class](https://github.com/MrPowers/chispa/blob/main/chispa/bcolors.py#L1).
+
 ## Approximate column equality
 
 We can check if columns are approximately equal, which is especially useful for floating number comparisons.
