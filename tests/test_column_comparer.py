@@ -1,6 +1,6 @@
 import pytest
 
-from .spark import *
+from .spark import spark
 from chispa import *
 
 

@@ -124,7 +124,7 @@ def describe_are_schemas_equal_ignore_nullable():
         assert are_schemas_equal_ignore_nullable(s1, s2) == False
 
 
-def describe_are_structfield_types_equal_ignore_nullable():
+def describe_are_structfields_equal():
     def it_returns_true_when_only_nullable_flag_is_different_within_array_element():
         s1 = StructField("coords", ArrayType(DoubleType(), True), True)
         s2 = StructField("coords", ArrayType(DoubleType(), False), True)
@@ -159,3 +159,22 @@ def describe_are_structfield_types_equal_ignore_nullable():
         s1 = StructField("coords", StructType([StructField("hello", DoubleType(), True)]), True)
         s2 = StructField("coords", StructType([StructField("hello", DoubleType(), False)]), True)
         assert are_structfields_equal(s1, s2, True) == True
+    def it_returns_false_when_metadata_differs():
+        s1 = StructField("coords", StringType(), True, {"hi": "whatever"})
+        s2 = StructField("coords", StringType(), True, {"hi": "no"})
+        assert are_structfields_equal(s1, s2, ignore_nullability=True, ignore_metadata=False) is False
+
+    def it_allows_metadata_to_be_ignored():
+        s1 = StructField("coords", StringType(), True, {"hi": "whatever"})
+        s2 = StructField("coords", StringType(), True, {"hi": "no"})
+        assert are_structfields_equal(s1, s2, ignore_nullability=False, ignore_metadata=True) is True
+
+    def it_allows_nullability_and_metadata_to_be_ignored():
+        s1 = StructField("coords", StringType(), True, {"hi": "whatever"})
+        s2 = StructField("coords", StringType(), False, {"hi": "no"})
+        assert are_structfields_equal(s1, s2, ignore_nullability=True, ignore_metadata=True) is True
+
+    def it_returns_true_when_metadata_is_the_same():
+        s1 = StructField("coords", StringType(), True, {"hi": "whatever"})
+        s2 = StructField("coords", StringType(), True, {"hi": "whatever"})
+        assert are_structfields_equal(s1, s2, ignore_nullability=True, ignore_metadata=False) is True

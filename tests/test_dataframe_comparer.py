@@ -5,6 +5,7 @@ from chispa import *
 from chispa.dataframe_comparer import are_dfs_equal
 from chispa.schema_comparer import SchemasNotEqualError
 import math
+from pyspark.sql.types import StringType, IntegerType, StructType, StructField
 
 
 def describe_assert_df_equality():
@@ -15,7 +16,6 @@ def describe_assert_df_equality():
         df2 = spark.createDataFrame(data2, ["name", "expected_name"])
         with pytest.raises(SchemasNotEqualError) as e_info:
             assert_df_equality(df1, df2)
-
 
 
     def it_can_work_with_different_row_orders():
@@ -112,6 +112,46 @@ def describe_assert_df_equality():
         df2 = spark.createDataFrame(data2, ["num", "name"])
         with pytest.raises(DataFramesNotEqualError) as e_info:
             assert_df_equality(df1, df2, allow_nan_equality=False)
+
+
+    def it_can_ignore_metadata():
+        rows_data = [("jose", 1), ("li", 2), ("luisa", 3)]
+        schema1 = StructType(
+            [
+                StructField("name", StringType(), True, {"hi": "no"}),
+                StructField("age", IntegerType(), True),
+            ]
+        )
+        schema2 = StructType(
+            [
+                StructField("name", StringType(), True, {"hi": "whatever"}),
+                StructField("age", IntegerType(), True),
+            ]
+        )
+        df1 = spark.createDataFrame(rows_data, schema1)
+        df2 = spark.createDataFrame(rows_data, schema2)
+        assert_df_equality(df1, df2, ignore_metadata=True)
+
+
+    def it_catches_mismatched_metadata():
+        rows_data = [("jose", 1), ("li", 2), ("luisa", 3)]
+        schema1 = StructType(
+            [
+                StructField("name", StringType(), True, {"hi": "no"}),
+                StructField("age", IntegerType(), True),
+            ]
+        )
+        schema2 = StructType(
+            [
+                StructField("name", StringType(), True, {"hi": "whatever"}),
+                StructField("age", IntegerType(), True),
+            ]
+        )
+        df1 = spark.createDataFrame(rows_data, schema1)
+        df2 = spark.createDataFrame(rows_data, schema2)
+        with pytest.raises(SchemasNotEqualError) as e_info:
+            assert_df_equality(df1, df2)
+
 
 
 def describe_are_dfs_equal():
