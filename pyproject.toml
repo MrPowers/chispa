@@ -6,13 +6,13 @@ authors = ["MrPowers <matthewkevinpowers@gmail.com>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = ">=3.7,<4.0"
+python = ">=3.8,<4.0"
 
 [tool.poetry.dev-dependencies]
-pytest = "3.2.2"
-pytest_describe = "^1.0.0"
+pytest = "7.4.2"
 pyspark = ">2.0.0"
 findspark = "1.4.2"
+pytest-describe = "^2.1.0"
 
 [tool.poetry.group.mkdocs]
 optional = true

@@ -1,4 +1,4 @@
-import chispa.six as six
+from itertools import zip_longest
 from chispa.prettytable import PrettyTable
 from chispa.bcolors import *
 import chispa
@@ -12,7 +12,7 @@ def assert_basic_rows_equality(rows1, rows2, underline_cells=False):
         num_columns = len(row_column_names)
     if rows1 != rows2:
         t = PrettyTable(["df1", "df2"])
-        zipped = list(six.moves.zip_longest(rows1, rows2))
+        zipped = list(zip_longest(rows1, rows2))
         for r1, r2 in zipped:
             if r1 == r2:
                 t.add_row([blue(r1), blue(r2)])
@@ -28,7 +28,7 @@ def assert_basic_rows_equality(rows1, rows2, underline_cells=False):
 def assert_generic_rows_equality(rows1, rows2, row_equality_fun, row_equality_fun_args, underline_cells=False):
     df1_rows = rows1
     df2_rows = rows2
-    zipped = list(six.moves.zip_longest(df1_rows, df2_rows))
+    zipped = list(zip_longest(df1_rows, df2_rows))
     t = PrettyTable(["df1", "df2"])
     allRowsEqual = True
     if underline_cells:
