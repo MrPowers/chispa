@@ -5,6 +5,7 @@ chispa.egg-info/
 tmp/
 .idea/
 .DS_Store
+.python_version
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

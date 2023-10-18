@@ -1,6 +1,6 @@
 from chispa.prettytable import PrettyTable
 from chispa.bcolors import *
-import chispa.six as six
+from itertools import zip_longest
 
 
 class SchemasNotEqualError(Exception):
@@ -19,7 +19,7 @@ def assert_schema_equality_full(s1, s2, ignore_nullable=False, ignore_metadata=F
     def inner(s1, s2, ignore_nullable, ignore_metadata):
         if len(s1) != len(s2):
             return False
-        zipped = list(six.moves.zip_longest(s1, s2))
+        zipped = list(zip_longest(s1, s2))
         for sf1, sf2 in zipped:
             if not are_structfields_equal(sf1, sf2, ignore_nullable, ignore_metadata):
                 return False
@@ -27,7 +27,7 @@ def assert_schema_equality_full(s1, s2, ignore_nullable=False, ignore_metadata=F
 
     if not inner(s1, s2, ignore_nullable, ignore_metadata):
         t = PrettyTable(["schema1", "schema2"])
-        zipped = list(six.moves.zip_longest(s1, s2))
+        zipped = list(zip_longest(s1, s2))
         for sf1, sf2 in zipped:
             if are_structfields_equal(sf1, sf2, True):
                 t.add_row([blue(sf1), blue(sf2)])
@@ -42,7 +42,7 @@ def assert_schema_equality_full(s1, s2, ignore_nullable=False, ignore_metadata=F
 def assert_basic_schema_equality(s1, s2):
     if s1 != s2:
         t = PrettyTable(["schema1", "schema2"])
-        zipped = list(six.moves.zip_longest(s1, s2))
+        zipped = list(zip_longest(s1, s2))
         for sf1, sf2 in zipped:
             if sf1 == sf2:
                 t.add_row([blue(sf1), blue(sf2)])
@@ -56,7 +56,7 @@ def assert_basic_schema_equality(s1, s2):
 def assert_schema_equality_ignore_nullable(s1, s2):
     if not are_schemas_equal_ignore_nullable(s1, s2):
         t = PrettyTable(["schema1", "schema2"])
-        zipped = list(six.moves.zip_longest(s1, s2))
+        zipped = list(zip_longest(s1, s2))
         for sf1, sf2 in zipped:
             if are_structfields_equal(sf1, sf2, True):
                 t.add_row([blue(sf1), blue(sf2)])
@@ -69,7 +69,7 @@ def assert_schema_equality_ignore_nullable(s1, s2):
 def are_schemas_equal_ignore_nullable(s1, s2):
     if len(s1) != len(s2):
         return False
-    zipped = list(six.moves.zip_longest(s1, s2))
+    zipped = list(zip_longest(s1, s2))
     for sf1, sf2 in zipped:
         if not are_structfields_equal(sf1, sf2, True):
             return False
