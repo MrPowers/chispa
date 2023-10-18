@@ -456,9 +456,6 @@ TODO: Need to benchmark these methods vs. the spark-testing-base ones
 
 ## Vendored dependencies
 
-These dependencies are vendored:
-
-* [six](https://github.com/benjaminp/six)
 * [PrettyTable](https://github.com/jazzband/prettytable)
 
 The dependencies are vendored to save you from dependency hell.
