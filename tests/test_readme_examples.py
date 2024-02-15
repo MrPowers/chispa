@@ -1,5 +1,6 @@
 import pytest
 
+from chispa.schema_comparer import assert_schema_equality, tree_string
 from chispa import *
 import pyspark.sql.functions as F
 from chispa.schema_comparer import SchemasNotEqualError
@@ -229,5 +230,63 @@ def describe_schema_mismatch_messages():
             (None, None)
         ]
         df2 = spark.createDataFrame(data2, ["num", "num2"])
+        # assert_df_equality(df1, df2)
         with pytest.raises(SchemasNotEqualError) as e_info:
             assert_df_equality(df1, df2)
+
+
+def describe_schema_comparer():
+    # def test_large_schema_error_messages():
+    #         schema1 = StructType(
+    #             [
+    #                 StructField("id", IntegerType(), True),
+    #                 StructField(
+    #                     "details",
+    #                     StructType(
+    #                         [
+    #                             StructField("name", StringType(), True),
+    #                             StructField("address", StringType(), True),
+    #                             StructField("age", IntegerType(), True),
+    #                         ]
+    #                     ),
+    #                     True,
+    #                 ),
+    #             ]
+    #         )
+    #         schema2 = StructType(
+    #             [
+    #                 StructField("id", IntegerType(), True),
+    #                 StructField(
+    #                     "details",
+    #                     StructType(
+    #                         [
+    #                             StructField("nombre", StringType(), True),
+    #                             StructField("address", StringType(), True),
+    #                             StructField("age", IntegerType(), True),
+    #                         ]
+    #                     ),
+    #                     True,
+    #                 ),
+    #             ]
+    #         )
+    #         assert_schema_equality(schema1, schema2)
+
+
+    def test_tree_string():
+            schema1 = StructType(
+                [
+                    StructField("id", IntegerType(), True),
+                    StructField(
+                        "details",
+                        StructType(
+                            [
+                                StructField("name", StringType(), True),
+                                StructField("address", StringType(), True),
+                                StructField("age", IntegerType(), True),
+                            ]
+                        ),
+                        True,
+                    ),
+                ]
+            )
+            print(tree_string(schema1))
