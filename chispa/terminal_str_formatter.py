@@ -15,6 +15,3 @@ def format_string(input, formats):
         s = formatting[format]
         formatted = s + str(formatted) + s
     return formatting["nc"] + str(formatted) + formatting["nc"]
-
-def format_mismatched_cell(input_text: str, mismatched_cells) -> str:
-    return format_string(input_text, mismatched_cells)

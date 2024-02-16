@@ -4,19 +4,19 @@ from chispa.bcolors import *
 import chispa
 from pyspark.sql.types import Row
 from typing import List
-from chispa.terminal_str_formatter import format_string, format_mismatched_cell
+from chispa.terminal_str_formatter import format_string
 from chispa.default_formats import DefaultFormats
 
 
 def assert_basic_rows_equality(rows1, rows2, underline_cells=False, formats=DefaultFormats()):
-    if len(rows1) != len(rows2):
-        raise chispa.DataFramesNotEqualError("\n" + "Number of rows is not equal")
     if rows1 != rows2:
         t = PrettyTable(["df1", "df2"])
         zipped = list(six.moves.zip_longest(rows1, rows2))
         for r1, r2 in zipped:
-            if r1 == r2:
-                t.add_row([format_string(r1, formats.matched_rows), format_string(r2, formats.matched_rows)])
+            if r1 is None and r2 is not None:
+                t.add_row([None, format_string(r2, formats.mismatched_rows)])
+            elif r1 is not None and r2 is None:
+                t.add_row([format_string(r1, formats.mismatched_rows), None])
             else:
                 r_zipped = list(six.moves.zip_longest(r1.__fields__, r2.__fields__))
                 r1_string = []
@@ -28,8 +28,11 @@ def assert_basic_rows_equality(rows1, rows2, underline_cells=False, formats=Defa
                     else:
                         r1_string.append(format_string(f"{r1_field}='{r1[r1_field]}'", formats.matched_cells))
                         r2_string.append(format_string(f"{r2_field}='{r2[r2_field]}'", formats.matched_cells))
-                r1_res = "Row(" + ", ".join(r1_string) + ")"
-                r2_res = "Row(" + ", ".join(r2_string) + ")"
+                # r1_res = format_string("Row(", formats.mismatched_rows) + ", ".join(r1_string) + format_string(")", formats.mismatched_rows)
+                # r2_res = format_string("Row(", formats.mismatched_rows) + ", ".join(r2_string) + format_string(")", formats.mismatched_rows)
+                r1_res = ", ".join(r1_string)
+                r2_res = ", ".join(r2_string)
+
                 t.add_row([r1_res, r2_res])
         raise chispa.DataFramesNotEqualError("\n" + t.get_string())
 
