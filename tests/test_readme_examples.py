@@ -87,9 +87,9 @@ def describe_dataframe_equality():
             (None, None)
         ]
         expected_df = spark.createDataFrame(expected_data, ["name", "clean_name"])
-        assert_df_equality(actual_df, expected_df)
-        # with pytest.raises(DataFramesNotEqualError) as e_info:
-        #     assert_df_equality(actual_df, expected_df)
+        # assert_df_equality(actual_df, expected_df)
+        with pytest.raises(DataFramesNotEqualError) as e_info:
+            assert_df_equality(actual_df, expected_df)
 
 
     def ignore_row_order():
@@ -151,7 +151,8 @@ def describe_dataframe_equality():
             ("rick", 66),
         ]
         df2 = spark.createDataFrame(data, ["firstname", "age"])
-        assert_df_equality(df1, df2, underline_cells=True)
+        with pytest.raises(DataFramesNotEqualError) as e_info:
+            assert_df_equality(df1, df2, underline_cells=True)
 
 
 def describe_assert_approx_column_equality():
