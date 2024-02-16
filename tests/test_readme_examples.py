@@ -137,18 +137,18 @@ def describe_dataframe_equality():
 
     def it_prints_underline_message():
         data = [
+            (None, None),
             ("jose", 42),
             ("li", 99),
             ("rick", 28),
-            (None, None),
             ("funny", 33),
         ]
         df1 = spark.createDataFrame(data, ["firstname", "age"])
         data = [
+            (None, None),
             ("lou", 42),
             ("li", 99),
             ("rick", 66),
-            (None, None)
         ]
         df2 = spark.createDataFrame(data, ["firstname", "age"])
         assert_df_equality(df1, df2, underline_cells=True)
