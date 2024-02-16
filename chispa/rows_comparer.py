@@ -4,9 +4,11 @@ from chispa.bcolors import *
 import chispa
 from pyspark.sql.types import Row
 from typing import List
+from chispa.terminal_str_formatter import format_string, format_mismatched_cell
+from chispa.default_formats import DefaultFormats
 
 
-def assert_basic_rows_equality(rows1, rows2, underline_cells=False):
+def assert_basic_rows_equality(rows1, rows2, underline_cells=False, formats=DefaultFormats()):
     if underline_cells:
         row_column_names = rows1[0].__fields__
         num_columns = len(row_column_names)
@@ -15,7 +17,7 @@ def assert_basic_rows_equality(rows1, rows2, underline_cells=False):
         zipped = list(six.moves.zip_longest(rows1, rows2))
         for r1, r2 in zipped:
             if r1 == r2:
-                t.add_row([blue(r1), blue(r2)])
+                t.add_row([format_string(r1, formats.matched_rows), format_string(r2, formats.matched_rows)])
             else:
                 if underline_cells:
                     t.add_row(__underline_cells_in_row(
