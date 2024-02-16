@@ -9,9 +9,8 @@ from chispa.default_formats import DefaultFormats
 
 
 def assert_basic_rows_equality(rows1, rows2, underline_cells=False, formats=DefaultFormats()):
-    if underline_cells:
-        row_column_names = rows1[0].__fields__
-        num_columns = len(row_column_names)
+    if len(rows1) != len(rows2):
+        raise chispa.DataFramesNotEqualError("\n" + "Number of rows is not equal")
     if rows1 != rows2:
         t = PrettyTable(["df1", "df2"])
         zipped = list(six.moves.zip_longest(rows1, rows2))
@@ -19,11 +18,19 @@ def assert_basic_rows_equality(rows1, rows2, underline_cells=False, formats=Defa
             if r1 == r2:
                 t.add_row([format_string(r1, formats.matched_rows), format_string(r2, formats.matched_rows)])
             else:
-                if underline_cells:
-                    t.add_row(__underline_cells_in_row(
-                        r1=r1, r2=r2, row_column_names=row_column_names, num_columns=num_columns))
-                else:
-                    t.add_row([r1, r2])
+                r_zipped = list(six.moves.zip_longest(r1.__fields__, r2.__fields__))
+                r1_string = []
+                r2_string = []
+                for r1_field, r2_field in r_zipped:
+                    if r1[r1_field] != r2[r2_field]:
+                        r1_string.append(format_string(f"{r1_field}='{r1[r1_field]}'", formats.mismatched_cells))
+                        r2_string.append(format_string(f"{r2_field}='{r2[r2_field]}'", formats.mismatched_cells))
+                    else:
+                        r1_string.append(format_string(f"{r1_field}='{r1[r1_field]}'", formats.matched_cells))
+                        r2_string.append(format_string(f"{r2_field}='{r2[r2_field]}'", formats.matched_cells))
+                r1_res = "Row(" + ", ".join(r1_string) + ")"
+                r2_res = "Row(" + ", ".join(r2_string) + ")"
+                t.add_row([r1_res, r2_res])
         raise chispa.DataFramesNotEqualError("\n" + t.get_string())
 
 

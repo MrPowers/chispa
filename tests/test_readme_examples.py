@@ -87,8 +87,9 @@ def describe_dataframe_equality():
             (None, None)
         ]
         expected_df = spark.createDataFrame(expected_data, ["name", "clean_name"])
-        with pytest.raises(DataFramesNotEqualError) as e_info:
-            assert_df_equality(actual_df, expected_df)
+        assert_df_equality(actual_df, expected_df)
+        # with pytest.raises(DataFramesNotEqualError) as e_info:
+        #     assert_df_equality(actual_df, expected_df)
 
 
     def ignore_row_order():
@@ -134,22 +135,23 @@ def describe_dataframe_equality():
         df2 = spark.createDataFrame(data2, ["num", "name"])
         assert_df_equality(df1, df2, allow_nan_equality=True)
 
-    # def it_prints_underline_message():
-    #     data = [
-    #         ("jose", 42),
-    #         ("li", 99),
-    #         ("rick", 28),
-    #         (None, None)
-    #     ]
-    #     df1 = spark.createDataFrame(data, ["firstname", "age"])
-    #     data = [
-    #         ("lou", 42),
-    #         ("li", 99),
-    #         ("rick", 66),
-    #         (None, None)
-    #     ]
-    #     df2 = spark.createDataFrame(data, ["firstname", "age"])
-    #     assert_df_equality(df1, df2, underline_cells=True)
+    def it_prints_underline_message():
+        data = [
+            ("jose", 42),
+            ("li", 99),
+            ("rick", 28),
+            (None, None),
+            ("funny", 33),
+        ]
+        df1 = spark.createDataFrame(data, ["firstname", "age"])
+        data = [
+            ("lou", 42),
+            ("li", 99),
+            ("rick", 66),
+            (None, None)
+        ]
+        df2 = spark.createDataFrame(data, ["firstname", "age"])
+        assert_df_equality(df1, df2, underline_cells=True)
 
 
 def describe_assert_approx_column_equality():
