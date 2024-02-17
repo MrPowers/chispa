@@ -5,7 +5,7 @@ from dataclasses import dataclass
 class MyFormats:
     mismatched_rows = ["light_yellow"]
     matched_rows = ["cyan", "bold"]
-    mismatched_cells = ["purple", "blink"]
+    mismatched_cells = ["purple"]
     matched_cells = ["blue"]
 
 @pytest.fixture()
