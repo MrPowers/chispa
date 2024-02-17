@@ -151,8 +151,8 @@ def describe_dataframe_equality():
             ("rick", 66),
         ]
         df2 = spark.createDataFrame(data, ["firstname", "age"]) 
-        # with pytest.raises(DataFramesNotEqualError) as e_info:
-        #     assert_df_equality(df1, df2, formats=my_formats)
+        with pytest.raises(DataFramesNotEqualError) as e_info:
+            assert_df_equality(df1, df2, underline_cells=True)
 
     def it_shows_assert_basic_rows_equality(my_formats):
         data = [
@@ -231,6 +231,7 @@ def describe_assert_approx_column_equality():
             (None, None)
         ]
         df2 = spark.createDataFrame(data2, ["num", "letter"])
+        # assert_approx_df_equality(df1, df2, 0.1)
         with pytest.raises(DataFramesNotEqualError) as e_info:
             assert_approx_df_equality(df1, df2, 0.1)
 
