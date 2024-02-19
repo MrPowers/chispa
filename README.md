@@ -303,23 +303,42 @@ nan2 = float('nan')
 nan1 == nan2 # False
 ```
 
-Pandas, a popular DataFrame library, does consider NaN values to be equal by default.
-
-This library requires you to set a flag to consider two NaN values to be equal.
+pandas considers NaN values to be equal by default, but this library requires you to set a flag to consider two NaN values to be equal.
 
 ```python
 assert_df_equality(df1, df2, allow_nan_equality=True)
 ```
 
-### Underline differences within rows
+## Customize formatting
 
-You can choose to underline columns within a row that are different by setting `underline_cells` to True, i.e.:
+*Available in chispa 0.10+*.
+
+You can specify custom formats for the printed error messages as follows:
 
 ```python
-assert_df_equality(df1, df2, underline_cells=True)
+@dataclass
+class MyFormats:
+    mismatched_rows = ["light_yellow"]
+    matched_rows = ["cyan", "bold"]
+    mismatched_cells = ["purple"]
+    matched_cells = ["blue"]
+
+assert_basic_rows_equality(df1.collect(), df2.collect(), formats=MyFormats())
 ```
 
-![DfsNotEqualUnderlined](https://github.com/MrPowers/chispa/blob/main/images/df_not_equal_underlined.png)
+You can also define these formats in `conftest.py` and inject them via a fixture:
+
+```python
+@pytest.fixture()
+def my_formats():
+    return MyFormats()
+
+def test_shows_assert_basic_rows_equality(my_formats):
+  ...
+  assert_basic_rows_equality(df1.collect(), df2.collect(), formats=my_formats)
+```
+
+![custom_formats](https://github.com/MrPowers/chispa/blob/main/images/custom_formats.png)
 
 ## Approximate column equality
 

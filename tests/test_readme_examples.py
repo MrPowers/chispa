@@ -19,7 +19,7 @@ spark = (SparkSession.builder
 
 
 def describe_column_equality():
-    def it_removes_non_word_characters_short():
+    def test_removes_non_word_characters_short():
         data = [
             ("jo&&se", "jose"),
             ("**li**", "li"),
@@ -31,7 +31,7 @@ def describe_column_equality():
         assert_column_equality(df, "clean_name", "expected_name")
 
 
-    def it_removes_non_word_characters_nice_error():
+    def test_remove_non_word_characters_nice_error():
         data = [
             ("matt7", "matt"),
             ("bill&", "bill"),
@@ -40,6 +40,7 @@ def describe_column_equality():
         ]
         df = spark.createDataFrame(data, ["name", "expected_name"])\
             .withColumn("clean_name", remove_non_word_characters(F.col("name")))
+        # assert_column_equality(df, "clean_name", "expected_name")
         with pytest.raises(ColumnsNotEqualError) as e_info:
             assert_column_equality(df, "clean_name", "expected_name")
 
@@ -95,6 +96,7 @@ def describe_dataframe_equality():
     def ignore_row_order():
         df1 = spark.createDataFrame([(1,), (2,), (3,)], ["some_num"])
         df2 = spark.createDataFrame([(2,), (1,), (3,)], ["some_num"])
+        # assert_df_equality(df1, df2)
         assert_df_equality(df1, df2, ignore_row_order=True)
 
 

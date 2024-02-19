@@ -27,11 +27,11 @@ def assert_basic_rows_equality(rows1, rows2, underline_cells=False, formats=Defa
                 for r1_field, r2_field in r_zipped:
                     if r1[r1_field] != r2[r2_field]:
                         all_rows_equal = False
-                        r1_string.append(format_string(f"{r1_field}='{r1[r1_field]}'", formats.mismatched_cells))
-                        r2_string.append(format_string(f"{r2_field}='{r2[r2_field]}'", formats.mismatched_cells))
+                        r1_string.append(format_string(f"{r1_field}={r1[r1_field]}", formats.mismatched_cells))
+                        r2_string.append(format_string(f"{r2_field}={r2[r2_field]}", formats.mismatched_cells))
                     else:
-                        r1_string.append(format_string(f"{r1_field}='{r1[r1_field]}'", formats.matched_cells))
-                        r2_string.append(format_string(f"{r2_field}='{r2[r2_field]}'", formats.matched_cells))
+                        r1_string.append(format_string(f"{r1_field}={r1[r1_field]}", formats.matched_cells))
+                        r2_string.append(format_string(f"{r2_field}={r2[r2_field]}", formats.matched_cells))
                 r1_res = ", ".join(r1_string)
                 r2_res = ", ".join(r2_string)
 
@@ -64,11 +64,11 @@ def assert_generic_rows_equality(rows1, rows2, row_equality_fun, row_equality_fu
             for r1_field, r2_field in r_zipped:
                 if r1[r1_field] != r2[r2_field]:
                     all_rows_equal = False
-                    r1_string.append(format_string(f"{r1_field}='{r1[r1_field]}'", formats.mismatched_cells))
-                    r2_string.append(format_string(f"{r2_field}='{r2[r2_field]}'", formats.mismatched_cells))
+                    r1_string.append(format_string(f"{r1_field}={r1[r1_field]}", formats.mismatched_cells))
+                    r2_string.append(format_string(f"{r2_field}={r2[r2_field]}", formats.mismatched_cells))
                 else:
-                    r1_string.append(format_string(f"{r1_field}='{r1[r1_field]}'", formats.matched_cells))
-                    r2_string.append(format_string(f"{r2_field}='{r2[r2_field]}'", formats.matched_cells))
+                    r1_string.append(format_string(f"{r1_field}={r1[r1_field]}", formats.matched_cells))
+                    r2_string.append(format_string(f"{r2_field}={r2[r2_field]}", formats.matched_cells))
             r1_res = ", ".join(r1_string)
             r2_res = ", ".join(r2_string)
 
