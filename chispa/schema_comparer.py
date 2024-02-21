@@ -16,6 +16,7 @@ def assert_schema_equality(s1, s2, ignore_nullable=False, ignore_metadata=False)
 
 
 def assert_schema_equality_full(s1, s2, ignore_nullable=False, ignore_metadata=False):
+    t = PrettyTable(["schema1", "schema2"])
     def inner(s1, s2, ignore_nullable, ignore_metadata):
         if len(s1) != len(s2):
             return False
@@ -26,7 +27,6 @@ def assert_schema_equality_full(s1, s2, ignore_nullable=False, ignore_metadata=F
         return True
 
     if not inner(s1, s2, ignore_nullable, ignore_metadata):
-        t = PrettyTable(["schema1", "schema2"])
         zipped = list(six.moves.zip_longest(s1, s2))
         for sf1, sf2 in zipped:
             if are_structfields_equal(sf1, sf2, True):
@@ -109,3 +109,32 @@ def are_datatypes_equal_ignore_nullable(dt1, dt2):
             return True
     else:
         return False
+
+
+#   def treeString: String = treeString(Int.MaxValue)
+
+#   def treeString(maxDepth: Int): String = {
+#     val stringConcat = new StringConcat()
+#     stringConcat.append("root\n")
+#     val prefix = " |"
+#     val depth = if (maxDepth > 0) maxDepth else Int.MaxValue
+#     fields.foreach(field => field.buildFormattedString(prefix, stringConcat, depth))
+#     stringConcat.toString()
+#   }
+
+
+def tree_string(structtype, max_depth=10000):
+    string_concat = ""
+    string_concat = string_concat + "root\n"
+    prefix = " |"
+    depth = max_depth if (max_depth > 0) else 5000
+    for field in structtype.fields:
+        if field.dataType.typeName() == "struct":
+            buildFormattedString(field, prefix, string_concat, depth)
+        else:
+            string_concat = string_concat + field.simpleString() + "\n"
+    return string_concat
+    
+def buildFormattedString(fields, prefix, stringConcat, max_depth):    
+    for field in fields:
+        buildFormattedString(field, prefix, stringConcat, max_depth)
