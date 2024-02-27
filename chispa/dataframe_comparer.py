@@ -1,6 +1,7 @@
 from chispa.schema_comparer import assert_schema_equality
-from chispa.row_comparer import *
+from chispa.default_formats import DefaultFormats
 from chispa.rows_comparer import assert_basic_rows_equality, assert_generic_rows_equality
+from chispa.row_comparer import are_rows_equal_enhanced, are_rows_approx_equal
 from functools import reduce
 
 
@@ -10,7 +11,7 @@ class DataFramesNotEqualError(Exception):
 
 
 def assert_df_equality(df1, df2, ignore_nullable=False, transforms=None, allow_nan_equality=False,
-                       ignore_column_order=False, ignore_row_order=False, underline_cells=False, ignore_metadata=False):
+                       ignore_column_order=False, ignore_row_order=False, underline_cells=False, ignore_metadata=False, formats=DefaultFormats()):
     if transforms is None:
         transforms = []
     if ignore_column_order:
@@ -22,10 +23,10 @@ def assert_df_equality(df1, df2, ignore_nullable=False, transforms=None, allow_n
     assert_schema_equality(df1.schema, df2.schema, ignore_nullable, ignore_metadata)
     if allow_nan_equality:
         assert_generic_rows_equality(
-            df1.collect(), df2.collect(), are_rows_equal_enhanced, [True], underline_cells=underline_cells)
+            df1.collect(), df2.collect(), are_rows_equal_enhanced, [True], underline_cells=underline_cells, formats=formats)
     else:
         assert_basic_rows_equality(
-            df1.collect(), df2.collect(), underline_cells=underline_cells)
+            df1.collect(), df2.collect(), underline_cells=underline_cells, formats=formats)
 
 
 def are_dfs_equal(df1, df2):
@@ -37,7 +38,7 @@ def are_dfs_equal(df1, df2):
 
 
 def assert_approx_df_equality(df1, df2, precision, ignore_nullable=False, transforms=None, allow_nan_equality=False,
-                       ignore_column_order=False, ignore_row_order=False):
+                       ignore_column_order=False, ignore_row_order=False, formats=DefaultFormats()):
     if transforms is None:
         transforms = []
     if ignore_column_order:
@@ -48,8 +49,8 @@ def assert_approx_df_equality(df1, df2, precision, ignore_nullable=False, transf
     df2 = reduce(lambda acc, fn: fn(acc), transforms, df2)
     assert_schema_equality(df1.schema, df2.schema, ignore_nullable)
     if precision != 0:
-        assert_generic_rows_equality(df1.collect(), df2.collect(), are_rows_approx_equal, [precision, allow_nan_equality])
+        assert_generic_rows_equality(df1.collect(), df2.collect(), are_rows_approx_equal, [precision, allow_nan_equality], formats)
     elif allow_nan_equality:
-        assert_generic_rows_equality(df1.collect(), df2.collect(), are_rows_equal_enhanced, [True])
+        assert_generic_rows_equality(df1.collect(), df2.collect(), are_rows_equal_enhanced, [True], formats)
     else:
-        assert_basic_rows_equality(df1.collect(), df2.collect())
+        assert_basic_rows_equality(df1.collect(), df2.collect(), formats)
