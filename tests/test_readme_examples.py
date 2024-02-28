@@ -256,3 +256,27 @@ def describe_schema_mismatch_messages():
         df2 = spark.createDataFrame(data2, ["num", "num2"])
         with pytest.raises(SchemasNotEqualError) as e_info:
             assert_df_equality(df1, df2)
+
+
+def test_remove_non_word_characters_long_error(my_chispa):
+    source_data = [
+        ("matt7",),
+        ("bill&",),
+        ("isabela*",),
+        (None,)
+    ]
+    source_df = spark.createDataFrame(source_data, ["name"])
+    actual_df = source_df.withColumn(
+        "clean_name",
+        remove_non_word_characters(F.col("name"))
+    )
+    expected_data = [
+        ("matt7", "matt"),
+        ("bill&", "bill"),
+        ("isabela*", "isabela"),
+        (None, None)
+    ]
+    expected_df = spark.createDataFrame(expected_data, ["name", "clean_name"])
+    # my_chispa.assert_df_equality(actual_df, expected_df)
+    with pytest.raises(DataFramesNotEqualError) as e_info:
+        assert_df_equality(actual_df, expected_df)

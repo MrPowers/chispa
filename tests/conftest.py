@@ -1,5 +1,6 @@
 import pytest
 from dataclasses import dataclass
+from chispa import Chispa
 
 @dataclass
 class MyFormats:
@@ -11,3 +12,8 @@ class MyFormats:
 @pytest.fixture()
 def my_formats():
     return MyFormats()
+
+
+@pytest.fixture()
+def my_chispa():
+    return Chispa(formats=MyFormats())
