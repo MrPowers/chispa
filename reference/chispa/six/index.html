@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>Six - Chispa</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link href="../../../assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Six";
+        var mkdocs_page_input_path = "reference/chispa/six.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="../../../js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Chispa
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../..">Chispa</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../SUMMARY/">API Docs</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Chispa</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>Six</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <div class="doc doc-object doc-module">
+
+
+<a id="chispa.six"></a>
+  <div class="doc doc-contents first">
+  
+      <p>Utilities for writing code that runs on Python 2 and 3</p>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="chispa.six.Module_six_moves_urllib" class="doc doc-heading">
+        <code>Module_six_moves_urllib</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code>types.<span title="types.ModuleType">ModuleType</span></code></p>
+
+  
+      <p>Create a six.moves.urllib namespace that resembles the Python 3 namespace</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>chispa/six.py</code></summary>
+          <pre class="highlight"><code class="language-python">class Module_six_moves_urllib(types.ModuleType):
+
+    """Create a six.moves.urllib namespace that resembles the Python 3 namespace"""
+    __path__ = []  # mark as package
+    parse = _importer._get_module("moves.urllib_parse")
+    error = _importer._get_module("moves.urllib_error")
+    request = _importer._get_module("moves.urllib_request")
+    response = _importer._get_module("moves.urllib_response")
+    robotparser = _importer._get_module("moves.urllib_robotparser")
+
+    def __dir__(self):
+        return ['parse', 'error', 'request', 'response', 'robotparser']</code></pre>
+        </details>
+
+  
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+  </div>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="chispa.six.Module_six_moves_urllib_error" class="doc doc-heading">
+        <code>Module_six_moves_urllib_error</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><span title="chispa.six._LazyModule">_LazyModule</span></code></p>
+
+  
+      <p>Lazy loading of moved objects in six.moves.urllib_error</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>chispa/six.py</code></summary>
+          <pre class="highlight"><code class="language-python">class Module_six_moves_urllib_error(_LazyModule):
+
+    """Lazy loading of moved objects in six.moves.urllib_error"""</code></pre>
+        </details>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="chispa.six.Module_six_moves_urllib_parse" class="doc doc-heading">
+        <code>Module_six_moves_urllib_parse</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><span title="chispa.six._LazyModule">_LazyModule</span></code></p>
+
+  
+      <p>Lazy loading of moved objects in six.moves.urllib_parse</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>chispa/six.py</code></summary>
+          <pre class="highlight"><code class="language-python">class Module_six_moves_urllib_parse(_LazyModule):
+
+    """Lazy loading of moved objects in six.moves.urllib_parse"""</code></pre>
+        </details>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="chispa.six.Module_six_moves_urllib_request" class="doc doc-heading">
+        <code>Module_six_moves_urllib_request</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><span title="chispa.six._LazyModule">_LazyModule</span></code></p>
+
+  
+      <p>Lazy loading of moved objects in six.moves.urllib_request</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>chispa/six.py</code></summary>
+          <pre class="highlight"><code class="language-python">class Module_six_moves_urllib_request(_LazyModule):
+
+    """Lazy loading of moved objects in six.moves.urllib_request"""</code></pre>
+        </details>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="chispa.six.Module_six_moves_urllib_response" class="doc doc-heading">
+        <code>Module_six_moves_urllib_response</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><span title="chispa.six._LazyModule">_LazyModule</span></code></p>
+
+  
+      <p>Lazy loading of moved objects in six.moves.urllib_response</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>chispa/six.py</code></summary>
+          <pre class="highlight"><code class="language-python">class Module_six_moves_urllib_response(_LazyModule):
+
+    """Lazy loading of moved objects in six.moves.urllib_response"""</code></pre>
+        </details>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-class">
+
+
+
+<h2 id="chispa.six.Module_six_moves_urllib_robotparser" class="doc doc-heading">
+        <code>Module_six_moves_urllib_robotparser</code>
+
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+      <p class="doc doc-class-bases">
+        Bases: <code><span title="chispa.six._LazyModule">_LazyModule</span></code></p>
+
+  
+      <p>Lazy loading of moved objects in six.moves.urllib_robotparser</p>
+
+
+        <details class="quote">
+          <summary>Source code in <code>chispa/six.py</code></summary>
+          <pre class="highlight"><code class="language-python">class Module_six_moves_urllib_robotparser(_LazyModule):
+
+    """Lazy loading of moved objects in six.moves.urllib_robotparser"""</code></pre>
+        </details>
+
+  </div>
+
+</div>
+
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="chispa.six.add_metaclass" class="doc doc-heading">
+<code class="highlight language-python">add_metaclass(metaclass)</code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Class decorator for creating a class with a metaclass.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>chispa/six.py</code></summary>
+        <pre class="highlight"><code class="language-python">def add_metaclass(metaclass):
+    """Class decorator for creating a class with a metaclass."""
+    def wrapper(cls):
+        orig_vars = cls.__dict__.copy()
+        slots = orig_vars.get('__slots__')
+        if slots is not None:
+            if isinstance(slots, str):
+                slots = [slots]
+            for slots_var in slots:
+                orig_vars.pop(slots_var)
+        orig_vars.pop('__dict__', None)
+        orig_vars.pop('__weakref__', None)
+        if hasattr(cls, '__qualname__'):
+            orig_vars['__qualname__'] = cls.__qualname__
+        return metaclass(cls.__name__, cls.__bases__, orig_vars)
+    return wrapper</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="chispa.six.add_move" class="doc doc-heading">
+<code class="highlight language-python">add_move(move)</code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Add an item to six.moves.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>chispa/six.py</code></summary>
+        <pre class="highlight"><code class="language-python">def add_move(move):
+    """Add an item to six.moves."""
+    setattr(_MovedItems, move.name, move)</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="chispa.six.ensure_binary" class="doc doc-heading">
+<code class="highlight language-python">ensure_binary(s, encoding='utf-8', errors='strict')</code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Coerce <strong>s</strong> to six.binary_type.</p>
+<p>For Python 2:
+  - <code>unicode</code> -&gt; encoded to <code>str</code>
+  - <code>str</code> -&gt; <code>str</code></p>
+<p>For Python 3:
+  - <code>str</code> -&gt; encoded to <code>bytes</code>
+  - <code>bytes</code> -&gt; <code>bytes</code></p>
+
+      <details class="quote">
+        <summary>Source code in <code>chispa/six.py</code></summary>
+        <pre class="highlight"><code class="language-python">def ensure_binary(s, encoding='utf-8', errors='strict'):
+    """Coerce **s** to six.binary_type.
+
+    For Python 2:
+      - `unicode` -&gt; encoded to `str`
+      - `str` -&gt; `str`
+
+    For Python 3:
+      - `str` -&gt; encoded to `bytes`
+      - `bytes` -&gt; `bytes`
+    """
+    if isinstance(s, binary_type):
+        return s
+    if isinstance(s, text_type):
+        return s.encode(encoding, errors)
+    raise TypeError("not expecting type '%s'" % type(s))</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="chispa.six.ensure_str" class="doc doc-heading">
+<code class="highlight language-python">ensure_str(s, encoding='utf-8', errors='strict')</code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Coerce <em>s</em> to <code>str</code>.</p>
+<p>For Python 2:
+  - <code>unicode</code> -&gt; encoded to <code>str</code>
+  - <code>str</code> -&gt; <code>str</code></p>
+<p>For Python 3:
+  - <code>str</code> -&gt; <code>str</code>
+  - <code>bytes</code> -&gt; decoded to <code>str</code></p>
+
+      <details class="quote">
+        <summary>Source code in <code>chispa/six.py</code></summary>
+        <pre class="highlight"><code class="language-python">def ensure_str(s, encoding='utf-8', errors='strict'):
+    """Coerce *s* to `str`.
+
+    For Python 2:
+      - `unicode` -&gt; encoded to `str`
+      - `str` -&gt; `str`
+
+    For Python 3:
+      - `str` -&gt; `str`
+      - `bytes` -&gt; decoded to `str`
+    """
+    # Optimization: Fast return for the common case.
+    if type(s) is str:
+        return s
+    if PY2 and isinstance(s, text_type):
+        return s.encode(encoding, errors)
+    elif PY3 and isinstance(s, binary_type):
+        return s.decode(encoding, errors)
+    elif not isinstance(s, (text_type, binary_type)):
+        raise TypeError("not expecting type '%s'" % type(s))
+    return s</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="chispa.six.ensure_text" class="doc doc-heading">
+<code class="highlight language-python">ensure_text(s, encoding='utf-8', errors='strict')</code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Coerce <em>s</em> to six.text_type.</p>
+<p>For Python 2:
+  - <code>unicode</code> -&gt; <code>unicode</code>
+  - <code>str</code> -&gt; <code>unicode</code></p>
+<p>For Python 3:
+  - <code>str</code> -&gt; <code>str</code>
+  - <code>bytes</code> -&gt; decoded to <code>str</code></p>
+
+      <details class="quote">
+        <summary>Source code in <code>chispa/six.py</code></summary>
+        <pre class="highlight"><code class="language-python">def ensure_text(s, encoding='utf-8', errors='strict'):
+    """Coerce *s* to six.text_type.
+
+    For Python 2:
+      - `unicode` -&gt; `unicode`
+      - `str` -&gt; `unicode`
+
+    For Python 3:
+      - `str` -&gt; `str`
+      - `bytes` -&gt; decoded to `str`
+    """
+    if isinstance(s, binary_type):
+        return s.decode(encoding, errors)
+    elif isinstance(s, text_type):
+        return s
+    else:
+        raise TypeError("not expecting type '%s'" % type(s))</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="chispa.six.exec_" class="doc doc-heading">
+<code class="highlight language-python">exec_(_code_, _globs_=None, _locs_=None)</code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Execute code in a namespace.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>chispa/six.py</code></summary>
+        <pre class="highlight"><code class="language-python">def exec_(_code_, _globs_=None, _locs_=None):
+    """Execute code in a namespace."""
+    if _globs_ is None:
+        frame = sys._getframe(1)
+        _globs_ = frame.f_globals
+        if _locs_ is None:
+            _locs_ = frame.f_locals
+        del frame
+    elif _locs_ is None:
+        _locs_ = _globs_
+    exec("""exec _code_ in _globs_, _locs_""")</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="chispa.six.python_2_unicode_compatible" class="doc doc-heading">
+<code class="highlight language-python">python_2_unicode_compatible(klass)</code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>A class decorator that defines <strong>unicode</strong> and <strong>str</strong> methods under Python 2.
+Under Python 3 it does nothing.</p>
+<p>To support Python 2 and 3 with a single code base, define a <strong>str</strong> method
+returning text and apply this decorator to the class.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>chispa/six.py</code></summary>
+        <pre class="highlight"><code class="language-python">def python_2_unicode_compatible(klass):
+    """
+    A class decorator that defines __unicode__ and __str__ methods under Python 2.
+    Under Python 3 it does nothing.
+
+    To support Python 2 and 3 with a single code base, define a __str__ method
+    returning text and apply this decorator to the class.
+    """
+    if PY2:
+        if '__str__' not in klass.__dict__:
+            raise ValueError("@python_2_unicode_compatible cannot be applied "
+                             "to %s because it doesn't define __str__()." %
+                             klass.__name__)
+        klass.__unicode__ = klass.__str__
+        klass.__str__ = lambda self: self.__unicode__().encode('utf-8')
+    return klass</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="chispa.six.remove_move" class="doc doc-heading">
+<code class="highlight language-python">remove_move(name)</code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Remove item from six.moves.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>chispa/six.py</code></summary>
+        <pre class="highlight"><code class="language-python">def remove_move(name):
+    """Remove item from six.moves."""
+    try:
+        delattr(_MovedItems, name)
+    except AttributeError:
+        try:
+            del moves.__dict__[name]
+        except KeyError:
+            raise AttributeError("no such move, %r" % (name,))</code></pre>
+      </details>
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h2 id="chispa.six.with_metaclass" class="doc doc-heading">
+<code class="highlight language-python">with_metaclass(meta, *bases)</code>
+
+</h2>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Create a base class with a metaclass.</p>
+
+      <details class="quote">
+        <summary>Source code in <code>chispa/six.py</code></summary>
+        <pre class="highlight"><code class="language-python">def with_metaclass(meta, *bases):
+    """Create a base class with a metaclass."""
+    # This requires a bit of explanation: the basic idea is to make a dummy
+    # metaclass for one level of class instantiation that replaces itself with
+    # the actual metaclass.
+    class metaclass(type):
+
+        def __new__(cls, name, this_bases, d):
+            if sys.version_info[:2] &gt;= (3, 7):
+                # This version introduced PEP 560 that requires a bit
+                # of extra care (we mimic what is done by __build_class__).
+                resolved_bases = types.resolve_bases(bases)
+                if resolved_bases is not bases:
+                    d['__orig_bases__'] = bases
+            else:
+                resolved_bases = bases
+            return meta(name, resolved_bases, d)
+
+        @classmethod
+        def __prepare__(cls, name, this_bases):
+            return meta.__prepare__(name, bases)
+    return type.__new__(metaclass, 'temporary_class', (), {})</code></pre>
+      </details>
+  </div>
+
+</div>
+
+
+
+  </div>
+
+  </div>
+
+</div>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+  </span>
+</div>
+    <script>var base_url = '../../..';</script>
+    <script src="../../../js/theme_extra.js" defer></script>
+    <script src="../../../js/theme.js" defer></script>
+      <script src="../../../search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>

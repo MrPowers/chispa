@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="None" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>Chispa</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/styles/github.min.css" />
+        <link href="assets/_mkdocstrings.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Chispa";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <script src="js/jquery-3.6.0.min.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.5.0/highlight.min.js"></script>
+      <script>hljs.initHighlightingOnLoad();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> Chispa
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href=".">Chispa</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#column-equality">Column equality</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#dataframe-equality">DataFrame equality</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#ignore-row-order">Ignore row order</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ignore-column-order">Ignore column order</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ignore-nullability">Ignore nullability</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#allow-nan-equality">Allow NaN equality</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#customize-formatting">Customize formatting</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#approximate-column-equality">Approximate column equality</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#approximate-dataframe-equality">Approximate DataFrame equality</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#schema-mismatch-messages">Schema mismatch messages</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#supported-pyspark-python-versions">Supported PySpark / Python versions</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#benchmarks">Benchmarks</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#vendored-dependencies">Vendored dependencies</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#developing-chispa-on-your-local-machine">Developing chispa on your local machine</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#contributing">Contributing</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="reference/SUMMARY/">API Docs</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">Chispa</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" alt="Docs"></a> &raquo;</li>
+      <li>Chispa</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="chispa">chispa</h1>
+<p><img alt="![image](https://github.com/MrPowers/chispa/workflows/build/badge.svg)" src="https://github.com/MrPowers/chispa/actions/workflows/ci.yml/badge.svg" />
+<img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dm/chispa" />
+<a href="https://badge.fury.io/py/chispa"><img alt="PyPI version" src="https://badge.fury.io/py/chispa.svg" /></a></p>
+<p>chispa provides fast PySpark test helper methods that output descriptive error messages.</p>
+<p>This library makes it easy to write high quality PySpark code.</p>
+<p>Fun fact: "chispa" means Spark in Spanish ;)</p>
+<h2 id="installation">Installation</h2>
+<p>Install the latest version with <code>pip install chispa</code>.</p>
+<p>If you use Poetry, add this library as a development dependency with <code>poetry add chispa -G dev</code>.</p>
+<h2 id="column-equality">Column equality</h2>
+<p>Suppose you have a function that removes the non-word characters in a string.</p>
+<pre><code class="language-python">def remove_non_word_characters(col):
+    return F.regexp_replace(col, &quot;[^\\w\\s]+&quot;, &quot;&quot;)
+</code></pre>
+<p>Create a <code>SparkSession</code> so you can create DataFrames.</p>
+<pre><code class="language-python">from pyspark.sql import SparkSession
+
+spark = (SparkSession.builder
+  .master(&quot;local&quot;)
+  .appName(&quot;chispa&quot;)
+  .getOrCreate())
+</code></pre>
+<p>Create a DataFrame with a column that contains strings with non-word characters, run the <code>remove_non_word_characters</code> function, and check that all these characters are removed with the chispa <code>assert_column_equality</code> method.</p>
+<pre><code class="language-python">import pytest
+
+from chispa.column_comparer import assert_column_equality
+import pyspark.sql.functions as F
+
+def test_remove_non_word_characters_short():
+    data = [
+        (&quot;jo&amp;&amp;se&quot;, &quot;jose&quot;),
+        (&quot;**li**&quot;, &quot;li&quot;),
+        (&quot;#::luisa&quot;, &quot;luisa&quot;),
+        (None, None)
+    ]
+    df = (spark.createDataFrame(data, [&quot;name&quot;, &quot;expected_name&quot;])
+        .withColumn(&quot;clean_name&quot;, remove_non_word_characters(F.col(&quot;name&quot;))))
+    assert_column_equality(df, &quot;clean_name&quot;, &quot;expected_name&quot;)
+</code></pre>
+<p>Let's write another test that'll fail to see how the descriptive error message lets you easily debug the underlying issue.</p>
+<p>Here's the failing test:</p>
+<pre><code class="language-python">def test_remove_non_word_characters_nice_error():
+    data = [
+        (&quot;matt7&quot;, &quot;matt&quot;),
+        (&quot;bill&amp;&quot;, &quot;bill&quot;),
+        (&quot;isabela*&quot;, &quot;isabela&quot;),
+        (None, None)
+    ]
+    df = (spark.createDataFrame(data, [&quot;name&quot;, &quot;expected_name&quot;])
+        .withColumn(&quot;clean_name&quot;, remove_non_word_characters(F.col(&quot;name&quot;))))
+    assert_column_equality(df, &quot;clean_name&quot;, &quot;expected_name&quot;)
+</code></pre>
+<p>Here's the nicely formatted error message:</p>
+<p><img alt="ColumnsNotEqualError" src="https://github.com/MrPowers/chispa/blob/main/images/columns_not_equal_error.png" /></p>
+<p>You can see the <code>matt7</code> / <code>matt</code> row of data is what's causing the error (note it's highlighted in red).  The other rows are colored blue because they're equal.</p>
+<h2 id="dataframe-equality">DataFrame equality</h2>
+<p>We can also test the <code>remove_non_word_characters</code> method by creating two DataFrames and verifying that they're equal.</p>
+<p>Creating two DataFrames is slower and requires more code, but comparing entire DataFrames is necessary for some tests.</p>
+<pre><code class="language-python">from chispa.dataframe_comparer import *
+
+def test_remove_non_word_characters_long():
+    source_data = [
+        (&quot;jo&amp;&amp;se&quot;,),
+        (&quot;**li**&quot;,),
+        (&quot;#::luisa&quot;,),
+        (None,)
+    ]
+    source_df = spark.createDataFrame(source_data, [&quot;name&quot;])
+
+    actual_df = source_df.withColumn(
+        &quot;clean_name&quot;,
+        remove_non_word_characters(F.col(&quot;name&quot;))
+    )
+
+    expected_data = [
+        (&quot;jo&amp;&amp;se&quot;, &quot;jose&quot;),
+        (&quot;**li**&quot;, &quot;li&quot;),
+        (&quot;#::luisa&quot;, &quot;luisa&quot;),
+        (None, None)
+    ]
+    expected_df = spark.createDataFrame(expected_data, [&quot;name&quot;, &quot;clean_name&quot;])
+
+    assert_df_equality(actual_df, expected_df)
+</code></pre>
+<p>Let's write another test that'll return an error, so you can see the descriptive error message.</p>
+<pre><code class="language-python">def test_remove_non_word_characters_long_error():
+    source_data = [
+        (&quot;matt7&quot;,),
+        (&quot;bill&amp;&quot;,),
+        (&quot;isabela*&quot;,),
+        (None,)
+    ]
+    source_df = spark.createDataFrame(source_data, [&quot;name&quot;])
+
+    actual_df = source_df.withColumn(
+        &quot;clean_name&quot;,
+        remove_non_word_characters(F.col(&quot;name&quot;))
+    )
+
+    expected_data = [
+        (&quot;matt7&quot;, &quot;matt&quot;),
+        (&quot;bill&amp;&quot;, &quot;bill&quot;),
+        (&quot;isabela*&quot;, &quot;isabela&quot;),
+        (None, None)
+    ]
+    expected_df = spark.createDataFrame(expected_data, [&quot;name&quot;, &quot;clean_name&quot;])
+
+    assert_df_equality(actual_df, expected_df)
+</code></pre>
+<p>Here's the nicely formatted error message:</p>
+<p><img alt="DataFramesNotEqualError" src="https://github.com/MrPowers/chispa/blob/main/images/dfs_not_equal_error.png" /></p>
+<h3 id="ignore-row-order">Ignore row order</h3>
+<p>You can easily compare DataFrames, ignoring the order of the rows.  The content of the DataFrames is usually what matters, not the order of the rows.</p>
+<p>Here are the contents of <code>df1</code>:</p>
+<pre><code>+--------+
+|some_num|
++--------+
+|       1|
+|       2|
+|       3|
++--------+
+</code></pre>
+<p>Here are the contents of <code>df2</code>:</p>
+<pre><code>+--------+
+|some_num|
++--------+
+|       2|
+|       1|
+|       3|
++--------+
+</code></pre>
+<p>Here's how to confirm <code>df1</code> and <code>df2</code> are equal when the row order is ignored.</p>
+<pre><code class="language-python">assert_df_equality(df1, df2, ignore_row_order=True)
+</code></pre>
+<p>If you don't specify to <code>ignore_row_order</code> then the test will error out with this message:</p>
+<p><img alt="ignore_row_order_false" src="https://github.com/MrPowers/chispa/blob/main/images/ignore_row_order_false.png" /></p>
+<p>The rows aren't ordered by default because sorting slows down the function.</p>
+<h3 id="ignore-column-order">Ignore column order</h3>
+<p>This section explains how to compare DataFrames, ignoring the order of the columns.</p>
+<p>Suppose you have the following <code>df1</code>:</p>
+<pre><code>+----+----+
+|num1|num2|
++----+----+
+|   1|   7|
+|   2|   8|
+|   3|   9|
++----+----+
+</code></pre>
+<p>Here are the contents of <code>df2</code>:</p>
+<pre><code>+----+----+
+|num2|num1|
++----+----+
+|   7|   1|
+|   8|   2|
+|   9|   3|
++----+----+
+</code></pre>
+<p>Here's how to compare the equality of <code>df1</code> and <code>df2</code>, ignoring the column order:</p>
+<pre><code class="language-python">assert_df_equality(df1, df2, ignore_column_order=True)
+</code></pre>
+<p>Here's the error message you'll see if you run <code>assert_df_equality(df1, df2)</code>, without ignoring the column order.</p>
+<p><img alt="ignore_column_order_false" src="https://github.com/MrPowers/chispa/blob/main/images/ignore_column_order_false.png" /></p>
+<h3 id="ignore-nullability">Ignore nullability</h3>
+<p>Each column in a schema has three properties: a name, data type, and nullable property.  The column can accept null values if <code>nullable</code> is set to true.</p>
+<p>You'll sometimes want to ignore the nullable property when making DataFrame comparisons.</p>
+<p>Suppose you have the following <code>df1</code>:</p>
+<pre><code>+-----+---+
+| name|age|
++-----+---+
+| juan|  7|
+|bruna|  8|
++-----+---+
+</code></pre>
+<p>And this <code>df2</code>:</p>
+<pre><code>+-----+---+
+| name|age|
++-----+---+
+| juan|  7|
+|bruna|  8|
++-----+---+
+</code></pre>
+<p>You might be surprised to find that in this example, <code>df1</code> and <code>df2</code> are not equal and will error out with this message:</p>
+<p><img alt="nullable_off_error" src="https://github.com/MrPowers/chispa/blob/main/images/nullable_off_error.png" /></p>
+<p>Examine the code in this contrived example to better understand the error:</p>
+<pre><code class="language-python">def ignore_nullable_property():
+    s1 = StructType([
+       StructField(&quot;name&quot;, StringType(), True),
+       StructField(&quot;age&quot;, IntegerType(), True)])
+    df1 = spark.createDataFrame([(&quot;juan&quot;, 7), (&quot;bruna&quot;, 8)], s1)
+    s2 = StructType([
+       StructField(&quot;name&quot;, StringType(), True),
+       StructField(&quot;age&quot;, IntegerType(), False)])
+    df2 = spark.createDataFrame([(&quot;juan&quot;, 7), (&quot;bruna&quot;, 8)], s2)
+    assert_df_equality(df1, df2)
+</code></pre>
+<p>You can ignore the nullable property when assessing equality by adding a flag:</p>
+<pre><code class="language-python">assert_df_equality(df1, df2, ignore_nullable=True)
+</code></pre>
+<p>Elements contained within an <code>ArrayType()</code> also have a nullable property, in addition to the nullable property of the column schema. These are also ignored when passing <code>ignore_nullable=True</code>.</p>
+<p>Again, examine the following code to understand the error that <code>ignore_nullable=True</code> bypasses:</p>
+<pre><code class="language-python">def ignore_nullable_property_array():
+    s1 = StructType([
+        StructField(&quot;name&quot;, StringType(), True),
+        StructField(&quot;coords&quot;, ArrayType(DoubleType(), True), True),])
+    df1 = spark.createDataFrame([(&quot;juan&quot;, [1.42, 3.5]), (&quot;bruna&quot;, [2.76, 3.2])], s1)
+    s2 = StructType([
+        StructField(&quot;name&quot;, StringType(), True),
+        StructField(&quot;coords&quot;, ArrayType(DoubleType(), False), True),])
+    df2 = spark.createDataFrame([(&quot;juan&quot;, [1.42, 3.5]), (&quot;bruna&quot;, [2.76, 3.2])], s2)
+    assert_df_equality(df1, df2)
+</code></pre>
+<h3 id="allow-nan-equality">Allow NaN equality</h3>
+<p>Python has NaN (not a number) values and two NaN values are not considered equal by default.  Create two NaN values, compare them, and confirm they're not considered equal by default.</p>
+<pre><code class="language-python">nan1 = float('nan')
+nan2 = float('nan')
+nan1 == nan2 # False
+</code></pre>
+<p>pandas considers NaN values to be equal by default, but this library requires you to set a flag to consider two NaN values to be equal.</p>
+<pre><code class="language-python">assert_df_equality(df1, df2, allow_nan_equality=True)
+</code></pre>
+<h2 id="customize-formatting">Customize formatting</h2>
+<p><em>Available in chispa 0.10+</em>.</p>
+<p>You can specify custom formats for the printed error messages as follows:</p>
+<pre><code class="language-python">@dataclass
+class MyFormats:
+    mismatched_rows = [&quot;light_yellow&quot;]
+    matched_rows = [&quot;cyan&quot;, &quot;bold&quot;]
+    mismatched_cells = [&quot;purple&quot;]
+    matched_cells = [&quot;blue&quot;]
+
+assert_basic_rows_equality(df1.collect(), df2.collect(), formats=MyFormats())
+</code></pre>
+<p>You can also define these formats in <code>conftest.py</code> and inject them via a fixture:</p>
+<pre><code class="language-python">@pytest.fixture()
+def my_formats():
+    return MyFormats()
+
+def test_shows_assert_basic_rows_equality(my_formats):
+  ...
+  assert_basic_rows_equality(df1.collect(), df2.collect(), formats=my_formats)
+</code></pre>
+<p><img alt="custom_formats" src="https://github.com/MrPowers/chispa/blob/main/images/custom_formats.png" /></p>
+<h2 id="approximate-column-equality">Approximate column equality</h2>
+<p>We can check if columns are approximately equal, which is especially useful for floating number comparisons.</p>
+<p>Here's a test that creates a DataFrame with two floating point columns and verifies that the columns are approximately equal.  In this example, values are considered approximately equal if the difference is less than 0.1.</p>
+<pre><code class="language-python">def test_approx_col_equality_same():
+    data = [
+        (1.1, 1.1),
+        (2.2, 2.15),
+        (3.3, 3.37),
+        (None, None)
+    ]
+    df = spark.createDataFrame(data, [&quot;num1&quot;, &quot;num2&quot;])
+    assert_approx_column_equality(df, &quot;num1&quot;, &quot;num2&quot;, 0.1)
+</code></pre>
+<p>Here's an example of a test with columns that are not approximately equal.</p>
+<pre><code class="language-python">def test_approx_col_equality_different():
+    data = [
+        (1.1, 1.1),
+        (2.2, 2.15),
+        (3.3, 5.0),
+        (None, None)
+    ]
+    df = spark.createDataFrame(data, [&quot;num1&quot;, &quot;num2&quot;])
+    assert_approx_column_equality(df, &quot;num1&quot;, &quot;num2&quot;, 0.1)
+</code></pre>
+<p>This failing test will output a readable error message so the issue is easy to debug.</p>
+<p><img alt="ColumnsNotEqualError" src="https://github.com/MrPowers/chispa/blob/main/images/columns_not_approx_equal.png" /></p>
+<h2 id="approximate-dataframe-equality">Approximate DataFrame equality</h2>
+<p>Let's create two DataFrames and confirm they're approximately equal.</p>
+<pre><code class="language-python">def test_approx_df_equality_same():
+    data1 = [
+        (1.1, &quot;a&quot;),
+        (2.2, &quot;b&quot;),
+        (3.3, &quot;c&quot;),
+        (None, None)
+    ]
+    df1 = spark.createDataFrame(data1, [&quot;num&quot;, &quot;letter&quot;])
+
+    data2 = [
+        (1.05, &quot;a&quot;),
+        (2.13, &quot;b&quot;),
+        (3.3, &quot;c&quot;),
+        (None, None)
+    ]
+    df2 = spark.createDataFrame(data2, [&quot;num&quot;, &quot;letter&quot;])
+
+    assert_approx_df_equality(df1, df2, 0.1)
+</code></pre>
+<p>The <code>assert_approx_df_equality</code> method is smart and will only perform approximate equality operations for floating point numbers in DataFrames.  It'll perform regular equality for strings and other types.</p>
+<p>Let's perform an approximate equality comparison for two DataFrames that are not equal.</p>
+<pre><code class="language-python">def test_approx_df_equality_different():
+    data1 = [
+        (1.1, &quot;a&quot;),
+        (2.2, &quot;b&quot;),
+        (3.3, &quot;c&quot;),
+        (None, None)
+    ]
+    df1 = spark.createDataFrame(data1, [&quot;num&quot;, &quot;letter&quot;])
+
+    data2 = [
+        (1.1, &quot;a&quot;),
+        (5.0, &quot;b&quot;),
+        (3.3, &quot;z&quot;),
+        (None, None)
+    ]
+    df2 = spark.createDataFrame(data2, [&quot;num&quot;, &quot;letter&quot;])
+
+    assert_approx_df_equality(df1, df2, 0.1)
+</code></pre>
+<p>Here's the pretty error message that's outputted:</p>
+<p><img alt="DataFramesNotEqualError" src="https://github.com/MrPowers/chispa/blob/main/images/dfs_not_approx_equal.png" /></p>
+<h2 id="schema-mismatch-messages">Schema mismatch messages</h2>
+<p>DataFrame equality messages peform schema comparisons before analyzing the actual content of the DataFrames.  DataFrames that don't have the same schemas should error out as fast as possible.</p>
+<p>Let's compare a DataFrame that has a string column an integer column with a DataFrame that has two integer columns to observe the schema mismatch message.</p>
+<pre><code class="language-python">def test_schema_mismatch_message():
+    data1 = [
+        (1, &quot;a&quot;),
+        (2, &quot;b&quot;),
+        (3, &quot;c&quot;),
+        (None, None)
+    ]
+    df1 = spark.createDataFrame(data1, [&quot;num&quot;, &quot;letter&quot;])
+
+    data2 = [
+        (1, 6),
+        (2, 7),
+        (3, 8),
+        (None, None)
+    ]
+    df2 = spark.createDataFrame(data2, [&quot;num&quot;, &quot;num2&quot;])
+
+    assert_df_equality(df1, df2)
+</code></pre>
+<p>Here's the error message:</p>
+<p><img alt="SchemasNotEqualError" src="https://github.com/MrPowers/chispa/blob/main/images/schemas_not_approx_equal.png" /></p>
+<h2 id="supported-pyspark-python-versions">Supported PySpark / Python versions</h2>
+<p>chispa currently supports PySpark 2.4+ and Python 3.5+.</p>
+<p>Use chispa v0.8.2 if you're using an older Python version.</p>
+<p>PySpark 2 support will be dropped when chispa 1.x is released.</p>
+<h2 id="benchmarks">Benchmarks</h2>
+<p>TODO: Need to benchmark these methods vs. the spark-testing-base ones</p>
+<h2 id="vendored-dependencies">Vendored dependencies</h2>
+<p>These dependencies are vendored:</p>
+<ul>
+<li><a href="https://github.com/benjaminp/six">six</a></li>
+<li><a href="https://github.com/jazzband/prettytable">PrettyTable</a></li>
+</ul>
+<p>The dependencies are vendored to save you from dependency hell.</p>
+<h2 id="developing-chispa-on-your-local-machine">Developing chispa on your local machine</h2>
+<p>You are encouraged to clone and/or fork this repo.</p>
+<p>This project uses <a href="https://python-poetry.org/">Poetry</a> for packaging and dependency management.</p>
+<ul>
+<li>Setup the virtual environment with <code>poetry install</code></li>
+<li>Run the tests with <code>poetry run pytest tests</code></li>
+</ul>
+<p>Studying the codebase is a great way to learn about PySpark!</p>
+<h2 id="contributing">Contributing</h2>
+<p>Anyone is encouraged to submit a pull request, open an issue, or submit a bug report.</p>
+<p>We're happy to promote folks to be library maintainers if they make good contributions.</p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="reference/SUMMARY/" class="btn btn-neutral float-right" title="API Docs">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+    
+      <span><a href="reference/SUMMARY/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script>var base_url = '.';</script>
+    <script src="js/theme_extra.js" defer></script>
+    <script src="js/theme.js" defer></script>
+      <script src="search/main.js" defer></script>
+    <script defer>
+        window.onload = function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        };
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.4.2
+Build Date UTC : 2024-02-28 14:33:42.357879+00:00
+-->
