@@ -12,10 +12,7 @@ def remove_non_word_characters(col):
 
 from pyspark.sql import SparkSession
 
-spark = (SparkSession.builder
-  .master("local")
-  .appName("chispa")
-  .getOrCreate())
+spark = SparkSession.builder.remote("sc://localhost").appName("chispa").getOrCreate()
 
 
 def describe_column_equality():
