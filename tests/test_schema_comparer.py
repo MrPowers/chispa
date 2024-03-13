@@ -38,6 +38,37 @@ def describe_assert_schema_equality():
             assert_schema_equality(s1, s2)
 
 
+    def it_throws_as_tree_string_for_wide_schemas(): 
+        # create a deeply nested schema 
+        s1 = StructType([
+            StructField("name", StringType(), True),
+            StructField("age", IntegerType(), True),
+            StructField("fav_number", IntegerType(), True),
+            StructField("fav_numbers", ArrayType(IntegerType(), True), True),
+            StructField("fav_colors", StructType([
+                StructField("red", IntegerType(), True),
+                StructField("green", IntegerType(), True),
+                StructField("blue", IntegerType(), True)
+            ]))
+        ])
+
+        s2 = StructType([
+            StructField("name", StringType(), True),
+            StructField("age", IntegerType(), True),
+            StructField("fav_number", IntegerType(), True),
+            StructField("fav_numbers", ArrayType(IntegerType(), True), True),
+            StructField("fav_colors", StructType([
+                StructField("orange", IntegerType(), True),
+                StructField("green", IntegerType(), True),
+                StructField("yellow", IntegerType(), True)
+            ]))
+        ])
+        with pytest.raises(SchemasNotEqualError) as e_info:
+            assert_schema_equality(s1, s2)
+        print(e_info.value)
+            
+
+
 def describe_assert_schema_equality_ignore_nullable():
     def it_has_good_error_messages_for_different_sized_schemas():
         s1 = StructType([
