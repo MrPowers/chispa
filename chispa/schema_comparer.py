@@ -3,9 +3,26 @@ from chispa.bcolors import *
 import chispa.six as six
 
 
+class SchemasNotEqualErrorWide(Exception):
+    """The schemas are not equal"""
+    pass
+
 class SchemasNotEqualError(Exception):
    """The schemas are not equal"""
    pass
+
+def create_schema_comparison_tree(s1, s2):
+    pass
+
+def create_schema_comparison_table(s1, s2):
+    t = PrettyTable(["schema1", "schema2"])
+    zipped = list(six.moves.zip_longest(s1, s2))
+    for sf1, sf2 in zipped:
+        if are_structfields_equal(sf1, sf2, True):
+            t.add_row([blue(sf1), blue(sf2)])
+        else:
+            t.add_row([sf1, sf2])
+    return t
 
 
 def assert_schema_equality(s1, s2, ignore_nullable=False, ignore_metadata=False):
@@ -26,13 +43,7 @@ def assert_schema_equality_full(s1, s2, ignore_nullable=False, ignore_metadata=F
         return True
 
     if not inner(s1, s2, ignore_nullable, ignore_metadata):
-        t = PrettyTable(["schema1", "schema2"])
-        zipped = list(six.moves.zip_longest(s1, s2))
-        for sf1, sf2 in zipped:
-            if are_structfields_equal(sf1, sf2, True):
-                t.add_row([blue(sf1), blue(sf2)])
-            else:
-                t.add_row([sf1, sf2])
+        t = create_schema_comparison_table(s1, s2)
         raise SchemasNotEqualError("\n" + t.get_string())
 
 
@@ -41,13 +52,7 @@ def assert_schema_equality_full(s1, s2, ignore_nullable=False, ignore_metadata=F
 # I think schema equality operations are really fast to begin with
 def assert_basic_schema_equality(s1, s2):
     if s1 != s2:
-        t = PrettyTable(["schema1", "schema2"])
-        zipped = list(six.moves.zip_longest(s1, s2))
-        for sf1, sf2 in zipped:
-            if sf1 == sf2:
-                t.add_row([blue(sf1), blue(sf2)])
-            else:
-                t.add_row([sf1, sf2])
+        t = create_schema_comparison_table(s1, s2)
         raise SchemasNotEqualError("\n" + t.get_string())
 
 
@@ -55,13 +60,7 @@ def assert_basic_schema_equality(s1, s2):
 # deprecate this.  ignore_nullable should be a flag.
 def assert_schema_equality_ignore_nullable(s1, s2):
     if not are_schemas_equal_ignore_nullable(s1, s2):
-        t = PrettyTable(["schema1", "schema2"])
-        zipped = list(six.moves.zip_longest(s1, s2))
-        for sf1, sf2 in zipped:
-            if are_structfields_equal(sf1, sf2, True):
-                t.add_row([blue(sf1), blue(sf2)])
-            else:
-                t.add_row([sf1, sf2])
+        t = create_schema_comparison_table(s1, s2)
         raise SchemasNotEqualError("\n" + t.get_string())
 
 
