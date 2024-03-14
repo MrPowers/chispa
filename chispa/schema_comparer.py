@@ -15,31 +15,29 @@ def create_schema_comparison_tree(s1, s2) -> str:
         for sf in s:
             nullable = "(nullable = true)" if sf.nullable else "(nullable = false)"
             tree_string += [
-                f"|{horizontal_char * indent} {sf.name}: {sf.dataType.typeName()} {nullable}"
+                f"{indent * ' '}|{horizontal_char * 2} {sf.name}: {sf.dataType.typeName()} {nullable}"
             ]
             if sf.dataType.typeName() == "struct":
                 tree_string += create_schema_tree(
-                    sf.dataType, indent + 2, horizontal_char
+                    sf.dataType, indent + 4, horizontal_char
                 )
         return tree_string
 
     tree_space = 6
     horizontal_char = "-"
 
-    s1_tree = create_schema_tree(s1, 2, horizontal_char)
-    s2_tree = create_schema_tree(s2, 2, horizontal_char)
+    s1_tree = create_schema_tree(s1, 0, horizontal_char)
+    s2_tree = create_schema_tree(s2, 0, horizontal_char)
 
     widest_line = max(len(line) for line in s1_tree)
     tree_string_combined = "schema1".ljust(widest_line + tree_space) + "schema2\n"
     for i in range(max(len(s1_tree), len(s2_tree))):
+        line1 = ""
+        line2 = ""
         if i < len(s1_tree):
             line1 = s1_tree[i]
-        else:
-            line1 = " " * widest_line
         if i < len(s2_tree):
             line2 = s2_tree[i]
-        else:
-            line2 = ""
         tree_string_combined += line1.ljust(widest_line + tree_space) + line2 + "\n"
     return tree_string_combined
 
