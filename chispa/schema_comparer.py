@@ -3,16 +3,47 @@ from chispa.bcolors import *
 import chispa.six as six
 
 
-class SchemasNotEqualErrorWide(Exception):
-    """The schemas are not equal"""
-    pass
-
 class SchemasNotEqualError(Exception):
-   """The schemas are not equal"""
-   pass
+    """The schemas are not equal"""
 
-def create_schema_comparison_tree(s1, s2):
     pass
+
+
+def create_schema_comparison_tree(s1, s2) -> str:
+    def create_schema_tree(s, indent: int, horizontal_char="-", title: str = "") -> str:
+        if title:
+            tree_string = title + "\n"
+        else:
+            tree_string = ""
+
+        for sf in s:
+            nullable = "(nullable = true)" if sf.nullable else "(nullable = false)"
+            tree_string += f"|{horizontal_char * indent}{sf.name}: {sf.dataType.typeName()} {nullable}\n"
+            if sf.dataType.typeName() == "struct":
+                tree_string += create_schema_tree(
+                    sf.dataType, indent + 2, horizontal_char, ""
+                )
+        return tree_string
+
+    tree_space = 6
+    horizontal_char = "-"
+    tree_string = ""
+
+    s1_tree = create_schema_tree(s1, 0, horizontal_char, "schema1")
+    print(s1_tree)
+    s1_tree_list = s1_tree.split("\n")
+    widest_line = max(len(line) for line in s1_tree_list)
+    s2_padding = widest_line + tree_space
+
+    s2_tree = create_schema_tree(s2, 0, horizontal_char, "schema2")
+    print(s2_tree)
+
+    tree_string += "schema1\n"
+    tree_string += s1_tree
+    tree_string += "schema2\n"
+    tree_string += s2_tree
+    return tree_string
+
 
 def create_schema_comparison_table(s1, s2):
     t = PrettyTable(["schema1", "schema2"])
@@ -23,6 +54,24 @@ def create_schema_comparison_table(s1, s2):
         else:
             t.add_row([sf1, sf2])
     return t
+
+
+def check_if_schemas_are_wide(s1, s2) -> bool:
+    contains_nested_structs = any(
+        sf.dataType.typeName() == "struct" for sf in s1
+    ) or any(sf.dataType.typeName() == "struct" for sf in s2)
+    contains_many_columns = len(s1) > 10 or len(s2) > 10
+    return contains_nested_structs or contains_many_columns
+
+
+def handle_schemas_not_equal(s1, s2):
+    schemas_are_wide = check_if_schemas_are_wide(s1, s2)
+    if schemas_are_wide:
+        error_message = create_schema_comparison_tree(s1, s2)
+    else:
+        t = create_schema_comparison_table(s1, s2)
+        error_message = "\n" + t.get_string()
+    raise SchemasNotEqualError(error_message)
 
 
 def assert_schema_equality(s1, s2, ignore_nullable=False, ignore_metadata=False):
@@ -43,8 +92,7 @@ def assert_schema_equality_full(s1, s2, ignore_nullable=False, ignore_metadata=F
         return True
 
     if not inner(s1, s2, ignore_nullable, ignore_metadata):
-        t = create_schema_comparison_table(s1, s2)
-        raise SchemasNotEqualError("\n" + t.get_string())
+        handle_schemas_not_equal(s1, s2)
 
 
 # deprecate this
@@ -52,16 +100,13 @@ def assert_schema_equality_full(s1, s2, ignore_nullable=False, ignore_metadata=F
 # I think schema equality operations are really fast to begin with
 def assert_basic_schema_equality(s1, s2):
     if s1 != s2:
-        t = create_schema_comparison_table(s1, s2)
-        raise SchemasNotEqualError("\n" + t.get_string())
-
+        handle_schemas_not_equal(s1, s2)
 
 
 # deprecate this.  ignore_nullable should be a flag.
 def assert_schema_equality_ignore_nullable(s1, s2):
     if not are_schemas_equal_ignore_nullable(s1, s2):
-        t = create_schema_comparison_table(s1, s2)
-        raise SchemasNotEqualError("\n" + t.get_string())
+        handle_schemas_not_equal(s1, s2)
 
 
 # deprecate this.  ignore_nullable should be a flag.
@@ -100,9 +145,9 @@ def are_datatypes_equal_ignore_nullable(dt1, dt2):
     """
     if dt1.typeName() == dt2.typeName():
         # Account for array types by inspecting elementType.
-        if dt1.typeName() == 'array':
+        if dt1.typeName() == "array":
             return are_datatypes_equal_ignore_nullable(dt1.elementType, dt2.elementType)
-        elif dt1.typeName() == 'struct':
+        elif dt1.typeName() == "struct":
             return are_schemas_equal_ignore_nullable(dt1, dt2)
         else:
             return True
