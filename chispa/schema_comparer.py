@@ -30,7 +30,7 @@ def create_schema_comparison_tree(s1, s2) -> str:
     s2_tree = create_schema_tree(s2, 0, horizontal_char)
 
     widest_line = max(len(line) for line in s1_tree)
-    tree_string_combined = "schema1".ljust(widest_line + tree_space) + "schema2\n"
+    tree_string_combined = "\n\nschema1".ljust(widest_line + tree_space) + "schema2\n"
     for i in range(max(len(s1_tree), len(s2_tree))):
         line1 = ""
         line2 = ""
@@ -38,7 +38,18 @@ def create_schema_comparison_tree(s1, s2) -> str:
             line1 = s1_tree[i]
         if i < len(s2_tree):
             line2 = s2_tree[i]
-        tree_string_combined += line1.ljust(widest_line + tree_space) + line2 + "\n"
+
+        tree_string_line = line1.ljust(widest_line + tree_space) + line2
+
+        if line1 == line2:
+            tree_string_line = line_blue(tree_string_line)
+
+        else:
+            tree_string_line = line_red(tree_string_line)
+
+        tree_string_combined += tree_string_line + "\n"
+
+    tree_string_combined += bcolors.LightBlue
     return tree_string_combined
 
 
