@@ -9,17 +9,19 @@ class SchemasNotEqualError(Exception):
     pass
 
 
-def create_schema_comparison_tree(s1, s2) -> str:
+def create_schema_comparison_tree(s1, s2, ignore_nullable: bool) -> str:
     def create_schema_tree(s, indent: int, horizontal_char="-") -> list[str]:
         tree_string = []
-        for sf in s:
-            nullable = "(nullable = true)" if sf.nullable else "(nullable = false)"
+        for struct_field in s:
+            nullable = (
+                "(nullable = true)" if struct_field.nullable else "(nullable = false)"
+            )
             tree_string += [
-                f"{indent * ' '}|{horizontal_char * 2} {sf.name}: {sf.dataType.typeName()} {nullable}"
+                f"{indent * ' '}|{horizontal_char * 2} {struct_field.name}: {struct_field.dataType.typeName()} {nullable}"
             ]
-            if sf.dataType.typeName() == "struct":
+            if struct_field.dataType.typeName() == "struct":
                 tree_string += create_schema_tree(
-                    sf.dataType, indent + 4, horizontal_char
+                    struct_field.dataType, indent + 4, horizontal_char
                 )
         return tree_string
 
@@ -41,7 +43,7 @@ def create_schema_comparison_tree(s1, s2) -> str:
 
         tree_string_line = line1.ljust(widest_line + tree_space) + line2
 
-        if line1 == line2:
+        if are_schema_strings_equal(line1, line2, ignore_nullable):
             tree_string_line = line_blue(tree_string_line)
 
         else:
@@ -51,6 +53,19 @@ def create_schema_comparison_tree(s1, s2) -> str:
 
     tree_string_combined += bcolors.LightBlue
     return tree_string_combined
+
+
+def are_schema_strings_equal(s1: str, s2: str, ignore_nullable: bool) -> bool:
+    if not ignore_nullable:
+        return s1 == s2
+
+    s1_no_nullable = s1.replace("(nullable = true)", "").replace(
+        "(nullable = false)", ""
+    )
+    s2_no_nullable = s2.replace("(nullable = true)", "").replace(
+        "(nullable = false)", ""
+    )
+    return s1_no_nullable == s2_no_nullable
 
 
 def create_schema_comparison_table(s1, s2):
@@ -72,10 +87,10 @@ def check_if_schemas_are_wide(s1, s2) -> bool:
     return contains_nested_structs or contains_many_columns
 
 
-def handle_schemas_not_equal(s1, s2):
+def handle_schemas_not_equal(s1, s2, ignore_nullable: bool):
     schemas_are_wide = check_if_schemas_are_wide(s1, s2)
     if schemas_are_wide:
-        error_message = create_schema_comparison_tree(s1, s2)
+        error_message = create_schema_comparison_tree(s1, s2, ignore_nullable)
     else:
         t = create_schema_comparison_table(s1, s2)
         error_message = "\n" + t.get_string()
@@ -100,7 +115,7 @@ def assert_schema_equality_full(s1, s2, ignore_nullable=False, ignore_metadata=F
         return True
 
     if not inner(s1, s2, ignore_nullable, ignore_metadata):
-        handle_schemas_not_equal(s1, s2)
+        handle_schemas_not_equal(s1, s2, ignore_nullable)
 
 
 # deprecate this
@@ -108,13 +123,13 @@ def assert_schema_equality_full(s1, s2, ignore_nullable=False, ignore_metadata=F
 # I think schema equality operations are really fast to begin with
 def assert_basic_schema_equality(s1, s2):
     if s1 != s2:
-        handle_schemas_not_equal(s1, s2)
+        handle_schemas_not_equal(s1, s2, ignore_nullable=False)
 
 
 # deprecate this.  ignore_nullable should be a flag.
 def assert_schema_equality_ignore_nullable(s1, s2):
     if not are_schemas_equal_ignore_nullable(s1, s2):
-        handle_schemas_not_equal(s1, s2)
+        handle_schemas_not_equal(s1, s2, ignore_nullable=True)
 
 
 # deprecate this.  ignore_nullable should be a flag.
