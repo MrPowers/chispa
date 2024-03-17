@@ -9,41 +9,61 @@ class SchemasNotEqualError(Exception):
     pass
 
 
-def create_schema_comparison_tree(s1, s2, ignore_nullable: bool) -> str:
-    def create_schema_tree(s, indent: int, horizontal_char="-") -> list[str]:
+def create_schema_comparison_tree(
+    s1, s2, ignore_nullable: bool, ignore_metadata: bool
+) -> str:
+    def parse_schema_as_tree(s, indent: int, horizontal_char="-") -> tuple[list, list]:
         tree_string = []
+        fields = []
         for struct_field in s:
             nullable = (
                 "(nullable = true)" if struct_field.nullable else "(nullable = false)"
             )
+            struct_field_type = struct_field.dataType.typeName()
             tree_string += [
-                f"{indent * ' '}|{horizontal_char * 2} {struct_field.name}: {struct_field.dataType.typeName()} {nullable}"
+                f"{indent * ' '}|{horizontal_char * 2} {struct_field.name}: {struct_field_type} {nullable}"
             ]
-            if struct_field.dataType.typeName() == "struct":
-                tree_string += create_schema_tree(
+            if struct_field_type == "struct":
+                tree_string_nested, fields_nested = parse_schema_as_tree(
                     struct_field.dataType, indent + 4, horizontal_char
                 )
-        return tree_string
+                fields += [struct_field]
+                tree_string += tree_string_nested
+                fields += fields_nested
+                continue
+
+            fields += [struct_field]
+        return tree_string, fields
 
     tree_space = 6
     horizontal_char = "-"
 
-    s1_tree = create_schema_tree(s1, 0, horizontal_char)
-    s2_tree = create_schema_tree(s2, 0, horizontal_char)
+    s1_tree, s1_fields = parse_schema_as_tree(s1, 0, horizontal_char)
+    s2_tree, s2_fields = parse_schema_as_tree(s2, 0, horizontal_char)
 
     widest_line = max(len(line) for line in s1_tree)
-    tree_string_combined = "\n\nschema1".ljust(widest_line + tree_space) + "schema2\n"
-    for i in range(max(len(s1_tree), len(s2_tree))):
-        line1 = ""
-        line2 = ""
+    longest_tree = max(len(s1_tree), len(s2_tree))
+    schema_gap = widest_line + tree_space
+
+    tree_string_combined = "\nschema1".ljust(schema_gap) + "schema2\n"
+    for i in range(longest_tree):
+        line1 = line2 = ""
+        s1_field = s2_field = None
+
         if i < len(s1_tree):
             line1 = s1_tree[i]
+            s1_field = s1_fields[i]
         if i < len(s2_tree):
             line2 = s2_tree[i]
+            s2_field = s2_fields[i]
 
-        tree_string_line = line1.ljust(widest_line + tree_space) + line2
+        tree_string_line = line1.ljust(schema_gap) + line2
 
-        if are_schema_strings_equal(line1, line2, ignore_nullable):
+        if i >= len(s1_fields) or i >= len(s2_fields):
+            tree_string_combined += line_red(tree_string_line) + "\n"
+            continue
+
+        if are_structfields_equal(s1_field, s2_field, ignore_nullable, ignore_metadata):
             tree_string_line = line_blue(tree_string_line)
 
         else:
@@ -51,28 +71,17 @@ def create_schema_comparison_tree(s1, s2, ignore_nullable: bool) -> str:
 
         tree_string_combined += tree_string_line + "\n"
 
-    tree_string_combined += bcolors.LightBlue
+    tree_string_combined += bcolors.NC
     return tree_string_combined
 
 
-def are_schema_strings_equal(s1: str, s2: str, ignore_nullable: bool) -> bool:
-    if not ignore_nullable:
-        return s1 == s2
-
-    s1_no_nullable = s1.replace("(nullable = true)", "").replace(
-        "(nullable = false)", ""
-    )
-    s2_no_nullable = s2.replace("(nullable = true)", "").replace(
-        "(nullable = false)", ""
-    )
-    return s1_no_nullable == s2_no_nullable
-
-
-def create_schema_comparison_table(s1, s2):
+def create_schema_comparison_table(
+    s1, s2, ignore_nullable: bool, ignore_metadata: bool
+):
     t = PrettyTable(["schema1", "schema2"])
     zipped = list(six.moves.zip_longest(s1, s2))
     for sf1, sf2 in zipped:
-        if are_structfields_equal(sf1, sf2, True):
+        if are_structfields_equal(sf1, sf2, ignore_nullable, ignore_metadata):
             t.add_row([blue(sf1), blue(sf2)])
         else:
             t.add_row([sf1, sf2])
@@ -87,13 +96,16 @@ def check_if_schemas_are_wide(s1, s2) -> bool:
     return contains_nested_structs or contains_many_columns
 
 
-def handle_schemas_not_equal(s1, s2, ignore_nullable: bool):
+def handle_schemas_not_equal(s1, s2, ignore_nullable: bool, ignore_metadata: bool):
     schemas_are_wide = check_if_schemas_are_wide(s1, s2)
     if schemas_are_wide:
-        error_message = create_schema_comparison_tree(s1, s2, ignore_nullable)
+        error_message = create_schema_comparison_tree(
+            s1, s2, ignore_nullable, ignore_metadata
+        )
     else:
-        t = create_schema_comparison_table(s1, s2)
+        t = create_schema_comparison_table(s1, s2, ignore_nullable, ignore_metadata)
         error_message = "\n" + t.get_string()
+    print(repr(error_message))
     raise SchemasNotEqualError(error_message)
 
 
@@ -115,7 +127,7 @@ def assert_schema_equality_full(s1, s2, ignore_nullable=False, ignore_metadata=F
         return True
 
     if not inner(s1, s2, ignore_nullable, ignore_metadata):
-        handle_schemas_not_equal(s1, s2, ignore_nullable)
+        handle_schemas_not_equal(s1, s2, ignore_nullable, ignore_metadata)
 
 
 # deprecate this
@@ -123,13 +135,13 @@ def assert_schema_equality_full(s1, s2, ignore_nullable=False, ignore_metadata=F
 # I think schema equality operations are really fast to begin with
 def assert_basic_schema_equality(s1, s2):
     if s1 != s2:
-        handle_schemas_not_equal(s1, s2, ignore_nullable=False)
+        handle_schemas_not_equal(s1, s2, ignore_nullable=False, ignore_metadata=False)
 
 
 # deprecate this.  ignore_nullable should be a flag.
 def assert_schema_equality_ignore_nullable(s1, s2):
     if not are_schemas_equal_ignore_nullable(s1, s2):
-        handle_schemas_not_equal(s1, s2, ignore_nullable=True)
+        handle_schemas_not_equal(s1, s2, ignore_nullable=True, ignore_metadata=False)
 
 
 # deprecate this.  ignore_nullable should be a flag.
