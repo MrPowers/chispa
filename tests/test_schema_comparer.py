@@ -99,7 +99,10 @@ def describe_tree_string():
             ]
         )
 
-        result = create_schema_comparison_tree(s1, s2, ignore_nullable=False)
+        result = create_schema_comparison_tree(
+            s1, s2, ignore_nullable=False, ignore_metadata=False
+        )
+
         assert repr(result) == expected
 
     def it_prints_correctly_for_wide_schemas_multiple_nested_structs():
@@ -183,7 +186,9 @@ def describe_tree_string():
             ]
         )
 
-        result = create_schema_comparison_tree(s1, s2, ignore_nullable=False)
+        result = create_schema_comparison_tree(
+            s1, s2, ignore_nullable=False, ignore_metadata=False
+        )
         assert repr(result) == expected
 
     def it_prints_correctly_for_wide_schemas_ignore_nullable():
@@ -214,15 +219,15 @@ def describe_tree_string():
         s2 = StructType(
             [
                 StructField("name", StringType(), True),
-                StructField("age", IntegerType(), True),
+                StructField("age", IntegerType(), False),
                 StructField("fav_number", IntegerType(), True),
-                StructField("fav_numbers", ArrayType(IntegerType(), True), True),
+                StructField("fav_numbers", ArrayType(IntegerType(), True), False),
                 StructField(
                     "fav_colors",
                     StructType(
                         [
                             StructField("orange", IntegerType(), True),
-                            StructField("green", IntegerType(), True),
+                            StructField("green", IntegerType(), False),
                             StructField("yellow", IntegerType(), True),
                         ]
                     ),
@@ -230,7 +235,10 @@ def describe_tree_string():
             ]
         )
 
-        result = create_schema_comparison_tree(s1, s2, ignore_nullable=True)
+        result = create_schema_comparison_tree(
+            s1, s2, ignore_nullable=True, ignore_metadata=False
+        )
+
         assert repr(result) == expected
 
     def it_prints_correctly_for_wide_schemas_different_lengths():
