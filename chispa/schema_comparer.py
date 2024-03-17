@@ -12,34 +12,38 @@ class SchemasNotEqualError(Exception):
 def create_schema_comparison_tree(
     s1, s2, ignore_nullable: bool, ignore_metadata: bool
 ) -> str:
-    def parse_schema_as_tree(s, indent: int, horizontal_char="-") -> tuple[list, list]:
-        tree_string = []
+    def parse_schema_as_tree(s, indent: int) -> tuple[list, list]:
+        tree_line = []
         fields = []
+
         for struct_field in s:
             nullable = (
                 "(nullable = true)" if struct_field.nullable else "(nullable = false)"
             )
             struct_field_type = struct_field.dataType.typeName()
-            tree_string += [
-                f"{indent * ' '}|{horizontal_char * 2} {struct_field.name}: {struct_field_type} {nullable}"
-            ]
-            if struct_field_type == "struct":
-                tree_string_nested, fields_nested = parse_schema_as_tree(
-                    struct_field.dataType, indent + 4, horizontal_char
-                )
+
+            struct_prefix = f"{indent * ' '}|{'-' * 2}"
+            struct_as_string = f"{struct_field.name}: {struct_field_type} {nullable}"
+
+            tree_line += [f"{struct_prefix} {struct_as_string}"]
+
+            if not struct_field_type == "struct":
                 fields += [struct_field]
-                tree_string += tree_string_nested
-                fields += fields_nested
                 continue
 
+            tree_line_nested, fields_nested = parse_schema_as_tree(
+                struct_field.dataType, indent + 4
+            )
+
             fields += [struct_field]
-        return tree_string, fields
+            tree_line += tree_line_nested
+            fields += fields_nested
+
+        return tree_line, fields
 
     tree_space = 6
-    horizontal_char = "-"
-
-    s1_tree, s1_fields = parse_schema_as_tree(s1, 0, horizontal_char)
-    s2_tree, s2_fields = parse_schema_as_tree(s2, 0, horizontal_char)
+    s1_tree, s1_fields = parse_schema_as_tree(s1, 0)
+    s2_tree, s2_fields = parse_schema_as_tree(s2, 0)
 
     widest_line = max(len(line) for line in s1_tree)
     longest_tree = max(len(s1_tree), len(s2_tree))
@@ -59,17 +63,10 @@ def create_schema_comparison_tree(
 
         tree_string_line = line1.ljust(schema_gap) + line2
 
-        if i >= len(s1_fields) or i >= len(s2_fields):
-            tree_string_combined += line_red(tree_string_line) + "\n"
-            continue
-
         if are_structfields_equal(s1_field, s2_field, ignore_nullable, ignore_metadata):
-            tree_string_line = line_blue(tree_string_line)
-
+            tree_string_combined += line_blue(tree_string_line) + "\n"
         else:
-            tree_string_line = line_red(tree_string_line)
-
-        tree_string_combined += tree_string_line + "\n"
+            tree_string_combined += line_red(tree_string_line) + "\n"
 
     tree_string_combined += bcolors.NC
     return tree_string_combined
@@ -105,7 +102,6 @@ def handle_schemas_not_equal(s1, s2, ignore_nullable: bool, ignore_metadata: boo
     else:
         t = create_schema_comparison_table(s1, s2, ignore_nullable, ignore_metadata)
         error_message = "\n" + t.get_string()
-    print(repr(error_message))
     raise SchemasNotEqualError(error_message)
 
 
