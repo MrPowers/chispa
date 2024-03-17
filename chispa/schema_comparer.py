@@ -13,7 +13,7 @@ def create_schema_comparison_tree(
     s1, s2, ignore_nullable: bool, ignore_metadata: bool
 ) -> str:
     def parse_schema_as_tree(s, indent: int) -> tuple[list, list]:
-        tree_line = []
+        tree_lines = []
         fields = []
 
         for struct_field in s:
@@ -25,7 +25,7 @@ def create_schema_comparison_tree(
             struct_prefix = f"{indent * ' '}|{'-' * 2}"
             struct_as_string = f"{struct_field.name}: {struct_field_type} {nullable}"
 
-            tree_line += [f"{struct_prefix} {struct_as_string}"]
+            tree_lines += [f"{struct_prefix} {struct_as_string}"]
 
             if not struct_field_type == "struct":
                 fields += [struct_field]
@@ -36,10 +36,10 @@ def create_schema_comparison_tree(
             )
 
             fields += [struct_field]
-            tree_line += tree_line_nested
+            tree_lines += tree_line_nested
             fields += fields_nested
 
-        return tree_line, fields
+        return tree_lines, fields
 
     tree_space = 6
     s1_tree, s1_fields = parse_schema_as_tree(s1, 0)
@@ -49,7 +49,7 @@ def create_schema_comparison_tree(
     longest_tree = max(len(s1_tree), len(s2_tree))
     schema_gap = widest_line + tree_space
 
-    tree_string_combined = "\nschema1".ljust(schema_gap) + "schema2\n"
+    tree = "\nschema1".ljust(schema_gap) + "schema2\n"
     for i in range(longest_tree):
         line1 = line2 = ""
         s1_field = s2_field = None
@@ -61,15 +61,15 @@ def create_schema_comparison_tree(
             line2 = s2_tree[i]
             s2_field = s2_fields[i]
 
-        tree_string_line = line1.ljust(schema_gap) + line2
+        tree_line = line1.ljust(schema_gap) + line2
 
         if are_structfields_equal(s1_field, s2_field, ignore_nullable, ignore_metadata):
-            tree_string_combined += line_blue(tree_string_line) + "\n"
+            tree += line_blue(tree_line) + "\n"
         else:
-            tree_string_combined += line_red(tree_string_line) + "\n"
+            tree += line_red(tree_line) + "\n"
 
-    tree_string_combined += bcolors.NC
-    return tree_string_combined
+    tree += bcolors.NC
+    return tree
 
 
 def create_schema_comparison_table(
