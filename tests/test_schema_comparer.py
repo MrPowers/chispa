@@ -287,7 +287,106 @@ def describe_tree_string():
             ]
         )
 
-        result = create_schema_comparison_tree(s1, s2, ignore_nullable=False)
+        result = create_schema_comparison_tree(
+            s1, s2, ignore_nullable=False, ignore_metadata=False
+        )
+        assert repr(result) == expected
+
+    def it_prints_correctly_for_wide_schemas_ignore_metadata():
+        with open(
+            "tests/data/tree_string/it_prints_correctly_for_wide_schemas_ignore_metadata.txt"
+        ) as f:
+            expected = f.read()
+
+        s1 = StructType(
+            [
+                StructField("name", StringType(), True, {"foo": "bar"}),
+                StructField("age", IntegerType(), True),
+                StructField("fav_number", IntegerType(), True),
+                StructField("fav_numbers", ArrayType(IntegerType(), True), True),
+                StructField(
+                    "fav_colors",
+                    StructType(
+                        [
+                            StructField("red", IntegerType(), True),
+                            StructField("green", IntegerType(), True),
+                            StructField("blue", IntegerType(), True),
+                        ]
+                    ),
+                ),
+            ]
+        )
+
+        s2 = StructType(
+            [
+                StructField("name", StringType(), True, {"foo": "baz"}),
+                StructField("age", IntegerType(), True),
+                StructField("fav_number", IntegerType(), True),
+                StructField("fav_numbers", ArrayType(IntegerType(), True), True),
+                StructField(
+                    "fav_colors",
+                    StructType(
+                        [
+                            StructField("orange", IntegerType(), True),
+                            StructField("green", IntegerType(), True),
+                            StructField("yellow", IntegerType(), True),
+                        ]
+                    ),
+                ),
+            ]
+        )
+        result = create_schema_comparison_tree(
+            s1, s2, ignore_nullable=False, ignore_metadata=True
+        )
+        assert repr(result) == expected
+
+    def it_prints_correctly_for_wide_schemas_with_metadata():
+        with open(
+            "tests/data/tree_string/it_prints_correctly_for_wide_schemas_with_metadata.txt"
+        ) as f:
+            expected = f.read()
+
+        s1 = StructType(
+            [
+                StructField("name", StringType(), True, {"foo": "bar"}),
+                StructField("age", IntegerType(), True),
+                StructField("fav_number", IntegerType(), True),
+                StructField("fav_numbers", ArrayType(IntegerType(), True), True),
+                StructField(
+                    "fav_colors",
+                    StructType(
+                        [
+                            StructField("red", IntegerType(), True),
+                            StructField("green", IntegerType(), True),
+                            StructField("blue", IntegerType(), True),
+                        ]
+                    ),
+                ),
+            ]
+        )
+
+        s2 = StructType(
+            [
+                StructField("name", StringType(), True, {"foo": "baz"}),
+                StructField("age", IntegerType(), True),
+                StructField("fav_number", IntegerType(), True),
+                StructField("fav_numbers", ArrayType(IntegerType(), True), True),
+                StructField(
+                    "fav_colors",
+                    StructType(
+                        [
+                            StructField("orange", IntegerType(), True),
+                            StructField("green", IntegerType(), True),
+                            StructField("yellow", IntegerType(), True),
+                        ]
+                    ),
+                ),
+            ]
+        )
+
+        result = create_schema_comparison_tree(
+            s1, s2, ignore_nullable=False, ignore_metadata=False
+        )
         assert repr(result) == expected
 
 
