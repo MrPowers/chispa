@@ -9,6 +9,7 @@ class MyFormats:
     mismatched_cells = ["purple"]
     matched_cells = ["blue"]
 
+
 @pytest.fixture()
 def my_formats():
     return MyFormats()

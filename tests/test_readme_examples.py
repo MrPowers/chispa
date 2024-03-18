@@ -172,7 +172,7 @@ def describe_dataframe_equality():
             ("rick", 66),
         ]
         df2 = spark.createDataFrame(data, ["firstname", "age"])
-        # assert_basic_rows_equality(df1.collect(), df2.collect(), formats=my_formats)
+        # assert_basic_rows_equality(df1.collect(), df2.collect(), formats=my_formats, output_format="smush")
         with pytest.raises(DataFramesNotEqualError) as e_info:
             assert_basic_rows_equality(df1.collect(), df2.collect(), underline_cells=True)
 
