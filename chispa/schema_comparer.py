@@ -9,6 +9,24 @@ class SchemasNotEqualError(Exception):
     pass
 
 
+def print_schema_diff(
+    s1, s2, ignore_nullable: bool, ignore_metadata: bool, output_format: str = "table"
+):
+    valid_output_formats = ["table", "tree"]
+    if output_format == "table":
+        schema_diff = create_schema_comparison_table(
+            s1, s2, ignore_nullable, ignore_metadata
+        )
+    elif output_format == "tree":
+        schema_diff = create_schema_comparison_tree(
+            s1, s2, ignore_nullable, ignore_metadata
+        )
+    else:
+        raise ValueError(f"output_format must be one of {valid_output_formats}")
+
+    print(schema_diff)
+
+
 def create_schema_comparison_tree(
     s1, s2, ignore_nullable: bool, ignore_metadata: bool
 ) -> str:
