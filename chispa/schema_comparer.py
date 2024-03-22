@@ -11,7 +11,7 @@ class SchemasNotEqualError(Exception):
 
 def print_schema_diff(
     s1, s2, ignore_nullable: bool, ignore_metadata: bool, output_format: str = "table"
-):
+) -> None:
     valid_output_formats = ["table", "tree"]
     if output_format == "table":
         schema_diff = create_schema_comparison_table(
@@ -111,7 +111,9 @@ def check_if_schemas_are_wide(s1, s2) -> bool:
     return contains_nested_structs or contains_many_columns
 
 
-def handle_schemas_not_equal(s1, s2, ignore_nullable: bool, ignore_metadata: bool):
+def handle_schemas_not_equal(
+    s1, s2, ignore_nullable: bool, ignore_metadata: bool
+) -> None:
     schemas_are_wide = check_if_schemas_are_wide(s1, s2)
     if schemas_are_wide:
         error_message = create_schema_comparison_tree(
@@ -130,7 +132,9 @@ def assert_schema_equality(s1, s2, ignore_nullable=False, ignore_metadata=False)
         assert_schema_equality_full(s1, s2, ignore_nullable, ignore_metadata)
 
 
-def assert_schema_equality_full(s1, s2, ignore_nullable=False, ignore_metadata=False):
+def assert_schema_equality_full(
+    s1, s2, ignore_nullable=False, ignore_metadata=False
+) -> None:
     def inner(s1, s2, ignore_nullable, ignore_metadata):
         if len(s1) != len(s2):
             return False
