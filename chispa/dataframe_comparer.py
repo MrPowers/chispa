@@ -11,7 +11,7 @@ class DataFramesNotEqualError(Exception):
 
 
 def assert_df_equality(df1, df2, ignore_nullable=False, transforms=None, allow_nan_equality=False,
-                       ignore_column_order=False, ignore_row_order=False, underline_cells=False, ignore_metadata=False, formats=DefaultFormats()):
+                       ignore_column_order=False, ignore_row_order=True, underline_cells=False, ignore_metadata=False, formats=DefaultFormats()):
     if transforms is None:
         transforms = []
     if ignore_column_order:
@@ -38,7 +38,7 @@ def are_dfs_equal(df1, df2):
 
 
 def assert_approx_df_equality(df1, df2, precision, ignore_nullable=False, transforms=None, allow_nan_equality=False,
-                       ignore_column_order=False, ignore_row_order=False, formats=DefaultFormats()):
+                       ignore_column_order=False, ignore_row_order=True, formats=DefaultFormats()):
     if transforms is None:
         transforms = []
     if ignore_column_order:
