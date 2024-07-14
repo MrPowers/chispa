@@ -1,7 +1,15 @@
 site_name: Chispa
+edit_uri: edit/main/docs/
+repo_name: MrPowers/chispa
+repo_url: https://github.com/MrPowers/chispa
+site_url: https://mrpowers.github.io/chispa/
+site_description: PySpark test helper methods with beautiful error messages.
+site_author: Matthew Powers
+copyright: Maintained by <a href="https://github.com/MrPowers">Matthew</a>.
 
-theme:
-  name: "readthedocs"
+nav:
+  - Home: index.md
+  - API Docs: reference/SUMMARY.md
 
 plugins:
   - search
@@ -19,10 +27,46 @@ plugins:
               show_if_no_docstring: true
             show_source: true
 
-nav:
-  - Chispa: index.md
-  - API Docs: reference/SUMMARY.md
+theme:
+  name: material
+  features:
+    - content.action.edit
+    - content.code.copy
+    - navigation.footer
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: amber
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  icon:
+    repo: fontawesome/brands/github
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/MrPowers/chispa
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/chispa/
 
 markdown_extensions:
-    - markdown_include.include:
-        base_path: .
+  - admonition
+  - attr_list
+  - md_in_html
+  - pymdownx.details
+  - pymdownx.superfences
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex:
+      generic: true
+  - markdown_include.include:
+      base_path: .

@@ -21,6 +21,7 @@ mkdocs-gen-files = "*"
 mkdocs-literate-nav = "*"
 mkdocs-section-index = "*"
 markdown-include = "*"
+mkdocs-material = "*"
 
 [tool.poetry.group.mkdocs]
 optional = true
