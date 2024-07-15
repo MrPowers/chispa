@@ -7,7 +7,7 @@ repository = "https://github.com/MrPowers/chispa"
 documentation = "https://mrpowers.github.io/chispa"
 readme = "README.md"
 license = "MIT"
-keywords = ["dependency", "poetry"]
+keywords = ['apachespark', 'spark', 'pyspark', 'pytest']
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Environment :: Console",
