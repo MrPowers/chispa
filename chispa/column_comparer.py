@@ -3,8 +3,9 @@ from prettytable import PrettyTable
 
 
 class ColumnsNotEqualError(Exception):
-   """The columns are not equal"""
-   pass
+    """The columns are not equal"""
+
+    pass
 
 
 def assert_column_equality(df, col_name1, col_name2):
@@ -35,11 +36,11 @@ def assert_approx_column_equality(df, col_name1, col_name2, precision):
         first = bcolors.LightBlue + str(elements[0]) + bcolors.LightRed
         second = bcolors.LightBlue + str(elements[1]) + bcolors.LightRed
         # when one is None and the other isn't, they're not equal
-        if (elements[0] == None and elements[1] != None) or (elements[0] != None and elements[1] == None):
+        if (elements[0] is None and elements[1] is not None) or (elements[0] is not None and elements[1] is None):
             all_rows_equal = False
             t.add_row([str(elements[0]), str(elements[1])])
         # when both are None, they're equal
-        elif elements[0] == None and elements[1] == None:
+        elif elements[0] is None and elements[1] is None:
             t.add_row([first, second])
         # when the diff is less than the threshhold, they're approximately equal
         elif abs(elements[0] - elements[1]) < precision:
@@ -50,4 +51,3 @@ def assert_approx_column_equality(df, col_name1, col_name2, precision):
             t.add_row([str(elements[0]), str(elements[1])])
     if all_rows_equal == False:
         raise ColumnsNotEqualError("\n" + t.get_string())
-

@@ -4,8 +4,9 @@ from itertools import zip_longest
 
 
 class SchemasNotEqualError(Exception):
-   """The schemas are not equal"""
-   pass
+    """The schemas are not equal"""
+
+    pass
 
 
 def assert_schema_equality(s1, s2, ignore_nullable=False, ignore_metadata=False):
@@ -49,7 +50,6 @@ def assert_basic_schema_equality(s1, s2):
             else:
                 t.add_row([sf1, sf2])
         raise SchemasNotEqualError("\n" + t.get_string())
-
 
 
 # deprecate this.  ignore_nullable should be a flag.
@@ -101,9 +101,9 @@ def are_datatypes_equal_ignore_nullable(dt1, dt2):
     """
     if dt1.typeName() == dt2.typeName():
         # Account for array types by inspecting elementType.
-        if dt1.typeName() == 'array':
+        if dt1.typeName() == "array":
             return are_datatypes_equal_ignore_nullable(dt1.elementType, dt2.elementType)
-        elif dt1.typeName() == 'struct':
+        elif dt1.typeName() == "struct":
             return are_schemas_equal_ignore_nullable(dt1, dt2)
         else:
             return True

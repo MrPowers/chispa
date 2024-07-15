@@ -1,5 +1,3 @@
-import pytest
-
 from chispa.structfield_comparer import are_structfields_equal
 from pyspark.sql.types import *
 
