@@ -16,6 +16,9 @@ jobs:
       - name: Set up the environment
         uses: ./.github/actions/setup-poetry-env
 
+      - name: Check lock file
+        run: poetry lock --check
+
       - name: Run pre-commit hooks
         run: poetry run pre-commit run -a --show-diff-on-failure
 
