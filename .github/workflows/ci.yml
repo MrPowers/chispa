@@ -1,39 +1,56 @@
 name: Unit tests
 
 on:
+  pull_request:
+    types: [opened, synchronize, reopened]
   push:
-    branches:
-    - main
+    branches: [main]
 
 jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+
+      - name: Set up the environment
+        uses: ./.github/actions/setup-poetry-env
+
+      - name: Check lock file
+        run: poetry lock --check
 
   test:
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix:
+        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+      fail-fast: false
+    defaults:
+      run:
+        shell: bash
     steps:
-      - uses: actions/checkout@v1
+      - name: Check out
+        uses: actions/checkout@v3
+
+      - name: Set up the environment
+        uses: ./.github/actions/setup-poetry-env
         with:
-          fetch-depth: 1
+          python-version: ${{ matrix.python-version }}
 
-      - name: Set up Python 3.9
-        uses: actions/setup-python@v2
+      - name: Run tests
+        run: poetry run pytest tests
+
+  check-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+
+      - name: Set up the environment
+        uses: ./.github/actions/setup-poetry-env
         with:
-          python-version: 3.9
+          with-docs: true
 
-      - name: Install Poetry
-        uses: snok/install-poetry@v1
+      - name: Check if documentation can be built
+        run: poetry run mkdocs build -s
 
-      - name: Cache Poetry virtualenv
-        uses: actions/cache@v1
-        id: cache
-        with:
-          path: ~/.virtualenvs
-          key: poetry-${{ hashFiles('**/poetry.lock') }}
-          restore-keys: |
-            poetry-${{ hashFiles('**/poetry.lock') }}
-      - name: Install dependencies
-        run: poetry install
-        if: steps.cache.outputs.cache-hit != 'true'
-
-      - name: Run tests with pytest
-        run: poetry run pytest
