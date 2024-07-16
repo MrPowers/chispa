@@ -1,4 +1,4 @@
-import chispa.six as six
+from itertools import zip_longest
 from chispa.prettytable import PrettyTable
 from chispa.bcolors import *
 import chispa
@@ -11,8 +11,9 @@ from chispa.default_formats import DefaultFormats
 def assert_basic_rows_equality(rows1, rows2, underline_cells=False, formats=DefaultFormats()):
     if rows1 != rows2:
         t = PrettyTable(["df1", "df2"])
-        zipped = list(six.moves.zip_longest(rows1, rows2))
+        zipped = list(zip_longest(rows1, rows2))
         all_rows_equal = True
+
         for r1, r2 in zipped:
             if r1 is None and r2 is not None:
                 t.add_row([None, format_string(r2, formats.mismatched_rows)])
@@ -21,7 +22,7 @@ def assert_basic_rows_equality(rows1, rows2, underline_cells=False, formats=Defa
                 t.add_row([format_string(r1, formats.mismatched_rows), None])
                 all_rows_equal = False
             else:
-                r_zipped = list(six.moves.zip_longest(r1.__fields__, r2.__fields__))
+                r_zipped = list(zip_longest(r1.__fields__, r2.__fields__))
                 r1_string = []
                 r2_string = []
                 for r1_field, r2_field in r_zipped:
@@ -43,7 +44,7 @@ def assert_basic_rows_equality(rows1, rows2, underline_cells=False, formats=Defa
 def assert_generic_rows_equality(rows1, rows2, row_equality_fun, row_equality_fun_args, underline_cells=False, formats=DefaultFormats()):
     df1_rows = rows1
     df2_rows = rows2
-    zipped = list(six.moves.zip_longest(df1_rows, df2_rows))
+    zipped = list(zip_longest(df1_rows, df2_rows))
     t = PrettyTable(["df1", "df2"])
     all_rows_equal = True
     for r1, r2 in zipped:
@@ -58,7 +59,7 @@ def assert_generic_rows_equality(rows1, rows2, row_equality_fun, row_equality_fu
             t.add_row([format_string(r1_string, formats.matched_rows), format_string(r2_string, formats.matched_rows)])
         # otherwise, rows aren't equal
         else:
-            r_zipped = list(six.moves.zip_longest(r1.__fields__, r2.__fields__))
+            r_zipped = list(zip_longest(r1.__fields__, r2.__fields__))
             r1_string = []
             r2_string = []
             for r1_field, r2_field in r_zipped:
