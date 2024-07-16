@@ -7,6 +7,18 @@ on:
     branches: [main]
 
 jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v3
+
+      - name: Set up the environment
+        uses: ./.github/actions/setup-poetry-env
+
+      - name: Run pre-commit hooks
+        run: poetry run pre-commit run -a --show-diff-on-failure
+
   test:
     runs-on: ubuntu-latest
     strategy:
