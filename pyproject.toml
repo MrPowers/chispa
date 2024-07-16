@@ -2,7 +2,11 @@
 name = "chispa"
 version = "0.10.0"
 description = "Pyspark test helper library"
-authors = ["MrPowers <matthewkevinpowers@gmail.com>"]
+authors = ["Matthew Powers <matthewkevinpowers@gmail.com>"]
+maintainers = [
+    "Semyon Sinchenko <ssinchenko@apache.org>",
+    "Florian Maas <info@fpgmaas.com>"
+]
 repository = "https://github.com/MrPowers/chispa"
 documentation = "https://mrpowers.github.io/chispa"
 readme = "README.md"
