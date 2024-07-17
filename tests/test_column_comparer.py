@@ -3,6 +3,7 @@ import pytest
 from .spark import spark
 from chispa import *
 
+
 def describe_assert_column_equality():
     def it_throws_error_with_data_mismatch():
         data = [("jose", "jose"), ("li", "li"), ("luisa", "laura")]
