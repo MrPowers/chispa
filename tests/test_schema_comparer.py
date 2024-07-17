@@ -25,7 +25,7 @@ def describe_assert_schema_equality():
             StructField("name", StringType(), True),
             StructField("age", IntegerType(), True),
         ])
-        with pytest.raises(SchemasNotEqualError) as e_info:
+        with pytest.raises(SchemasNotEqualError):
             assert_schema_equality(s1, s2)
 
     def it_throws_when_schema_lengths_differ():
@@ -38,7 +38,7 @@ def describe_assert_schema_equality():
             StructField("age", IntegerType(), True),
             StructField("fav_number", IntegerType(), True),
         ])
-        with pytest.raises(SchemasNotEqualError) as e_info:
+        with pytest.raises(SchemasNotEqualError):
             assert_schema_equality(s1, s2)
 
 
@@ -54,7 +54,7 @@ def describe_assert_schema_equality_ignore_nullable():
             StructField("something", IntegerType(), True),
             StructField("else", IntegerType(), True),
         ])
-        with pytest.raises(SchemasNotEqualError) as e_info:
+        with pytest.raises(SchemasNotEqualError):
             assert_schema_equality_ignore_nullable(s1, s2)
 
     def it_does_nothing_when_equal():
