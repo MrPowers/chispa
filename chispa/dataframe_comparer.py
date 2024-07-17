@@ -38,7 +38,7 @@ def are_dfs_equal(df1, df2):
 
 
 def assert_approx_df_equality(df1, df2, precision, ignore_nullable=False, transforms=None, allow_nan_equality=False,
-                       ignore_column_order=False, ignore_row_order=False, formats=DefaultFormats()):
+                       ignore_column_order=False, ignore_row_order=False, ignore_metadata=False, formats=DefaultFormats()):
     if transforms is None:
         transforms = []
     if ignore_column_order:
@@ -47,7 +47,7 @@ def assert_approx_df_equality(df1, df2, precision, ignore_nullable=False, transf
         transforms.append(lambda df: df.sort(df.columns))
     df1 = reduce(lambda acc, fn: fn(acc), transforms, df1)
     df2 = reduce(lambda acc, fn: fn(acc), transforms, df2)
-    assert_schema_equality(df1.schema, df2.schema, ignore_nullable)
+    assert_schema_equality(df1.schema, df2.schema, ignore_nullable=ignore_nullable, ignore_metadata=ignore_metadata)
     if precision != 0:
         assert_generic_rows_equality(df1.collect(), df2.collect(), are_rows_approx_equal, [precision, allow_nan_equality], formats)
     elif allow_nan_equality:
