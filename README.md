@@ -473,12 +473,6 @@ PySpark 2 support will be dropped when chispa 1.x is released.
 
 TODO: Need to benchmark these methods vs. the spark-testing-base ones
 
-## Vendored dependencies
-
-* [PrettyTable](https://github.com/jazzband/prettytable)
-
-The dependencies are vendored to save you from dependency hell.
-
 ## Developing chispa on your local machine
 
 You are encouraged to clone and/or fork this repo.

@@ -1,4 +1,4 @@
-from chispa.prettytable import PrettyTable
+from prettytable import PrettyTable
 from chispa.bcolors import *
 from itertools import zip_longest
 

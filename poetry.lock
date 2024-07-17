@@ -650,6 +650,23 @@ dev = ["pre-commit", "tox"]
 testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
+name = "prettytable"
+version = "3.10.2"
+description = "A simple Python library for easily displaying tabular data in a visually appealing ASCII table format"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "prettytable-3.10.2-py3-none-any.whl", hash = "sha256:1cbfdeb4bcc73976a778a0fb33cb6d752e75396f16574dcb3e2d6332fd93c76a"},
+    {file = "prettytable-3.10.2.tar.gz", hash = "sha256:29ec6c34260191d42cd4928c28d56adec360ac2b1208a26c7e4f14b90cc8bc84"},
+]
+
+[package.dependencies]
+wcwidth = "*"
+
+[package.extras]
+tests = ["pytest", "pytest-cov", "pytest-lazy-fixtures"]
+
+[[package]]
 name = "py4j"
 version = "0.10.9.7"
 description = "Enables Python programs to dynamically access arbitrary Java objects"
@@ -1051,6 +1068,17 @@ files = [
 watchmedo = ["PyYAML (>=3.10)"]
 
 [[package]]
+name = "wcwidth"
+version = "0.2.13"
+description = "Measures the displayed width of unicode strings in a terminal"
+optional = false
+python-versions = "*"
+files = [
+    {file = "wcwidth-0.2.13-py2.py3-none-any.whl", hash = "sha256:3da69048e4540d84af32131829ff948f1e022c1c6bdb8d6102117aac784f6859"},
+    {file = "wcwidth-0.2.13.tar.gz", hash = "sha256:72ea0c06399eb286d978fdedb6923a9eb47e1c486ce63e9b4e64fc18303972b5"},
+]
+
+[[package]]
 name = "wheel"
 version = "0.43.0"
 description = "A built-package format for Python"
@@ -1082,4 +1110,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8,<4.0"
-content-hash = "28562e740b45e6351b1c6820acaeeb6ba6ba102bc9897e7b917c6f7624d4975d"
+content-hash = "e03372b4324a84ae1c74bae8b8bb8205040db38d081ffc1dd6a1c135d2960414"
