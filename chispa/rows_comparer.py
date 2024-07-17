@@ -1,6 +1,5 @@
 from itertools import zip_longest
 from prettytable import PrettyTable
-from chispa.bcolors import *
 import chispa
 from chispa.terminal_str_formatter import format_string
 from chispa.default_formats import DefaultFormats

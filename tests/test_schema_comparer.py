@@ -1,7 +1,13 @@
 import pytest
 
-from pyspark.sql.types import *
-from chispa.schema_comparer import *
+from pyspark.sql.types import StringType, IntegerType, DoubleType, StructField, StructType, ArrayType
+from chispa.schema_comparer import (
+    assert_schema_equality,
+    SchemasNotEqualError,
+    assert_schema_equality_ignore_nullable,
+    are_schemas_equal_ignore_nullable,
+    are_structfields_equal,
+)
 
 
 def describe_assert_schema_equality():

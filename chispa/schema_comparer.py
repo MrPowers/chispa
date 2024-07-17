@@ -1,5 +1,5 @@
 from prettytable import PrettyTable
-from chispa.bcolors import *
+from chispa.bcolors import blue
 from itertools import zip_longest
 
 
