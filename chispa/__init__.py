@@ -4,7 +4,7 @@ from glob import glob
 
 # Add PySpark to the library path based on the value of SPARK_HOME if pyspark is not already in our path
 try:
-    from pyspark import context
+    from pyspark import context  # noqa: F401
 except ImportError:
     # We need to add PySpark, try use findspark, or failback to the "manually" find it
     try:
@@ -68,3 +68,16 @@ class Chispa:
             ignore_metadata,
             self.formats,
         )
+
+
+__all__ = (
+    "DataFramesNotEqualError",
+    "assert_df_equality",
+    "assert_approx_df_equality",
+    "ColumnsNotEqualError",
+    "assert_column_equality",
+    "assert_approx_column_equality",
+    "assert_basic_rows_equality",
+    "DefaultFormats",
+    "Chispa",
+)

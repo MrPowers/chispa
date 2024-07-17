@@ -1,8 +1,7 @@
 import pytest
 
-from .spark import *
-from chispa import *
-from chispa.rows_comparer import assert_basic_rows_equality
+from .spark import spark
+from chispa import assert_basic_rows_equality
 from chispa import DataFramesNotEqualError
 
 

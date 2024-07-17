@@ -1,7 +1,7 @@
 import pytest
 
 from .spark import spark
-from chispa import *
+from chispa import assert_column_equality, ColumnsNotEqualError, assert_approx_column_equality
 
 
 def describe_assert_column_equality():

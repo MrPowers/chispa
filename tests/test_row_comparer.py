@@ -1,5 +1,4 @@
-from .spark import *
-from chispa.row_comparer import *
+from chispa.row_comparer import are_rows_equal_enhanced, are_rows_equal, are_rows_approx_equal
 from pyspark.sql import Row
 
 

@@ -1,7 +1,7 @@
 import pytest
 
-from .spark import *
-from chispa import *
+from .spark import spark
+from chispa import assert_df_equality, DataFramesNotEqualError, assert_approx_df_equality
 from chispa.dataframe_comparer import are_dfs_equal
 from chispa.schema_comparer import SchemasNotEqualError
 import math
