@@ -92,22 +92,22 @@ def describe_are_schemas_equal_ignore_nullable():
             StructField("age", IntegerType(), False),
             StructField("coords", ArrayType(DoubleType(), True), False),
         ])
-        assert are_schemas_equal_ignore_nullable(s1, s2) == True
+        assert are_schemas_equal_ignore_nullable(s1, s2) is True
 
     def it_returns_true_when_only_nullable_flag_is_different_within_array_element():
         s1 = StructType([StructField("coords", ArrayType(DoubleType(), True), True)])
         s2 = StructType([StructField("coords", ArrayType(DoubleType(), False), True)])
-        assert are_schemas_equal_ignore_nullable(s1, s2) == True
+        assert are_schemas_equal_ignore_nullable(s1, s2) is True
 
     def it_returns_true_when_only_nullable_flag_is_different_within_nested_array_element():
         s1 = StructType([StructField("coords", ArrayType(ArrayType(DoubleType(), True), True), True)])
         s2 = StructType([StructField("coords", ArrayType(ArrayType(DoubleType(), False), True), True)])
-        assert are_schemas_equal_ignore_nullable(s1, s2) == True
+        assert are_schemas_equal_ignore_nullable(s1, s2) is True
 
     def it_returns_false_when_the_element_type_is_different_within_array():
         s1 = StructType([StructField("coords", ArrayType(DoubleType(), True), True)])
         s2 = StructType([StructField("coords", ArrayType(IntegerType(), True), True)])
-        assert are_schemas_equal_ignore_nullable(s1, s2) == False
+        assert are_schemas_equal_ignore_nullable(s1, s2) is False
 
     def it_returns_false_when_column_names_differ():
         s1 = StructType([
@@ -118,7 +118,7 @@ def describe_are_schemas_equal_ignore_nullable():
             StructField("name", StringType(), True),
             StructField("age", IntegerType(), False),
         ])
-        assert are_schemas_equal_ignore_nullable(s1, s2) == False
+        assert are_schemas_equal_ignore_nullable(s1, s2) is False
 
     def it_returns_false_when_columns_have_different_order():
         s1 = StructType([
@@ -129,39 +129,39 @@ def describe_are_schemas_equal_ignore_nullable():
             StructField("age", IntegerType(), False),
             StructField("blah", StringType(), True),
         ])
-        assert are_schemas_equal_ignore_nullable(s1, s2) == False
+        assert are_schemas_equal_ignore_nullable(s1, s2) is False
 
 
 def describe_are_structfields_equal():
     def it_returns_true_when_only_nullable_flag_is_different_within_array_element():
         s1 = StructField("coords", ArrayType(DoubleType(), True), True)
         s2 = StructField("coords", ArrayType(DoubleType(), False), True)
-        assert are_structfields_equal(s1, s2, True) == True
+        assert are_structfields_equal(s1, s2, True) is True
 
     def it_returns_false_when_the_element_type_is_different_within_array():
         s1 = StructField("coords", ArrayType(DoubleType(), True), True)
         s2 = StructField("coords", ArrayType(IntegerType(), True), True)
-        assert are_structfields_equal(s1, s2, True) == False
+        assert are_structfields_equal(s1, s2, True) is False
 
     def it_returns_true_when_the_element_type_is_same_within_struct():
         s1 = StructField("coords", StructType([StructField("hello", DoubleType(), True)]), True)
         s2 = StructField("coords", StructType([StructField("hello", DoubleType(), True)]), True)
-        assert are_structfields_equal(s1, s2, True) == True
+        assert are_structfields_equal(s1, s2, True) is True
 
     def it_returns_false_when_the_element_type_is_different_within_struct():
         s1 = StructField("coords", StructType([StructField("hello", DoubleType(), True)]), True)
         s2 = StructField("coords", StructType([StructField("hello", IntegerType(), True)]), True)
-        assert are_structfields_equal(s1, s2, True) == False
+        assert are_structfields_equal(s1, s2, True) is False
 
     def it_returns_false_when_the_element_name_is_different_within_struct():
         s1 = StructField("coords", StructType([StructField("hello", DoubleType(), True)]), True)
         s2 = StructField("coords", StructType([StructField("world", DoubleType(), True)]), True)
-        assert are_structfields_equal(s1, s2, True) == False
+        assert are_structfields_equal(s1, s2, True) is False
 
     def it_returns_true_when_different_nullability_within_struct():
         s1 = StructField("coords", StructType([StructField("hello", DoubleType(), True)]), True)
         s2 = StructField("coords", StructType([StructField("hello", DoubleType(), False)]), True)
-        assert are_structfields_equal(s1, s2, True) == True
+        assert are_structfields_equal(s1, s2, True) is True
 
     def it_returns_false_when_metadata_differs():
         s1 = StructField("coords", StringType(), True, {"hi": "whatever"})

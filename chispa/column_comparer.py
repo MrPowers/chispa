@@ -49,5 +49,5 @@ def assert_approx_column_equality(df, col_name1, col_name2, precision):
         else:
             all_rows_equal = False
             t.add_row([str(elements[0]), str(elements[1])])
-    if all_rows_equal == False:
+    if all_rows_equal is False:
         raise ColumnsNotEqualError("\n" + t.get_string())
