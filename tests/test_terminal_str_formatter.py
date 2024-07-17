@@ -1,5 +1,3 @@
-import pytest
-
 from chispa.terminal_str_formatter import format_string
 
 

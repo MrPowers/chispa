@@ -13,4 +13,4 @@ def nan_safe_equality(x, y) -> bool:
 
 
 def nan_safe_approx_equality(x, y, precision) -> bool:
-    return (abs(x-y)<=precision) or (isnan(x) and isnan(y))
+    return (abs(x - y) <= precision) or (isnan(x) and isnan(y))

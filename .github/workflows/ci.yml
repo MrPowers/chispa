@@ -19,6 +19,9 @@ jobs:
       - name: Check lock file
         run: poetry lock --check
 
+      - name: Run pre-commit hooks
+        run: poetry run pre-commit run -a
+
   test:
     runs-on: ubuntu-latest
     strategy:

@@ -4,7 +4,6 @@ from .spark import *
 from chispa import *
 from chispa.rows_comparer import assert_basic_rows_equality
 from chispa import DataFramesNotEqualError
-import math
 
 
 def describe_assert_basic_rows_equality():
@@ -30,4 +29,3 @@ def describe_assert_basic_rows_equality():
         data2 = [(1, "jose"), (2, "li"), (3, "laura")]
         df2 = spark.createDataFrame(data2, ["name", "expected_name"])
         assert_basic_rows_equality(df1.collect(), df2.collect())
-
