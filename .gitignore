@@ -1,7 +1,5 @@
 .DS_store
 .python_version
-.coverage*
-htmlcov
 
 # Emacs
 .dir-locals.el
