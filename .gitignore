@@ -1,6 +1,12 @@
 .DS_store
 .python_version
 
+# Emacs
+.dir-locals.el
+
+# VSCode
+.vscode
+
 # From https://github.com/github/gitignore/blob/main/Python.gitignore
 # Byte-compiled / optimized / DLL files
 __pycache__/
