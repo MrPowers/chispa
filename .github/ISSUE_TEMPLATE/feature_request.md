@@ -18,6 +18,6 @@ labels: "enhancement"
 
 **Are you planning on creating a PR?**
 
-<!-- Check the box below with an `x` if you are willing to create a PR. -->
+<!-- Check the box below with an `x` if you are planning to create a PR for this. -->
 
-- [ ] I'm planning to make pull-request
+- [ ] I'm planning to make a pull-request
