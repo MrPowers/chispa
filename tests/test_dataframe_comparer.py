@@ -136,21 +136,21 @@ def describe_are_dfs_equal():
         df1 = spark.createDataFrame(data1, ["num", "expected_name"])
         data2 = [("bob", "jose"), ("li", "li"), ("luisa", "laura")]
         df2 = spark.createDataFrame(data2, ["name", "expected_name"])
-        assert are_dfs_equal(df1, df2) == False
+        assert are_dfs_equal(df1, df2) is False
 
     def it_returns_false_with_content_mismatches():
         data1 = [("jose", "jose"), ("li", "li"), ("luisa", "laura")]
         df1 = spark.createDataFrame(data1, ["name", "expected_name"])
         data2 = [("bob", "jose"), ("li", "li"), ("luisa", "laura")]
         df2 = spark.createDataFrame(data2, ["name", "expected_name"])
-        assert are_dfs_equal(df1, df2) == False
+        assert are_dfs_equal(df1, df2) is False
 
     def it_returns_true_when_dfs_are_same():
         data1 = [("bob", "jose"), ("li", "li"), ("luisa", "laura")]
         df1 = spark.createDataFrame(data1, ["name", "expected_name"])
         data2 = [("bob", "jose"), ("li", "li"), ("luisa", "laura")]
         df2 = spark.createDataFrame(data2, ["name", "expected_name"])
-        assert are_dfs_equal(df1, df2) == True
+        assert are_dfs_equal(df1, df2) is True
 
 
 def describe_assert_approx_df_equality():

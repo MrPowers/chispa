@@ -70,7 +70,6 @@ preview = true
 [tool.ruff.lint]
 ignore = [
     "E501",  # Line too long
-    "E712",  # Avoid equality comparisons to `False`; use `if not ...:` for false checks
     "F401",  # imported but unused;
     "F403",  # `from X import *` used; unable to detect undefined names
     "F405",  # X may be undefined, or defined from star imports
