@@ -2,7 +2,7 @@ import pytest
 
 from .spark import spark
 from chispa import *
-
+import pyspark.sql.functions as f
 
 def describe_assert_column_equality():
     def it_throws_error_with_data_mismatch():

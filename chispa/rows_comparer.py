@@ -1,5 +1,5 @@
 from itertools import zip_longest
-from chispa.prettytable import PrettyTable
+from prettytable import PrettyTable
 from chispa.bcolors import *
 import chispa
 from pyspark.sql.types import Row
