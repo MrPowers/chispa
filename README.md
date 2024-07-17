@@ -316,26 +316,33 @@ assert_df_equality(df1, df2, allow_nan_equality=True)
 You can specify custom formats for the printed error messages as follows:
 
 ```python
-@dataclass
-class MyFormats:
-    mismatched_rows = ["light_yellow"]
-    matched_rows = ["cyan", "bold"]
-    mismatched_cells = ["purple"]
-    matched_cells = ["blue"]
+from chispa.formatting import FormattingConfig
 
-assert_basic_rows_equality(df1.collect(), df2.collect(), formats=MyFormats())
+formats = FormattingConfig(
+        mismatched_rows={"color": "light_yellow"},
+        matched_rows={"color": "cyan", "style": "bold"},
+        mismatched_cells={"color": "purple"},
+        matched_cells={"color": "blue"},
+    )
+
+assert_basic_rows_equality(df1.collect(), df2.collect(), formats=formats)
 ```
 
 You can also define these formats in `conftest.py` and inject them via a fixture:
 
 ```python
 @pytest.fixture()
-def my_formats():
-    return MyFormats()
+def chispa_formats():
+    return FormattingConfig(
+        mismatched_rows={"color": "light_yellow"},
+        matched_rows={"color": "cyan", "style": "bold"},
+        mismatched_cells={"color": "purple"},
+        matched_cells={"color": "blue"},
+    )
 
-def test_shows_assert_basic_rows_equality(my_formats):
+def test_shows_assert_basic_rows_equality(chispa_formats):
   ...
-  assert_basic_rows_equality(df1.collect(), df2.collect(), formats=my_formats)
+  assert_basic_rows_equality(df1.collect(), df2.collect(), formats=chispa_formats)
 ```
 
 ![custom_formats](https://github.com/MrPowers/chispa/blob/main/images/custom_formats.png)

@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 from functools import reduce
 
-from chispa.default_formats import DefaultFormats
+from chispa.formatting.formats import FormattingConfig
 from chispa.row_comparer import are_rows_approx_equal, are_rows_equal_enhanced
 from chispa.rows_comparer import (
     assert_basic_rows_equality,
@@ -25,7 +27,7 @@ def assert_df_equality(
     ignore_row_order=False,
     underline_cells=False,
     ignore_metadata=False,
-    formats=DefaultFormats(),
+    formats: FormattingConfig = FormattingConfig(),
 ):
     if transforms is None:
         transforms = []
@@ -71,8 +73,10 @@ def assert_approx_df_equality(
     allow_nan_equality=False,
     ignore_column_order=False,
     ignore_row_order=False,
-    formats=DefaultFormats(),
+    formats: FormattingConfig | None = None,
 ):
+    if not formats:
+        formats = FormattingConfig()
     if transforms is None:
         transforms = []
     if ignore_column_order:

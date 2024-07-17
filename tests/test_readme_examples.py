@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import pyspark.sql.functions as F
 import pytest
 from pyspark.sql import SparkSession

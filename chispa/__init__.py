@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 import os
 import sys
 from glob import glob
@@ -28,6 +30,7 @@ except ImportError:
             exit(-1)
 
 from chispa.default_formats import DefaultFormats
+from chispa.formatting.formats import Color, Format, FormattingConfig, Style
 
 from .column_comparer import (
     ColumnsNotEqualError,
@@ -43,8 +46,8 @@ from .rows_comparer import assert_basic_rows_equality
 
 
 class Chispa:
-    def __init__(self, formats=DefaultFormats(), default_output=None):
-        self.formats = formats
+    def __init__(self, formats: FormattingConfig | None = None, default_output=None):
+        self.formats = formats if formats else FormattingConfig()
         self.default_outputs = default_output
 
     def assert_df_equality(
@@ -81,6 +84,10 @@ __all__ = (
     "assert_column_equality",
     "assert_approx_column_equality",
     "assert_basic_rows_equality",
-    "DefaultFormats",
+    "Style",
+    "Color",
+    "FormattingConfig",
+    "Format",
     "Chispa",
+    "DefaultFormats",
 )
