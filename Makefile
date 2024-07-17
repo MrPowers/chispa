@@ -8,6 +8,17 @@ test: ## Run unit tests
 	@echo "Running unit tests"
 	@poetry run pytest tests
 
+.PHONY: test-cov
+test-cov: ## Run unit tests and create a coverage report
+	@echo "Running unit tests"
+	@poetry run pytest --cov-report term --cov-report=html --cov=chispa
+	@open htmlcov/index.html
+
+.PHONY: test-cov-xml
+test-cov-xml: ## Run unit tests and create a coverage report in xml format
+	@echo "Running unit tests"
+	@poetry run pytest tests --cov=chispa --cov-report=xml
+
 .PHONY: build
 build: clean-build ## Build wheel and sdist files using Poetry
 	@echo "Creating wheel and sdist files"
