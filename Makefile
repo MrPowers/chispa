@@ -6,7 +6,17 @@ install: ## Install the Poetry environment
 .PHONY: test
 test: ## Run unit tests
 	@echo "Running unit tests"
-	@poetry run pytest tests
+	@poetry run pytest tests --cov=chispa --cov-report=term 
+
+.PHONY: test-cov-html
+test-cov-html: ## Run unit tests and create a coverage report
+	@echo "Running unit tests and generating HTML report"
+	@poetry run pytest tests --cov=chispa --cov-report=html
+
+.PHONY: test-cov-xml
+test-cov-xml: ## Run unit tests and create a coverage report in xml format
+	@echo "Running unit tests and generating XML report"
+	@poetry run pytest tests --cov=chispa --cov-report=xml
 
 .PHONY: build
 build: clean-build ## Build wheel and sdist files using Poetry
