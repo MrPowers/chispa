@@ -17,7 +17,9 @@ except ImportError:
             sys.path.append(os.path.join(spark_home, "python"))
             py4j_src_zip = glob(os.path.join(spark_home, "python", "lib", "py4j-*-src.zip"))
             if len(py4j_src_zip) == 0:
-                raise ValueError("py4j source archive not found in %s" % os.path.join(spark_home, "python", "lib"))
+                raise ValueError(
+                    "py4j source archive not found in {}".format(os.path.join(spark_home, "python", "lib"))
+                )
             else:
                 py4j_src_zip = sorted(py4j_src_zip)[::-1]
                 sys.path.append(py4j_src_zip[0])
