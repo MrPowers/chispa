@@ -3,6 +3,11 @@ install: ## Install the Poetry environment
 	@echo "Creating virtual environment using Poetry"
 	@poetry install
 
+.PHONY: check
+check: ## Run code quality checks
+	@echo "Running pre-commit hooks"
+	@poetry run pre-commit run -a
+
 .PHONY: test
 test: ## Run unit tests
 	@echo "Running unit tests"
