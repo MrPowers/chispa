@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from chispa.terminal_str_formatter import format_string
 
 

@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+
 class bcolors:
     NC = "\033[0m"  # No Color, reset all
 

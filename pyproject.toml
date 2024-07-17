@@ -68,9 +68,10 @@ fix = true
 preview = true
 
 [tool.ruff.lint]
+select = ["E", "F", "I"]
 ignore = [
-    "E501",  # Line too long
-    "F405",  # X may be undefined, or defined from star imports
+    # Line too long
+    "E501",
 ]
 
 [tool.ruff.lint.flake8-type-checking]
