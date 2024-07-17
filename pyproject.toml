@@ -71,7 +71,6 @@ preview = true
 ignore = [
     "E501",  # Line too long
     "F405",  # X may be undefined, or defined from star imports
-    "F841",  # Local variable `e_info` is assigned to but never used
 ]
 
 [tool.ruff.lint.flake8-type-checking]
