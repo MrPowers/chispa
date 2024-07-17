@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 from prettytable import PrettyTable
 
 from chispa.bcolors import bcolors

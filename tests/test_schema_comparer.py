@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import pytest
 from pyspark.sql.types import ArrayType, DoubleType, IntegerType, StringType, StructField, StructType
 

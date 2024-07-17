@@ -1,6 +1,3 @@
-from __future__ import annotations
-
-
 def format_string(input, formats):
     formatting = {
         "nc": "\033[0m",  # No Color, reset all

@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import pytest
 
 from chispa import DataFramesNotEqualError, assert_basic_rows_equality

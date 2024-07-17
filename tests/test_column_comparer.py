@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import pytest
 
 from chispa import ColumnsNotEqualError, assert_approx_column_equality, assert_column_equality
