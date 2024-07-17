@@ -1,11 +1,12 @@
-from chispa.schema_comparer import assert_schema_equality
+from functools import reduce
+
 from chispa.default_formats import DefaultFormats
+from chispa.row_comparer import are_rows_approx_equal, are_rows_equal_enhanced
 from chispa.rows_comparer import (
     assert_basic_rows_equality,
     assert_generic_rows_equality,
 )
-from chispa.row_comparer import are_rows_equal_enhanced, are_rows_approx_equal
-from functools import reduce
+from chispa.schema_comparer import assert_schema_equality
 
 
 class DataFramesNotEqualError(Exception):

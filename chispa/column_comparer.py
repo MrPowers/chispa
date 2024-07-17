@@ -1,5 +1,6 @@
-from chispa.bcolors import bcolors
 from prettytable import PrettyTable
+
+from chispa.bcolors import bcolors
 
 
 class ColumnsNotEqualError(Exception):

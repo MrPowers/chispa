@@ -1,20 +1,18 @@
+import pyspark.sql.functions as F
 import pytest
+from pyspark.sql import SparkSession
+from pyspark.sql.types import ArrayType, DoubleType, IntegerType, StringType, StructField, StructType
 
 from chispa import (
-    assert_column_equality,
     ColumnsNotEqualError,
-    assert_df_equality,
     DataFramesNotEqualError,
-    assert_approx_df_equality,
     assert_approx_column_equality,
+    assert_approx_df_equality,
     assert_basic_rows_equality,
+    assert_column_equality,
+    assert_df_equality,
 )
-import pyspark.sql.functions as F
 from chispa.schema_comparer import SchemasNotEqualError
-from pyspark.sql.types import StringType, IntegerType, DoubleType, StructField, StructType, ArrayType
-
-
-from pyspark.sql import SparkSession
 
 
 def remove_non_word_characters(col):

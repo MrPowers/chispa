@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 from glob import glob
 
 # Add PySpark to the library path based on the value of SPARK_HOME if pyspark is not already in our path
@@ -25,18 +25,19 @@ except ImportError:
             print("Can't find Apache Spark. Please set environment variable SPARK_HOME to root of installation!")
             exit(-1)
 
-from .dataframe_comparer import (
-    DataFramesNotEqualError,
-    assert_df_equality,
-    assert_approx_df_equality,
-)
+from chispa.default_formats import DefaultFormats
+
 from .column_comparer import (
     ColumnsNotEqualError,
-    assert_column_equality,
     assert_approx_column_equality,
+    assert_column_equality,
+)
+from .dataframe_comparer import (
+    DataFramesNotEqualError,
+    assert_approx_df_equality,
+    assert_df_equality,
 )
 from .rows_comparer import assert_basic_rows_equality
-from chispa.default_formats import DefaultFormats
 
 
 class Chispa:

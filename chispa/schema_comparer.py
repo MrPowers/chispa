@@ -1,6 +1,8 @@
-from prettytable import PrettyTable
-from chispa.bcolors import blue
 from itertools import zip_longest
+
+from prettytable import PrettyTable
+
+from chispa.bcolors import blue
 
 
 class SchemasNotEqualError(Exception):

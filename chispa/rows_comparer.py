@@ -1,8 +1,10 @@
 from itertools import zip_longest
+
 from prettytable import PrettyTable
+
 import chispa
-from chispa.terminal_str_formatter import format_string
 from chispa.default_formats import DefaultFormats
+from chispa.terminal_str_formatter import format_string
 
 
 def assert_basic_rows_equality(rows1, rows2, underline_cells=False, formats=DefaultFormats()):

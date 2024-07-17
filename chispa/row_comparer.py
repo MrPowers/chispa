@@ -1,6 +1,8 @@
-from pyspark.sql import Row
-from chispa.number_helpers import nan_safe_equality, nan_safe_approx_equality
 import math
+
+from pyspark.sql import Row
+
+from chispa.number_helpers import nan_safe_approx_equality, nan_safe_equality
 
 
 def are_rows_equal(r1: Row, r2: Row) -> bool:

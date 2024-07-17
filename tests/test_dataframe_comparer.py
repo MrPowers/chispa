@@ -1,11 +1,13 @@
-import pytest
+import math
 
-from .spark import spark
-from chispa import assert_df_equality, DataFramesNotEqualError, assert_approx_df_equality
+import pytest
+from pyspark.sql.types import IntegerType, StringType, StructField, StructType
+
+from chispa import DataFramesNotEqualError, assert_approx_df_equality, assert_df_equality
 from chispa.dataframe_comparer import are_dfs_equal
 from chispa.schema_comparer import SchemasNotEqualError
-import math
-from pyspark.sql.types import StringType, IntegerType, StructType, StructField
+
+from .spark import spark
 
 
 def describe_assert_df_equality():
