@@ -6,7 +6,7 @@ install: ## Install the Poetry environment
 .PHONY: test
 test: ## Run unit tests
 	@echo "Running unit tests"
-	@poetry run pytest tests --cov=chispa --cov-report=term 
+	@poetry run pytest tests --cov=chispa --cov-report=term
 
 .PHONY: test-cov-html
 test-cov-html: ## Run unit tests and create a coverage report

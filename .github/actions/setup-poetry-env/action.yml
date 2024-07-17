@@ -10,7 +10,7 @@ inputs:
     required: false
     description: "Install the docs dependency group"
     default: 'false'
-  
+
 
 runs:
   using: "composite"
@@ -51,4 +51,3 @@ runs:
         fi
       shell: bash
       if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-

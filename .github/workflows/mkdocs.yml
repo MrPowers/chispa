@@ -12,12 +12,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      
+
       - name: Set up the environment
         uses: ./.github/actions/setup-poetry-env
         with:
           with-docs: true
-        
+
       - name: Setup GH
         run: |
           sudo apt update && sudo apt install -y git
