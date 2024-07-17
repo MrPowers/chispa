@@ -68,10 +68,12 @@ fix = true
 preview = true
 
 [tool.ruff.lint]
-select = ["E", "F", "I"]
+select = ["E", "F", "I", "RUF", "UP"]
 ignore = [
     # Line too long
     "E501",
+    # Mutable class attributes
+    "RUF012"
 ]
 
 [tool.ruff.lint.flake8-type-checking]
