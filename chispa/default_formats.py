@@ -2,8 +2,9 @@ from __future__ import annotations
 
 import warnings
 from dataclasses import dataclass, field
+from typing import Any
 
-from chispa.formatting import Color, Format, Style
+from chispa.formatting import Color, Format, FormattingConfig, Style
 
 
 @dataclass
@@ -22,12 +23,20 @@ class DefaultFormats:
         warnings.warn(
             "DefaultFormats is deprecated. Use `chispa.formatting.FormattingConfig` instead.", DeprecationWarning
         )
-        self.mismatched_rows = self._convert_to_format(self.mismatched_rows)
-        self.matched_rows = self._convert_to_format(self.matched_rows)
-        self.mismatched_cells = self._convert_to_format(self.mismatched_cells)
-        self.matched_cells = self._convert_to_format(self.matched_cells)
 
-    def _convert_to_format(self, values: list[str]) -> Format:
+
+def convert_to_formatting_config(instance: Any) -> FormattingConfig:
+    """
+    Converts an instance with specified fields to a FormattingConfig instance.
+    """
+
+    if type(instance) is not DefaultFormats:
+        warnings.warn(
+            "Using an arbitrary dataclass is deprecated. Use `chispa.formatting.FormattingConfig` instead.",
+            DeprecationWarning,
+        )
+
+    def _convert_to_format(values: list[str]) -> Format:
         color = None
         styles = []
         valid_colors = [c.name.lower() for c in Color]
@@ -44,3 +53,15 @@ class DefaultFormats:
                 )
 
         return Format(color=color, style=styles if styles else None)
+
+    mismatched_rows = _convert_to_format(getattr(instance, "mismatched_rows"))
+    matched_rows = _convert_to_format(getattr(instance, "matched_rows"))
+    mismatched_cells = _convert_to_format(getattr(instance, "mismatched_cells"))
+    matched_cells = _convert_to_format(getattr(instance, "matched_cells"))
+
+    return FormattingConfig(
+        mismatched_rows=mismatched_rows,
+        matched_rows=matched_rows,
+        mismatched_cells=mismatched_cells,
+        matched_cells=matched_cells,
+    )

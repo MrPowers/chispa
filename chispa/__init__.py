@@ -29,7 +29,7 @@ except ImportError:
             print("Can't find Apache Spark. Please set environment variable SPARK_HOME to root of installation!")
             exit(-1)
 
-from chispa.default_formats import DefaultFormats
+from chispa.default_formats import DefaultFormats, convert_to_formatting_config
 from chispa.formatting.formats import Color, Format, FormattingConfig, Style
 
 from .column_comparer import (
@@ -47,7 +47,13 @@ from .rows_comparer import assert_basic_rows_equality
 
 class Chispa:
     def __init__(self, formats: FormattingConfig | None = None, default_output=None):
-        self.formats = formats if formats else FormattingConfig()
+        if not formats:
+            self.formats = FormattingConfig()
+        elif type(formats) is FormattingConfig:
+            self.formats = formats
+        else:
+            self.formats = convert_to_formatting_config(formats)
+
         self.default_outputs = default_output
 
     def assert_df_equality(
