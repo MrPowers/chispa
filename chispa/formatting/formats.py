@@ -7,7 +7,7 @@ from typing import ClassVar
 RESET = "\033[0m"
 
 
-class Color(str, Enum):
+class Color(Enum):
     BLACK = "\033[30m"
     RED = "\033[31m"
     GREEN = "\033[32m"
@@ -26,7 +26,7 @@ class Color(str, Enum):
     WHITE = "\033[97m"
 
 
-class Style(str, Enum):
+class Style(Enum):
     BOLD = "\033[1m"
     UNDERLINE = "\033[4m"
     BLINK = "\033[5m"
