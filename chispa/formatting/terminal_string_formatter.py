@@ -12,10 +12,10 @@ def format_string(input_string: str, format: Format) -> str:
 
     if format.style:
         for style in format.style:
-            codes.append(style)
+            codes.append(style.value)
 
     if format.color:
-        codes.append(format.color)
+        codes.append(format.color.value)
 
     formatted_string = "".join(codes) + formatted_string + RESET
     return formatted_string
