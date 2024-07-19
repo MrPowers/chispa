@@ -10,8 +10,7 @@ from chispa.formatting import Color, Format, FormattingConfig, Style
 @dataclass
 class DefaultFormats:
     """
-    This class is now deprecated. For backwards compatibility, when it's used, it will try to match the
-    FormattingConfig class.
+    This class is now deprecated and should be removed in a future release, together with `convert_to_formatting_config`.
     """
 
     mismatched_rows: list[str] = field(default_factory=lambda: ["red"])
@@ -27,7 +26,8 @@ class DefaultFormats:
 
 def convert_to_formatting_config(instance: Any) -> FormattingConfig:
     """
-    Converts an instance with specified fields to a FormattingConfig instance.
+    Converts an instance of an arbitrary class with specified fields to a FormattingConfig instance.
+    This class is purely for backwards compatibility and should be removed in a future release.
     """
 
     if type(instance) is not DefaultFormats:
