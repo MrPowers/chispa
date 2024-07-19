@@ -57,7 +57,7 @@ class FormattingConfig:
     def _from_arbitrary_dataclass(cls, instance: Any) -> FormattingConfig:
         """
         Converts an instance of an arbitrary class with specified fields to a FormattingConfig instance.
-        This class is purely for backwards compatibility and should be removed in a future release,
+        This method is purely for backwards compatibility and should be removed in a future release,
         together with the `DefaultFormats` class.
         """
 
