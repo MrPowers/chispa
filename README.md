@@ -314,7 +314,7 @@ assert_df_equality(df1, df2, allow_nan_equality=True)
 You can specify custom formats for the printed error messages as follows:
 
 ```python
-from chispa.formatting import FormattingConfig
+from chispa import FormattingConfig
 
 formats = FormattingConfig(
         mismatched_rows={"color": "light_yellow"},
@@ -329,7 +329,7 @@ assert_basic_rows_equality(df1.collect(), df2.collect(), formats=formats)
 or similarly:
 
 ```python
-from chispa.formatting import FormattingConfig, Color, Style
+from chispa import FormattingConfig, Color, Style
 
 formats = FormattingConfig(
         mismatched_rows={"color": Color.LIGHT_YELLOW},
