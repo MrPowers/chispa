@@ -29,8 +29,8 @@ except ImportError:
             print("Can't find Apache Spark. Please set environment variable SPARK_HOME to root of installation!")
             exit(-1)
 
-from chispa.default_formats import DefaultFormats, convert_to_formatting_config
-from chispa.formatting.formats import Color, Format, FormattingConfig, Style
+from chispa.default_formats import DefaultFormats
+from chispa.formatting import Color, Format, FormattingConfig, Style
 
 from .column_comparer import (
     ColumnsNotEqualError,
@@ -49,10 +49,10 @@ class Chispa:
     def __init__(self, formats: FormattingConfig | None = None, default_output=None):
         if not formats:
             self.formats = FormattingConfig()
-        elif type(formats) is FormattingConfig:
+        elif isinstance(formats, FormattingConfig):
             self.formats = formats
         else:
-            self.formats = convert_to_formatting_config(formats)
+            self.formats = FormattingConfig.from_arbitrary_dataclass(formats)
 
         self.default_outputs = default_output
 

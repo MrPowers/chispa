@@ -6,7 +6,8 @@ from dataclasses import dataclass
 import pytest
 
 from chispa import DataFramesNotEqualError, assert_basic_rows_equality
-from chispa.default_formats import DefaultFormats, convert_to_formatting_config
+from chispa.default_formats import DefaultFormats
+from chispa.formatting import FormattingConfig
 
 from .spark import spark
 
@@ -64,4 +65,4 @@ def test_invalid_value_in_default_formats():
         matched_cells = ["cyan"]  # noqa: RUF012
 
     with pytest.raises(ValueError):
-        convert_to_formatting_config(InvalidFormats())
+        FormattingConfig.from_arbitrary_dataclass(InvalidFormats())

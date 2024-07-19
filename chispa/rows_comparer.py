@@ -5,15 +5,14 @@ from itertools import zip_longest
 from prettytable import PrettyTable
 
 import chispa
-from chispa.default_formats import convert_to_formatting_config
 from chispa.formatting import FormattingConfig, format_string
 
 
 def assert_basic_rows_equality(rows1, rows2, underline_cells=False, formats: FormattingConfig | None = None):
     if not formats:
         formats = FormattingConfig()
-    elif type(formats) is not FormattingConfig:
-        formats = convert_to_formatting_config(formats)
+    elif not isinstance(formats, FormattingConfig):
+        formats = FormattingConfig.from_arbitrary_dataclass(formats)
 
     if rows1 != rows2:
         t = PrettyTable(["df1", "df2"])
@@ -57,8 +56,8 @@ def assert_generic_rows_equality(
 ):
     if not formats:
         formats = FormattingConfig()
-    elif type(formats) is not FormattingConfig:
-        formats = convert_to_formatting_config(formats)
+    elif not isinstance(formats, FormattingConfig):
+        formats = FormattingConfig.from_arbitrary_dataclass(formats)
 
     df1_rows = rows1
     df2_rows = rows2
