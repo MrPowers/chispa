@@ -32,7 +32,7 @@ def assert_df_equality(
     if not formats:
         formats = FormattingConfig()
     elif not isinstance(formats, FormattingConfig):
-        formats = FormattingConfig.from_arbitrary_dataclass(formats)
+        formats = FormattingConfig._from_arbitrary_dataclass(formats)
 
     if transforms is None:
         transforms = []
@@ -83,7 +83,7 @@ def assert_approx_df_equality(
     if not formats:
         formats = FormattingConfig()
     elif not isinstance(formats, FormattingConfig):
-        formats = FormattingConfig.from_arbitrary_dataclass(formats)
+        formats = FormattingConfig._from_arbitrary_dataclass(formats)
 
     if transforms is None:
         transforms = []

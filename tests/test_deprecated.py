@@ -65,4 +65,4 @@ def test_invalid_value_in_default_formats():
         matched_cells = ["cyan"]  # noqa: RUF012
 
     with pytest.raises(ValueError):
-        FormattingConfig.from_arbitrary_dataclass(InvalidFormats())
+        FormattingConfig._from_arbitrary_dataclass(InvalidFormats())

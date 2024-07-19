@@ -52,7 +52,7 @@ class Chispa:
         elif isinstance(formats, FormattingConfig):
             self.formats = formats
         else:
-            self.formats = FormattingConfig.from_arbitrary_dataclass(formats)
+            self.formats = FormattingConfig._from_arbitrary_dataclass(formats)
 
         self.default_outputs = default_output
 

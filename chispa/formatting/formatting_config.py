@@ -54,7 +54,7 @@ class FormattingConfig:
         raise ValueError("Invalid format type. Must be Format or dict.")
 
     @classmethod
-    def from_arbitrary_dataclass(cls, instance: Any) -> FormattingConfig:
+    def _from_arbitrary_dataclass(cls, instance: Any) -> FormattingConfig:
         """
         Converts an instance of an arbitrary class with specified fields to a FormattingConfig instance.
         This class is purely for backwards compatibility and should be removed in a future release,

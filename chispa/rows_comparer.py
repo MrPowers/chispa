@@ -12,7 +12,7 @@ def assert_basic_rows_equality(rows1, rows2, underline_cells=False, formats: For
     if not formats:
         formats = FormattingConfig()
     elif not isinstance(formats, FormattingConfig):
-        formats = FormattingConfig.from_arbitrary_dataclass(formats)
+        formats = FormattingConfig._from_arbitrary_dataclass(formats)
 
     if rows1 != rows2:
         t = PrettyTable(["df1", "df2"])
@@ -57,7 +57,7 @@ def assert_generic_rows_equality(
     if not formats:
         formats = FormattingConfig()
     elif not isinstance(formats, FormattingConfig):
-        formats = FormattingConfig.from_arbitrary_dataclass(formats)
+        formats = FormattingConfig._from_arbitrary_dataclass(formats)
 
     df1_rows = rows1
     df2_rows = rows2
