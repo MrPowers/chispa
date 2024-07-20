@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from prettytable import PrettyTable
 
-from chispa import Color
+from chispa.formatting import blue
 
 
 class ColumnsNotEqualError(Exception):
@@ -20,9 +20,7 @@ def assert_column_equality(df, col_name1, col_name2):
         t = PrettyTable([col_name1, col_name2])
         for elements in zipped:
             if elements[0] == elements[1]:
-                first = Color.LIGHT_BLUE + str(elements[0]) + Color.LIGHT_RED
-                second = Color.LIGHT_BLUE + str(elements[1]) + Color.LIGHT_RED
-                t.add_row([first, second])
+                t.add_row([blue(str(elements[0])), blue(str(elements[1]))])
             else:
                 t.add_row([str(elements[0]), str(elements[1])])
         raise ColumnsNotEqualError("\n" + t.get_string())
@@ -36,8 +34,8 @@ def assert_approx_column_equality(df, col_name1, col_name2, precision):
     zipped = list(zip(colName1Elements, colName2Elements))
     t = PrettyTable([col_name1, col_name2])
     for elements in zipped:
-        first = Color.LIGHT_BLUE + str(elements[0]) + Color.LIGHT_RED
-        second = Color.LIGHT_BLUE + str(elements[1]) + Color.LIGHT_RED
+        first = blue(str(elements[0]))
+        second = blue(str(elements[1]))
         # when one is None and the other isn't, they're not equal
         if (elements[0] is None and elements[1] is not None) or (elements[0] is not None and elements[1] is None):
             all_rows_equal = False

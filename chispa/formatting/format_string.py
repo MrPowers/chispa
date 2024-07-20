@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from chispa.formatting.formats import RESET, Format
+from chispa.formatting.formats import RESET, Color, Format
 
 
 def format_string(input_string: str, format: Format) -> str:
@@ -19,3 +19,7 @@ def format_string(input_string: str, format: Format) -> str:
 
     formatted_string = "".join(codes) + formatted_string + RESET
     return formatted_string
+
+
+def blue(string: str):
+    return Color.LIGHT_BLUE + string + Color.LIGHT_RED
