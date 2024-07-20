@@ -42,6 +42,7 @@ findspark = "1.4.2"
 pytest-describe = "^2.1.0"
 pytest-cov = "^5.0.0"
 pre-commit = "3.3.3"
+mypy = "^1.11.0"
 
 [tool.poetry.group.mkdocs.dependencies]
 mkdocs = "^1.6.0"
@@ -82,3 +83,16 @@ strict = true
 
 [tool.ruff.lint.isort]
 required-imports = ["from __future__ import annotations"]
+
+[tool.mypy]
+files = ["chispa"]
+explicit_package_bases = true
+disallow_any_unimported = true
+enable_error_code = [
+    "ignore-without-code",
+    "redundant-expr",
+    "truthy-bool",
+]
+strict = true
+pretty = true
+show_error_codes = true

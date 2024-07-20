@@ -16,10 +16,10 @@ class FormattingConfig:
 
     def __init__(
         self,
-        mismatched_rows: Format | dict = Format(Color.RED),
-        matched_rows: Format | dict = Format(Color.BLUE),
-        mismatched_cells: Format | dict = Format(Color.RED, [Style.UNDERLINE]),
-        matched_cells: Format | dict = Format(Color.BLUE),
+        mismatched_rows: Format | dict[str, str | list[str]] = Format(Color.RED),
+        matched_rows: Format | dict[str, str | list[str]] = Format(Color.BLUE),
+        mismatched_cells: Format | dict[str, str | list[str]] = Format(Color.RED, [Style.UNDERLINE]),
+        matched_cells: Format | dict[str, str | list[str]] = Format(Color.BLUE),
     ):
         """
         Initializes the FormattingConfig with given or default formatting.
@@ -46,7 +46,7 @@ class FormattingConfig:
         self.mismatched_cells: Format = self._parse_format(mismatched_cells)
         self.matched_cells: Format = self._parse_format(matched_cells)
 
-    def _parse_format(self, format: Format | dict) -> Format:
+    def _parse_format(self, format: Format | dict[str, str | list[str]]) -> Format:
         if isinstance(format, Format):
             return format
         elif isinstance(format, dict):

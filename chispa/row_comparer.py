@@ -11,10 +11,10 @@ def are_rows_equal(r1: Row, r2: Row) -> bool:
     return r1 == r2
 
 
-def are_rows_equal_enhanced(r1: Row, r2: Row, allow_nan_equality: bool) -> bool:
+def are_rows_equal_enhanced(r1: Row | None, r2: Row | None, allow_nan_equality: bool) -> bool:
     if r1 is None and r2 is None:
         return True
-    if (r1 is None and r2 is not None) or (r2 is None and r1 is not None):
+    if r1 is None or r2 is None:
         return False
     d1 = r1.asDict()
     d2 = r2.asDict()
@@ -27,10 +27,10 @@ def are_rows_equal_enhanced(r1: Row, r2: Row, allow_nan_equality: bool) -> bool:
         return r1 == r2
 
 
-def are_rows_approx_equal(r1: Row, r2: Row, precision: float, allow_nan_equality=False) -> bool:
+def are_rows_approx_equal(r1: Row | None, r2: Row | None, precision: float, allow_nan_equality: bool = False) -> bool:
     if r1 is None and r2 is None:
         return True
-    if (r1 is None and r2 is not None) or (r2 is None and r1 is not None):
+    if r1 is None or r2 is None:
         return False
     d1 = r1.asDict()
     d2 = r2.asDict()

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from prettytable import PrettyTable
+from pyspark.sql import DataFrame
 
 from chispa.formatting import blue
 
@@ -11,10 +12,10 @@ class ColumnsNotEqualError(Exception):
     pass
 
 
-def assert_column_equality(df, col_name1, col_name2):
-    elements = df.select(col_name1, col_name2).collect()
-    colName1Elements = list(map(lambda x: x[0], elements))
-    colName2Elements = list(map(lambda x: x[1], elements))
+def assert_column_equality(df: DataFrame, col_name1: str, col_name2: str) -> None:
+    rows = df.select(col_name1, col_name2).collect()
+    colName1Elements = list(map(lambda x: x[0], rows))
+    colName2Elements = list(map(lambda x: x[1], rows))
     if colName1Elements != colName2Elements:
         zipped = list(zip(colName1Elements, colName2Elements))
         t = PrettyTable([col_name1, col_name2])
@@ -26,10 +27,10 @@ def assert_column_equality(df, col_name1, col_name2):
         raise ColumnsNotEqualError("\n" + t.get_string())
 
 
-def assert_approx_column_equality(df, col_name1, col_name2, precision):
-    elements = df.select(col_name1, col_name2).collect()
-    colName1Elements = list(map(lambda x: x[0], elements))
-    colName2Elements = list(map(lambda x: x[1], elements))
+def assert_approx_column_equality(df: DataFrame, col_name1: str, col_name2: str, precision: float) -> None:
+    rows = df.select(col_name1, col_name2).collect()
+    colName1Elements = list(map(lambda x: x[0], rows))
+    colName2Elements = list(map(lambda x: x[1], rows))
     all_rows_equal = True
     zipped = list(zip(colName1Elements, colName2Elements))
     t = PrettyTable([col_name1, col_name2])
@@ -37,7 +38,7 @@ def assert_approx_column_equality(df, col_name1, col_name2, precision):
         first = blue(str(elements[0]))
         second = blue(str(elements[1]))
         # when one is None and the other isn't, they're not equal
-        if (elements[0] is None and elements[1] is not None) or (elements[0] is not None and elements[1] is None):
+        if (elements[0] is None) != (elements[1] is None):
             all_rows_equal = False
             t.add_row([str(elements[0]), str(elements[1])])
         # when both are None, they're equal

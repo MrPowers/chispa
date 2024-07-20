@@ -57,7 +57,7 @@ class Format:
     style: list[Style] | None = None
 
     @classmethod
-    def from_dict(cls, format_dict: dict) -> Format:
+    def from_dict(cls, format_dict: dict[str, str | list[str]]) -> Format:
         """
         Create a Format instance from a dictionary.
 
@@ -72,7 +72,10 @@ class Format:
         if invalid_keys:
             raise ValueError(f"Invalid keys in format dictionary: {invalid_keys}. Valid keys are {valid_keys}")
 
-        color = cls._get_color_enum(format_dict.get("color"))
+        if isinstance(format_dict.get("color"), list):
+            raise TypeError("The value for key 'color' should be a string, not a list!")
+        color = cls._get_color_enum(format_dict.get("color"))  # type: ignore[arg-type]
+
         style = format_dict.get("style")
         if isinstance(style, str):
             styles = [cls._get_style_enum(style)]
@@ -81,7 +84,7 @@ class Format:
         else:
             styles = None
 
-        return cls(color=color, style=styles)
+        return cls(color=color, style=styles)  # type: ignore[arg-type]
 
     @classmethod
     def from_list(cls, values: list[str]) -> Format:

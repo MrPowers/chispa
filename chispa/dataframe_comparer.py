@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 from functools import reduce
+from typing import Callable
+
+from pyspark.sql import DataFrame
 
 from chispa.formatting import FormattingConfig
 from chispa.row_comparer import are_rows_approx_equal, are_rows_equal_enhanced
@@ -18,17 +21,17 @@ class DataFramesNotEqualError(Exception):
 
 
 def assert_df_equality(
-    df1,
-    df2,
-    ignore_nullable=False,
-    transforms=None,
-    allow_nan_equality=False,
-    ignore_column_order=False,
-    ignore_row_order=False,
-    underline_cells=False,
-    ignore_metadata=False,
+    df1: DataFrame,
+    df2: DataFrame,
+    ignore_nullable: bool = False,
+    transforms: list[Callable] | None = None,  # type: ignore[type-arg]
+    allow_nan_equality: bool = False,
+    ignore_column_order: bool = False,
+    ignore_row_order: bool = False,
+    underline_cells: bool = False,
+    ignore_metadata: bool = False,
     formats: FormattingConfig | None = None,
-):
+) -> None:
     if not formats:
         formats = FormattingConfig()
     elif not isinstance(formats, FormattingConfig):
@@ -48,7 +51,7 @@ def assert_df_equality(
             df1.collect(),
             df2.collect(),
             are_rows_equal_enhanced,
-            [True],
+            {"allow_nan_equality": True},
             underline_cells=underline_cells,
             formats=formats,
         )
@@ -61,7 +64,7 @@ def assert_df_equality(
         )
 
 
-def are_dfs_equal(df1, df2):
+def are_dfs_equal(df1: DataFrame, df2: DataFrame) -> bool:
     if df1.schema != df2.schema:
         return False
     if df1.collect() != df2.collect():
@@ -70,16 +73,16 @@ def are_dfs_equal(df1, df2):
 
 
 def assert_approx_df_equality(
-    df1,
-    df2,
-    precision,
-    ignore_nullable=False,
-    transforms=None,
-    allow_nan_equality=False,
-    ignore_column_order=False,
-    ignore_row_order=False,
+    df1: DataFrame,
+    df2: DataFrame,
+    precision: float,
+    ignore_nullable: bool = False,
+    transforms: list[Callable] | None = None,  # type: ignore[type-arg]
+    allow_nan_equality: bool = False,
+    ignore_column_order: bool = False,
+    ignore_row_order: bool = False,
     formats: FormattingConfig | None = None,
-):
+) -> None:
     if not formats:
         formats = FormattingConfig()
     elif not isinstance(formats, FormattingConfig):
@@ -99,10 +102,12 @@ def assert_approx_df_equality(
             df1.collect(),
             df2.collect(),
             are_rows_approx_equal,
-            [precision, allow_nan_equality],
-            formats,
+            {"precision": precision, "allow_nan_equality": allow_nan_equality},
+            formats=formats,
         )
     elif allow_nan_equality:
-        assert_generic_rows_equality(df1.collect(), df2.collect(), are_rows_equal_enhanced, [True], formats)
+        assert_generic_rows_equality(
+            df1.collect(), df2.collect(), are_rows_equal_enhanced, {"allow_nan_equality": True}, formats=formats
+        )
     else:
-        assert_basic_rows_equality(df1.collect(), df2.collect(), formats)
+        assert_basic_rows_equality(df1.collect(), df2.collect(), formats=formats)

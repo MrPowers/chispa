@@ -20,8 +20,8 @@ jobs:
       - name: Check lock file
         run: poetry lock --check
 
-      - name: Run pre-commit hooks
-        run: poetry run pre-commit run -a
+      - name: Run code quality checks
+        run: poetry run make check
 
   test:
     runs-on: ubuntu-latest

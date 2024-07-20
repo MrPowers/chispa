@@ -3,6 +3,9 @@ from __future__ import annotations
 import os
 import sys
 from glob import glob
+from typing import Callable
+
+from pyspark.sql import DataFrame
 
 # Add PySpark to the library path based on the value of SPARK_HOME if pyspark is not already in our path
 try:
@@ -10,7 +13,7 @@ try:
 except ImportError:
     # We need to add PySpark, try use findspark, or failback to the "manually" find it
     try:
-        import findspark
+        import findspark  # type: ignore[import-untyped]
 
         findspark.init()
     except ImportError:
@@ -46,7 +49,7 @@ from .rows_comparer import assert_basic_rows_equality
 
 
 class Chispa:
-    def __init__(self, formats: FormattingConfig | None = None, default_output=None):
+    def __init__(self, formats: FormattingConfig | None = None) -> None:
         if not formats:
             self.formats = FormattingConfig()
         elif isinstance(formats, FormattingConfig):
@@ -54,20 +57,18 @@ class Chispa:
         else:
             self.formats = FormattingConfig._from_arbitrary_dataclass(formats)
 
-        self.default_outputs = default_output
-
     def assert_df_equality(
         self,
-        df1,
-        df2,
-        ignore_nullable=False,
-        transforms=None,
-        allow_nan_equality=False,
-        ignore_column_order=False,
-        ignore_row_order=False,
-        underline_cells=False,
-        ignore_metadata=False,
-    ):
+        df1: DataFrame,
+        df2: DataFrame,
+        ignore_nullable: bool = False,
+        transforms: list[Callable] | None = None,  # type: ignore[type-arg]
+        allow_nan_equality: bool = False,
+        ignore_column_order: bool = False,
+        ignore_row_order: bool = False,
+        underline_cells: bool = False,
+        ignore_metadata: bool = False,
+    ) -> None:
         return assert_df_equality(
             df1,
             df2,

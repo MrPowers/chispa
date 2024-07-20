@@ -15,7 +15,7 @@ class DefaultFormats:
     mismatched_cells: list[str] = field(default_factory=lambda: ["red", "underline"])
     matched_cells: list[str] = field(default_factory=lambda: ["blue"])
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         warnings.warn(
             "DefaultFormats is deprecated. Use `chispa.formatting.FormattingConfig` instead.", DeprecationWarning
         )
