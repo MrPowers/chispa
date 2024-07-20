@@ -4,7 +4,7 @@ from itertools import zip_longest
 
 from prettytable import PrettyTable
 
-from chispa.bcolors import blue
+from chispa.formatting import Color, Format, format_string
 
 
 class SchemasNotEqualError(Exception):
@@ -34,8 +34,11 @@ def assert_schema_equality_full(s1, s2, ignore_nullable=False, ignore_metadata=F
         t = PrettyTable(["schema1", "schema2"])
         zipped = list(zip_longest(s1, s2))
         for sf1, sf2 in zipped:
-            if are_structfields_equal(sf1, sf2, ignore_nullable, ignore_metadata):
-                t.add_row([blue(sf1), blue(sf2)])
+            if are_structfields_equal(sf1, sf2, True):
+                t.add_row([
+                    format_string(str(sf1), Format(color=Color.BLUE)),
+                    format_string(str(sf2), Format(color=Color.BLUE)),
+                ])
             else:
                 t.add_row([sf1, sf2])
         raise SchemasNotEqualError("\n" + t.get_string())
@@ -50,7 +53,10 @@ def assert_basic_schema_equality(s1, s2):
         zipped = list(zip_longest(s1, s2))
         for sf1, sf2 in zipped:
             if sf1 == sf2:
-                t.add_row([blue(sf1), blue(sf2)])
+                t.add_row([
+                    format_string(str(sf1), Format(color=Color.BLUE)),
+                    format_string(str(sf2), Format(color=Color.BLUE)),
+                ])
             else:
                 t.add_row([sf1, sf2])
         raise SchemasNotEqualError("\n" + t.get_string())
@@ -63,7 +69,10 @@ def assert_schema_equality_ignore_nullable(s1, s2):
         zipped = list(zip_longest(s1, s2))
         for sf1, sf2 in zipped:
             if are_structfields_equal(sf1, sf2, True):
-                t.add_row([blue(sf1), blue(sf2)])
+                t.add_row([
+                    format_string(str(sf1), Format(color=Color.BLUE)),
+                    format_string(str(sf2), Format(color=Color.BLUE)),
+                ])
             else:
                 t.add_row([sf1, sf2])
         raise SchemasNotEqualError("\n" + t.get_string())
