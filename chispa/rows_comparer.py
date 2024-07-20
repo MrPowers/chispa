@@ -1,13 +1,19 @@
+from __future__ import annotations
+
 from itertools import zip_longest
 
 from prettytable import PrettyTable
 
 import chispa
-from chispa.default_formats import DefaultFormats
-from chispa.terminal_str_formatter import format_string
+from chispa.formatting import FormattingConfig, format_string
 
 
-def assert_basic_rows_equality(rows1, rows2, underline_cells=False, formats=DefaultFormats()):
+def assert_basic_rows_equality(rows1, rows2, underline_cells=False, formats: FormattingConfig | None = None):
+    if not formats:
+        formats = FormattingConfig()
+    elif not isinstance(formats, FormattingConfig):
+        formats = FormattingConfig._from_arbitrary_dataclass(formats)
+
     if rows1 != rows2:
         t = PrettyTable(["df1", "df2"])
         zipped = list(zip_longest(rows1, rows2))
@@ -15,10 +21,10 @@ def assert_basic_rows_equality(rows1, rows2, underline_cells=False, formats=Defa
 
         for r1, r2 in zipped:
             if r1 is None and r2 is not None:
-                t.add_row([None, format_string(r2, formats.mismatched_rows)])
+                t.add_row([None, format_string(str(r2), formats.mismatched_rows)])
                 all_rows_equal = False
             elif r1 is not None and r2 is None:
-                t.add_row([format_string(r1, formats.mismatched_rows), None])
+                t.add_row([format_string(str(r1), formats.mismatched_rows), None])
                 all_rows_equal = False
             else:
                 r_zipped = list(zip_longest(r1.__fields__, r2.__fields__))
@@ -46,8 +52,13 @@ def assert_generic_rows_equality(
     row_equality_fun,
     row_equality_fun_args,
     underline_cells=False,
-    formats=DefaultFormats(),
+    formats: FormattingConfig | None = None,
 ):
+    if not formats:
+        formats = FormattingConfig()
+    elif not isinstance(formats, FormattingConfig):
+        formats = FormattingConfig._from_arbitrary_dataclass(formats)
+
     df1_rows = rows1
     df2_rows = rows2
     zipped = list(zip_longest(df1_rows, df2_rows))
@@ -55,11 +66,11 @@ def assert_generic_rows_equality(
     all_rows_equal = True
     for r1, r2 in zipped:
         # rows are not equal when one is None and the other isn't
-        if (r1 is not None and r2 is None) or (r2 is not None and r1 is None):
+        if (r1 is None) ^ (r2 is None):
             all_rows_equal = False
             t.add_row([
-                format_string(r1, formats.mismatched_rows),
-                format_string(r2, formats.mismatched_rows),
+                format_string(str(r1), formats.mismatched_rows),
+                format_string(str(r2), formats.mismatched_rows),
             ])
         # rows are equal
         elif row_equality_fun(r1, r2, *row_equality_fun_args):

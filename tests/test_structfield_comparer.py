@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pyspark.sql.types import DoubleType, IntegerType, StructField, StructType
 
 from chispa.structfield_comparer import are_structfields_equal

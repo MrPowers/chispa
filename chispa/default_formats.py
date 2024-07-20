@@ -1,9 +1,21 @@
-from dataclasses import dataclass
+from __future__ import annotations
+
+import warnings
+from dataclasses import dataclass, field
 
 
 @dataclass
 class DefaultFormats:
-    mismatched_rows = ["red"]
-    matched_rows = ["blue"]
-    mismatched_cells = ["red", "underline"]
-    matched_cells = ["blue"]
+    """
+    This class is now deprecated and should be removed in a future release.
+    """
+
+    mismatched_rows: list[str] = field(default_factory=lambda: ["red"])
+    matched_rows: list[str] = field(default_factory=lambda: ["blue"])
+    mismatched_cells: list[str] = field(default_factory=lambda: ["red", "underline"])
+    matched_cells: list[str] = field(default_factory=lambda: ["blue"])
+
+    def __post_init__(self):
+        warnings.warn(
+            "DefaultFormats is deprecated. Use `chispa.formatting.FormattingConfig` instead.", DeprecationWarning
+        )

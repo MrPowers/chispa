@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from pyspark.sql import Row
 
 from chispa.row_comparer import are_rows_approx_equal, are_rows_equal, are_rows_equal_enhanced
