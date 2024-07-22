@@ -8,6 +8,11 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/chispa
+    permissions:
+      id-token: write
     steps:
       - name: Check out
         uses: actions/checkout@v4
@@ -23,13 +28,11 @@ jobs:
           echo tag=$tag >> $GITHUB_OUTPUT
           echo version=$version >> $GITHUB_OUTPUT
 
-      - name: Build and publish
-        run: |
-          poetry version $RELEASE_VERSION
-          make build-and-publish
-        env:
-          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-          RELEASE_VERSION: ${{ steps.vars.outputs.version }}
+      - name: Build Python package
+        run: poetry build
+
+      - name: Publish to PyPi
+        uses: pypa/gh-action-pypi-publish@release/v1
 
   deploy-docs:
     runs-on: ubuntu-latest
