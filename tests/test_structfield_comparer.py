@@ -55,3 +55,8 @@ def describe_are_structfields_equal():
         sf1 = StructField("hi", StructType([StructField("world", IntegerType(), False)]), False)
         sf2 = StructField("hi", StructType([StructField("world", IntegerType(), True)]), False)
         assert are_structfields_equal(sf1, sf2, ignore_nullability=True) is True
+
+    def it_returns_true_when_inner_metadata_is_different_but_ignored():
+        sf1 = StructField("hi", StructType([StructField("world", IntegerType(), False)]), False)
+        sf2 = StructField("hi", StructType([StructField("world", IntegerType(), False, {"a": "b"})]), False)
+        assert are_structfields_equal(sf1, sf2, ignore_metadata=True) is True
