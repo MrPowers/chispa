@@ -5,6 +5,7 @@ on:
     types: [opened, synchronize, reopened]
   push:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   quality:
@@ -27,6 +28,14 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        pyspark-version: ["3.4.3", "3.5.1"]
+        include:
+          - python-version: "3.8"
+            pyspark-version: "3.3.4"
+          - python-version: "3.9"
+            pyspark-version: "3.3.4"
+          - python-version: "3.10"
+            pyspark-version: "3.3.4"
       fail-fast: false
     defaults:
       run:
@@ -39,6 +48,7 @@ jobs:
         uses: ./.github/actions/setup-poetry-env
         with:
           python-version: ${{ matrix.python-version }}
+          pyspark-version: ${{ matrix.pyspark-version }}
 
       - name: Run tests
         run: poetry run pytest tests

@@ -6,11 +6,14 @@ inputs:
     required: false
     description: "The python version to use"
     default: "3.11"
+  pyspark-version:
+    required: false
+    description: "The pyspark version to use"
+    default: "3.5.1"
   with-docs:
     required: false
     description: "Install the docs dependency group"
     default: 'false'
-
 
 runs:
   using: "composite"
@@ -40,7 +43,7 @@ runs:
       uses: actions/cache@v3
       with:
         path: .venv
-        key: venv-${{ runner.os }}-${{ inputs.python-version }}-${{ inputs.with-docs }}-${{ hashFiles('poetry.lock') }}
+        key: venv-${{ runner.os }}-${{ inputs.python-version }}-${{ inputs.pyspark-version }}-${{ inputs.with-docs }}-${{ hashFiles('poetry.lock') }}
 
     - name: Install dependencies
       run: |
@@ -49,5 +52,12 @@ runs:
         else
           poetry install --no-interaction
         fi
+        poetry run pip install pyspark==${{ inputs.pyspark-version }}
       shell: bash
       if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+
+    - name: Print python and pyspark version
+      run: |
+        poetry run python --version
+        poetry run pyspark --version
+      shell: bash
