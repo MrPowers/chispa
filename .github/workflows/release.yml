@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+    branches: [main]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/p/chispa
+    permissions:
+      id-token: write
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up the environment
+        uses: ./.github/actions/setup-poetry-env
+
+      - name: Export tag
+        id: vars
+        run: |
+          tag=${GITHUB_REF#refs/*/}
+          version=${tag#v}
+          echo tag=$tag >> $GITHUB_OUTPUT
+          echo version=$version >> $GITHUB_OUTPUT
+
+      - name: Build Python package
+        run: poetry build
+
+      - name: Publish to PyPi
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+  deploy-docs:
+    runs-on: ubuntu-latest
+    needs: publish
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up the environment
+        uses: ./.github/actions/setup-poetry-env
+
+      - name: Deploy documentation
+        run: poetry run mkdocs gh-deploy --force
