@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import warnings
+
 
 class bcolors:
     NC = "\033[0m"  # No Color, reset all
@@ -31,8 +33,12 @@ class bcolors:
     Bold = "\033[1m"
     Underline = "\033[4m"
 
+    def __init__(self):
+        warnings.warn("The `bcolors` class is deprecated and will be removed in a future version.", DeprecationWarning)
+
 
 def blue(s: str) -> str:
+    warnings.warn("The `blue` function is deprecated and will be removed in a future version.", DeprecationWarning)
     return bcolors.LightBlue + str(s) + bcolors.LightRed
 
 
@@ -40,4 +46,7 @@ def underline_text(input_text: str) -> str:
     """
     Takes an input string and returns a white, underlined string (based on PrettyTable formatting)
     """
+    warnings.warn(
+        "The `underline_text` function is deprecated and will be removed in a future version.", DeprecationWarning
+    )
     return bcolors.White + bcolors.Underline + input_text + bcolors.NC + bcolors.LightRed

@@ -6,6 +6,7 @@ from dataclasses import dataclass
 import pytest
 
 from chispa import DataFramesNotEqualError, assert_basic_rows_equality
+from chispa.bcolors import bcolors, blue, underline_text
 from chispa.default_formats import DefaultFormats
 from chispa.formatting import FormattingConfig
 
@@ -66,3 +67,20 @@ def test_invalid_value_in_default_formats():
 
     with pytest.raises(ValueError):
         FormattingConfig._from_arbitrary_dataclass(InvalidFormats())
+
+
+def test_bcolors_deprecation():
+    with pytest.warns(DeprecationWarning, match="The `bcolors` class is deprecated"):
+        _ = bcolors()
+
+
+def test_blue_deprecation():
+    with pytest.warns(DeprecationWarning, match="The `blue` function is deprecated"):
+        result = blue("test")
+        assert result == "\033[34mtest\033[31m"
+
+
+def test_underline_text_deprecation():
+    with pytest.warns(DeprecationWarning, match="The `underline_text` function is deprecated"):
+        result = underline_text("test")
+        assert result == "\033[97m\033[4mtest\033[0m\033[31m"
