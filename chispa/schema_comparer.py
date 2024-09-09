@@ -1,8 +1,10 @@
 from __future__ import annotations
 
+import typing
 from itertools import zip_longest
 
 from prettytable import PrettyTable
+from pyspark.sql.types import StructField, StructType
 
 from chispa.formatting import blue
 
@@ -13,15 +15,19 @@ class SchemasNotEqualError(Exception):
     pass
 
 
-def assert_schema_equality(s1, s2, ignore_nullable=False, ignore_metadata=False):
+def assert_schema_equality(
+    s1: StructType, s2: StructType, ignore_nullable: bool = False, ignore_metadata: bool = False
+) -> None:
     if not ignore_nullable and not ignore_metadata:
         assert_basic_schema_equality(s1, s2)
     else:
         assert_schema_equality_full(s1, s2, ignore_nullable, ignore_metadata)
 
 
-def assert_schema_equality_full(s1, s2, ignore_nullable=False, ignore_metadata=False):
-    def inner(s1, s2, ignore_nullable, ignore_metadata):
+def assert_schema_equality_full(
+    s1: StructType, s2: StructType, ignore_nullable: bool = False, ignore_metadata: bool = False
+) -> None:
+    def inner(s1: StructType, s2: StructType, ignore_nullable: bool, ignore_metadata: bool) -> bool:
         if len(s1) != len(s2):
             return False
         zipped = list(zip_longest(s1, s2))
@@ -44,7 +50,7 @@ def assert_schema_equality_full(s1, s2, ignore_nullable=False, ignore_metadata=F
 # deprecate this
 # perhaps it is a little faster, but do we really need this?
 # I think schema equality operations are really fast to begin with
-def assert_basic_schema_equality(s1, s2):
+def assert_basic_schema_equality(s1: StructType, s2: StructType) -> None:
     if s1 != s2:
         t = PrettyTable(["schema1", "schema2"])
         zipped = list(zip_longest(s1, s2))
@@ -57,7 +63,7 @@ def assert_basic_schema_equality(s1, s2):
 
 
 # deprecate this.  ignore_nullable should be a flag.
-def assert_schema_equality_ignore_nullable(s1, s2):
+def assert_schema_equality_ignore_nullable(s1: StructType, s2: StructType) -> None:
     if not are_schemas_equal_ignore_nullable(s1, s2):
         t = PrettyTable(["schema1", "schema2"])
         zipped = list(zip_longest(s1, s2))
@@ -70,7 +76,7 @@ def assert_schema_equality_ignore_nullable(s1, s2):
 
 
 # deprecate this.  ignore_nullable should be a flag.
-def are_schemas_equal_ignore_nullable(s1, s2, ignore_metadata=False):
+def are_schemas_equal_ignore_nullable(s1: StructType, s2: StructType, ignore_metadata: bool = False) -> bool:
     if len(s1) != len(s2):
         return False
     zipped = list(zip_longest(s1, s2))
@@ -81,7 +87,9 @@ def are_schemas_equal_ignore_nullable(s1, s2, ignore_metadata=False):
 
 
 # "ignore_nullability" should be "ignore_nullable" for consistent terminology
-def are_structfields_equal(sf1, sf2, ignore_nullability=False, ignore_metadata=False):
+def are_structfields_equal(
+    sf1: StructField | None, sf2: StructField | None, ignore_nullability: bool = False, ignore_metadata: bool = False
+) -> bool:
     if not ignore_nullability and not ignore_metadata:
         return sf1 == sf2
     else:
@@ -95,11 +103,12 @@ def are_structfields_equal(sf1, sf2, ignore_nullability=False, ignore_metadata=F
         if not ignore_metadata and sf1.metadata != sf2.metadata:
             return False
         else:
-            return are_datatypes_equal_ignore_nullable(sf1.dataType, sf2.dataType, ignore_metadata)
+            return are_datatypes_equal_ignore_nullable(sf1.dataType, sf2.dataType, ignore_metadata)  # type: ignore[no-any-return, no-untyped-call]
 
 
 # deprecate this
-def are_datatypes_equal_ignore_nullable(dt1, dt2, ignore_metadata=False):
+@typing.no_type_check
+def are_datatypes_equal_ignore_nullable(dt1, dt2, ignore_metadata: bool = False) -> bool:
     """Checks if datatypes are equal, descending into structs and arrays to
     ignore nullability.
     """

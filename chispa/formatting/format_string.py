@@ -21,5 +21,5 @@ def format_string(input_string: str, format: Format) -> str:
     return formatted_string
 
 
-def blue(string: str):
+def blue(string: str) -> str:
     return Color.LIGHT_BLUE + string + Color.LIGHT_RED

@@ -7,6 +7,7 @@ install: ## Install the Poetry environment
 check: ## Run code quality checks
 	@echo "Running pre-commit hooks"
 	@poetry run pre-commit run -a
+	@poetry run mypy chispa
 
 .PHONY: test
 test: ## Run unit tests
