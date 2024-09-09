@@ -33,7 +33,7 @@ class bcolors:
     Bold = "\033[1m"
     Underline = "\033[4m"
 
-    def __init__(self):
+    def __init__(self) -> None:
         warnings.warn("The `bcolors` class is deprecated and will be removed in a future version.", DeprecationWarning)
 
 
