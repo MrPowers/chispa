@@ -103,12 +103,12 @@ def are_structfields_equal(
         if not ignore_metadata and sf1.metadata != sf2.metadata:
             return False
         else:
-            return are_datatypes_equal_ignore_nullable(sf1.dataType, sf2.dataType)  # type: ignore[no-any-return, no-untyped-call]
+            return are_datatypes_equal_ignore_nullable(sf1.dataType, sf2.dataType, ignore_metadata)  # type: ignore[no-any-return, no-untyped-call]
 
 
 # deprecate this
 @typing.no_type_check
-def are_datatypes_equal_ignore_nullable(dt1, dt2) -> bool:
+def are_datatypes_equal_ignore_nullable(dt1, dt2, ignore_metadata: bool = False) -> bool:
     """Checks if datatypes are equal, descending into structs and arrays to
     ignore nullability.
     """
