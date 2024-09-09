@@ -14,10 +14,10 @@ class ColumnsNotEqualError(Exception):
 
 def assert_column_equality(df: DataFrame, col_name1: str, col_name2: str) -> None:
     rows = df.select(col_name1, col_name2).collect()
-    colName1Elements = list(map(lambda x: x[0], rows))
-    colName2Elements = list(map(lambda x: x[1], rows))
-    if colName1Elements != colName2Elements:
-        zipped = list(zip(colName1Elements, colName2Elements))
+    col_name_1_elements = [x[0] for x in rows]
+    col_name_2_elements = [x[1] for x in rows]
+    if col_name_1_elements != col_name_2_elements:
+        zipped = list(zip(col_name_1_elements, col_name_2_elements))
         t = PrettyTable([col_name1, col_name2])
         for elements in zipped:
             if elements[0] == elements[1]:
@@ -29,10 +29,10 @@ def assert_column_equality(df: DataFrame, col_name1: str, col_name2: str) -> Non
 
 def assert_approx_column_equality(df: DataFrame, col_name1: str, col_name2: str, precision: float) -> None:
     rows = df.select(col_name1, col_name2).collect()
-    colName1Elements = list(map(lambda x: x[0], rows))
-    colName2Elements = list(map(lambda x: x[1], rows))
+    col_name_1_elements = [x[0] for x in rows]
+    col_name_2_elements = [x[1] for x in rows]
     all_rows_equal = True
-    zipped = list(zip(colName1Elements, colName2Elements))
+    zipped = list(zip(col_name_1_elements, col_name_2_elements))
     t = PrettyTable([col_name1, col_name2])
     for elements in zipped:
         first = blue(str(elements[0]))
