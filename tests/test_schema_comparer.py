@@ -9,6 +9,7 @@ from chispa.schema_comparer import (
     are_structfields_equal,
     assert_schema_equality,
     assert_schema_equality_ignore_nullable,
+    create_schema_comparison_tree,
 )
 
 
