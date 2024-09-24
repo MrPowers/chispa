@@ -3,6 +3,8 @@ Script was taken from
 https://mkdocstrings.github.io/recipes/#automatic-code-reference-pages
 """
 
+from __future__ import annotations
+
 from pathlib import Path
 
 import mkdocs_gen_files
