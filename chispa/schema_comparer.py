@@ -3,9 +3,11 @@ from __future__ import annotations
 import typing
 from itertools import zip_longest
 
+import six
 from prettytable import PrettyTable
 from pyspark.sql.types import StructField, StructType
 
+from chispa.bcolors import bcolors, line_blue, line_red
 from chispa.formatting import blue
 
 
@@ -103,7 +105,7 @@ def create_schema_comparison_table(
     zipped = list(six.moves.zip_longest(s1, s2))
     for sf1, sf2 in zipped:
         if are_structfields_equal(sf1, sf2, ignore_nullable, ignore_metadata):
-            t.add_row([blue(sf1), blue(sf2)])
+            t.add_row([blue(str(sf1)), blue(str(sf2))])
         else:
             t.add_row([sf1, sf2])
     return t
