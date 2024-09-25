@@ -16,35 +16,25 @@ class SchemasNotEqualError(Exception):
     pass
 
 
-def print_schema_diff(
-    s1, s2, ignore_nullable: bool, ignore_metadata: bool, output_format: str = "table"
-) -> None:
+def print_schema_diff(s1, s2, ignore_nullable: bool, ignore_metadata: bool, output_format: str = "table") -> None:
     valid_output_formats = ["table", "tree"]
     if output_format == "table":
-        schema_diff = create_schema_comparison_table(
-            s1, s2, ignore_nullable, ignore_metadata
-        )
+        schema_diff = create_schema_comparison_table(s1, s2, ignore_nullable, ignore_metadata)
     elif output_format == "tree":
-        schema_diff = create_schema_comparison_tree(
-            s1, s2, ignore_nullable, ignore_metadata
-        )
+        schema_diff = create_schema_comparison_tree(s1, s2, ignore_nullable, ignore_metadata)
     else:
         raise ValueError(f"output_format must be one of {valid_output_formats}")
 
     print(schema_diff)
 
 
-def create_schema_comparison_tree(
-    s1, s2, ignore_nullable: bool, ignore_metadata: bool
-) -> str:
+def create_schema_comparison_tree(s1, s2, ignore_nullable: bool, ignore_metadata: bool) -> str:
     def parse_schema_as_tree(s, indent: int) -> tuple[list, list]:
         tree_lines = []
         fields = []
 
         for struct_field in s:
-            nullable = (
-                "(nullable = true)" if struct_field.nullable else "(nullable = false)"
-            )
+            nullable = "(nullable = true)" if struct_field.nullable else "(nullable = false)"
             struct_field_type = struct_field.dataType.typeName()
 
             struct_prefix = f"{indent * ' '}|{'-' * 2}"
@@ -56,9 +46,7 @@ def create_schema_comparison_tree(
                 fields += [struct_field]
                 continue
 
-            tree_line_nested, fields_nested = parse_schema_as_tree(
-                struct_field.dataType, indent + 4
-            )
+            tree_line_nested, fields_nested = parse_schema_as_tree(struct_field.dataType, indent + 4)
 
             fields += [struct_field]
             tree_lines += tree_line_nested
@@ -97,9 +85,7 @@ def create_schema_comparison_tree(
     return tree
 
 
-def create_schema_comparison_table(
-    s1, s2, ignore_nullable: bool, ignore_metadata: bool
-):
+def create_schema_comparison_table(s1, s2, ignore_nullable: bool, ignore_metadata: bool):
     t = PrettyTable(["schema1", "schema2"])
     zipped = list(zip_longest(s1, s2))
     for sf1, sf2 in zipped:
@@ -111,21 +97,17 @@ def create_schema_comparison_table(
 
 
 def check_if_schemas_are_wide(s1, s2) -> bool:
-    contains_nested_structs = any(
-        sf.dataType.typeName() == "struct" for sf in s1
-    ) or any(sf.dataType.typeName() == "struct" for sf in s2)
+    contains_nested_structs = any(sf.dataType.typeName() == "struct" for sf in s1) or any(
+        sf.dataType.typeName() == "struct" for sf in s2
+    )
     contains_many_columns = len(s1) > 10 or len(s2) > 10
     return contains_nested_structs or contains_many_columns
 
 
-def handle_schemas_not_equal(
-    s1, s2, ignore_nullable: bool, ignore_metadata: bool
-) -> None:
+def handle_schemas_not_equal(s1, s2, ignore_nullable: bool, ignore_metadata: bool) -> None:
     schemas_are_wide = check_if_schemas_are_wide(s1, s2)
     if schemas_are_wide:
-        error_message = create_schema_comparison_tree(
-            s1, s2, ignore_nullable, ignore_metadata
-        )
+        error_message = create_schema_comparison_tree(s1, s2, ignore_nullable, ignore_metadata)
     else:
         t = create_schema_comparison_table(s1, s2, ignore_nullable, ignore_metadata)
         error_message = "\n" + t.get_string()

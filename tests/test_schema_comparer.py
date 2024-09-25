@@ -53,337 +53,255 @@ def describe_assert_schema_equality():
 
 def describe_tree_string():
     def it_prints_correctly_for_wide_schemas():
-        with open(
-            "tests/data/tree_string/it_prints_correctly_for_wide_schemas.txt"
-        ) as f:
+        with open("tests/data/tree_string/it_prints_correctly_for_wide_schemas.txt") as f:
             expected = f.read()
 
-        s1 = StructType(
-            [
-                StructField("name", StringType(), True),
-                StructField("age", IntegerType(), True),
-                StructField("fav_number", IntegerType(), True),
-                StructField("fav_numbers", ArrayType(IntegerType(), True), True),
-                StructField(
-                    "fav_colors",
-                    StructType(
-                        [
-                            StructField("red", IntegerType(), True),
-                            StructField("green", IntegerType(), True),
-                            StructField("blue", IntegerType(), True),
-                        ]
-                    ),
-                ),
-            ]
-        )
+        s1 = StructType([
+            StructField("name", StringType(), True),
+            StructField("age", IntegerType(), True),
+            StructField("fav_number", IntegerType(), True),
+            StructField("fav_numbers", ArrayType(IntegerType(), True), True),
+            StructField(
+                "fav_colors",
+                StructType([
+                    StructField("red", IntegerType(), True),
+                    StructField("green", IntegerType(), True),
+                    StructField("blue", IntegerType(), True),
+                ]),
+            ),
+        ])
 
-        s2 = StructType(
-            [
-                StructField("name", StringType(), True),
-                StructField("age", IntegerType(), True),
-                StructField("fav_number", IntegerType(), True),
-                StructField("fav_numbers", ArrayType(IntegerType(), True), True),
-                StructField(
-                    "fav_colors",
-                    StructType(
-                        [
-                            StructField("orange", IntegerType(), True),
-                            StructField("green", IntegerType(), True),
-                            StructField("yellow", IntegerType(), True),
-                        ]
-                    ),
-                ),
-            ]
-        )
+        s2 = StructType([
+            StructField("name", StringType(), True),
+            StructField("age", IntegerType(), True),
+            StructField("fav_number", IntegerType(), True),
+            StructField("fav_numbers", ArrayType(IntegerType(), True), True),
+            StructField(
+                "fav_colors",
+                StructType([
+                    StructField("orange", IntegerType(), True),
+                    StructField("green", IntegerType(), True),
+                    StructField("yellow", IntegerType(), True),
+                ]),
+            ),
+        ])
 
-        result = create_schema_comparison_tree(
-            s1, s2, ignore_nullable=False, ignore_metadata=False
-        )
+        result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=False)
 
         assert repr(result) == expected
 
     def it_prints_correctly_for_wide_schemas_multiple_nested_structs():
-        with open(
-            "tests/data/tree_string/it_prints_correctly_for_wide_schemas_multiple_nested_structs.txt"
-        ) as f:
+        with open("tests/data/tree_string/it_prints_correctly_for_wide_schemas_multiple_nested_structs.txt") as f:
             expected = f.read()
 
-        s1 = StructType(
-            [
-                StructField("name", StringType(), True),
-                StructField(
-                    "fav_genres",
-                    StructType(
-                        [
-                            StructField(
-                                "rock",
-                                StructType(
-                                    [
-                                        StructField("metal", IntegerType(), True),
-                                        StructField("punk", IntegerType(), True),
-                                    ]
-                                ),
-                                True,
-                            ),
-                            StructField(
-                                "electronic",
-                                StructType(
-                                    [
-                                        StructField("house", IntegerType(), True),
-                                        StructField("dubstep", IntegerType(), True),
-                                    ]
-                                ),
-                                True,
-                            ),
-                        ]
+        s1 = StructType([
+            StructField("name", StringType(), True),
+            StructField(
+                "fav_genres",
+                StructType([
+                    StructField(
+                        "rock",
+                        StructType([
+                            StructField("metal", IntegerType(), True),
+                            StructField("punk", IntegerType(), True),
+                        ]),
+                        True,
                     ),
-                ),
-            ]
-        )
-
-        s2 = StructType(
-            [
-                StructField("name", StringType(), True),
-                StructField(
-                    "fav_genres",
-                    StructType(
-                        [
-                            StructField(
-                                "rock",
-                                StructType(
-                                    [
-                                        StructField("metal", IntegerType(), True),
-                                        StructField("classic", IntegerType(), True),
-                                    ]
-                                ),
-                                True,
-                            ),
-                            StructField(
-                                "electronic",
-                                StructType(
-                                    [
-                                        StructField("house", IntegerType(), True),
-                                        StructField("dubstep", IntegerType(), True),
-                                    ]
-                                ),
-                                True,
-                            ),
-                            StructField(
-                                "pop",
-                                StructType(
-                                    [
-                                        StructField("pop", IntegerType(), True),
-                                    ]
-                                ),
-                                True,
-                            ),
-                        ]
+                    StructField(
+                        "electronic",
+                        StructType([
+                            StructField("house", IntegerType(), True),
+                            StructField("dubstep", IntegerType(), True),
+                        ]),
+                        True,
                     ),
-                ),
-            ]
-        )
+                ]),
+            ),
+        ])
 
-        result = create_schema_comparison_tree(
-            s1, s2, ignore_nullable=False, ignore_metadata=False
-        )
+        s2 = StructType([
+            StructField("name", StringType(), True),
+            StructField(
+                "fav_genres",
+                StructType([
+                    StructField(
+                        "rock",
+                        StructType([
+                            StructField("metal", IntegerType(), True),
+                            StructField("classic", IntegerType(), True),
+                        ]),
+                        True,
+                    ),
+                    StructField(
+                        "electronic",
+                        StructType([
+                            StructField("house", IntegerType(), True),
+                            StructField("dubstep", IntegerType(), True),
+                        ]),
+                        True,
+                    ),
+                    StructField(
+                        "pop",
+                        StructType([
+                            StructField("pop", IntegerType(), True),
+                        ]),
+                        True,
+                    ),
+                ]),
+            ),
+        ])
+
+        result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=False)
         assert repr(result) == expected
 
     def it_prints_correctly_for_wide_schemas_ignore_nullable():
-        with open(
-            "tests/data/tree_string/it_prints_correctly_for_wide_schemas_ignore_nullable.txt"
-        ) as f:
+        with open("tests/data/tree_string/it_prints_correctly_for_wide_schemas_ignore_nullable.txt") as f:
             expected = f.read()
 
-        s1 = StructType(
-            [
-                StructField("name", StringType(), True),
-                StructField("age", IntegerType(), True),
-                StructField("fav_number", IntegerType(), True),
-                StructField("fav_numbers", ArrayType(IntegerType(), True), True),
-                StructField(
-                    "fav_colors",
-                    StructType(
-                        [
-                            StructField("red", IntegerType(), True),
-                            StructField("green", IntegerType(), True),
-                            StructField("blue", IntegerType(), True),
-                        ]
-                    ),
-                ),
-            ]
-        )
+        s1 = StructType([
+            StructField("name", StringType(), True),
+            StructField("age", IntegerType(), True),
+            StructField("fav_number", IntegerType(), True),
+            StructField("fav_numbers", ArrayType(IntegerType(), True), True),
+            StructField(
+                "fav_colors",
+                StructType([
+                    StructField("red", IntegerType(), True),
+                    StructField("green", IntegerType(), True),
+                    StructField("blue", IntegerType(), True),
+                ]),
+            ),
+        ])
 
-        s2 = StructType(
-            [
-                StructField("name", StringType(), True),
-                StructField("age", IntegerType(), False),
-                StructField("fav_number", IntegerType(), True),
-                StructField("fav_numbers", ArrayType(IntegerType(), True), False),
-                StructField(
-                    "fav_colors",
-                    StructType(
-                        [
-                            StructField("orange", IntegerType(), True),
-                            StructField("green", IntegerType(), False),
-                            StructField("yellow", IntegerType(), True),
-                        ]
-                    ),
-                ),
-            ]
-        )
+        s2 = StructType([
+            StructField("name", StringType(), True),
+            StructField("age", IntegerType(), False),
+            StructField("fav_number", IntegerType(), True),
+            StructField("fav_numbers", ArrayType(IntegerType(), True), False),
+            StructField(
+                "fav_colors",
+                StructType([
+                    StructField("orange", IntegerType(), True),
+                    StructField("green", IntegerType(), False),
+                    StructField("yellow", IntegerType(), True),
+                ]),
+            ),
+        ])
 
-        result = create_schema_comparison_tree(
-            s1, s2, ignore_nullable=True, ignore_metadata=False
-        )
+        result = create_schema_comparison_tree(s1, s2, ignore_nullable=True, ignore_metadata=False)
 
         assert repr(result) == expected
 
     def it_prints_correctly_for_wide_schemas_different_lengths():
-        with open(
-            "tests/data/tree_string/it_prints_correctly_for_wide_schemas_different_lengths.txt"
-        ) as f:
+        with open("tests/data/tree_string/it_prints_correctly_for_wide_schemas_different_lengths.txt") as f:
             expected = f.read()
 
-        s1 = StructType(
-            [
-                StructField("name", StringType(), True),
-                StructField("age", IntegerType(), True),
-                StructField("fav_number", IntegerType(), True),
-                StructField("fav_numbers", ArrayType(IntegerType(), True), True),
-                StructField(
-                    "fav_colors",
-                    StructType(
-                        [
-                            StructField("red", IntegerType(), True),
-                            StructField("green", IntegerType(), True),
-                            StructField("blue", IntegerType(), True),
-                        ]
-                    ),
-                ),
-            ]
-        )
+        s1 = StructType([
+            StructField("name", StringType(), True),
+            StructField("age", IntegerType(), True),
+            StructField("fav_number", IntegerType(), True),
+            StructField("fav_numbers", ArrayType(IntegerType(), True), True),
+            StructField(
+                "fav_colors",
+                StructType([
+                    StructField("red", IntegerType(), True),
+                    StructField("green", IntegerType(), True),
+                    StructField("blue", IntegerType(), True),
+                ]),
+            ),
+        ])
 
-        s2 = StructType(
-            [
-                StructField("name", StringType(), True),
-                StructField("age", IntegerType(), True),
-                StructField("fav_number", IntegerType(), True),
-                StructField("fav_numbers", ArrayType(IntegerType(), True), True),
-                StructField(
-                    "fav_colors",
-                    StructType(
-                        [
-                            StructField("orange", IntegerType(), True),
-                            StructField("green", IntegerType(), True),
-                            StructField("yellow", IntegerType(), True),
-                            StructField("purple", IntegerType(), True),
-                        ]
-                    ),
-                ),
-                StructField("phone_number", StringType(), True),
-            ]
-        )
+        s2 = StructType([
+            StructField("name", StringType(), True),
+            StructField("age", IntegerType(), True),
+            StructField("fav_number", IntegerType(), True),
+            StructField("fav_numbers", ArrayType(IntegerType(), True), True),
+            StructField(
+                "fav_colors",
+                StructType([
+                    StructField("orange", IntegerType(), True),
+                    StructField("green", IntegerType(), True),
+                    StructField("yellow", IntegerType(), True),
+                    StructField("purple", IntegerType(), True),
+                ]),
+            ),
+            StructField("phone_number", StringType(), True),
+        ])
 
-        result = create_schema_comparison_tree(
-            s1, s2, ignore_nullable=False, ignore_metadata=False
-        )
+        result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=False)
         assert repr(result) == expected
 
     def it_prints_correctly_for_wide_schemas_ignore_metadata():
-        with open(
-            "tests/data/tree_string/it_prints_correctly_for_wide_schemas_ignore_metadata.txt"
-        ) as f:
+        with open("tests/data/tree_string/it_prints_correctly_for_wide_schemas_ignore_metadata.txt") as f:
             expected = f.read()
 
-        s1 = StructType(
-            [
-                StructField("name", StringType(), True, {"foo": "bar"}),
-                StructField("age", IntegerType(), True),
-                StructField("fav_number", IntegerType(), True),
-                StructField("fav_numbers", ArrayType(IntegerType(), True), True),
-                StructField(
-                    "fav_colors",
-                    StructType(
-                        [
-                            StructField("red", IntegerType(), True),
-                            StructField("green", IntegerType(), True),
-                            StructField("blue", IntegerType(), True),
-                        ]
-                    ),
-                ),
-            ]
-        )
+        s1 = StructType([
+            StructField("name", StringType(), True, {"foo": "bar"}),
+            StructField("age", IntegerType(), True),
+            StructField("fav_number", IntegerType(), True),
+            StructField("fav_numbers", ArrayType(IntegerType(), True), True),
+            StructField(
+                "fav_colors",
+                StructType([
+                    StructField("red", IntegerType(), True),
+                    StructField("green", IntegerType(), True),
+                    StructField("blue", IntegerType(), True),
+                ]),
+            ),
+        ])
 
-        s2 = StructType(
-            [
-                StructField("name", StringType(), True, {"foo": "baz"}),
-                StructField("age", IntegerType(), True),
-                StructField("fav_number", IntegerType(), True),
-                StructField("fav_numbers", ArrayType(IntegerType(), True), True),
-                StructField(
-                    "fav_colors",
-                    StructType(
-                        [
-                            StructField("orange", IntegerType(), True),
-                            StructField("green", IntegerType(), True),
-                            StructField("yellow", IntegerType(), True),
-                        ]
-                    ),
-                ),
-            ]
-        )
-        result = create_schema_comparison_tree(
-            s1, s2, ignore_nullable=False, ignore_metadata=True
-        )
+        s2 = StructType([
+            StructField("name", StringType(), True, {"foo": "baz"}),
+            StructField("age", IntegerType(), True),
+            StructField("fav_number", IntegerType(), True),
+            StructField("fav_numbers", ArrayType(IntegerType(), True), True),
+            StructField(
+                "fav_colors",
+                StructType([
+                    StructField("orange", IntegerType(), True),
+                    StructField("green", IntegerType(), True),
+                    StructField("yellow", IntegerType(), True),
+                ]),
+            ),
+        ])
+        result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=True)
         assert repr(result) == expected
 
     def it_prints_correctly_for_wide_schemas_with_metadata():
-        with open(
-            "tests/data/tree_string/it_prints_correctly_for_wide_schemas_with_metadata.txt"
-        ) as f:
+        with open("tests/data/tree_string/it_prints_correctly_for_wide_schemas_with_metadata.txt") as f:
             expected = f.read()
 
-        s1 = StructType(
-            [
-                StructField("name", StringType(), True, {"foo": "bar"}),
-                StructField("age", IntegerType(), True),
-                StructField("fav_number", IntegerType(), True),
-                StructField("fav_numbers", ArrayType(IntegerType(), True), True),
-                StructField(
-                    "fav_colors",
-                    StructType(
-                        [
-                            StructField("red", IntegerType(), True),
-                            StructField("green", IntegerType(), True),
-                            StructField("blue", IntegerType(), True),
-                        ]
-                    ),
-                ),
-            ]
-        )
+        s1 = StructType([
+            StructField("name", StringType(), True, {"foo": "bar"}),
+            StructField("age", IntegerType(), True),
+            StructField("fav_number", IntegerType(), True),
+            StructField("fav_numbers", ArrayType(IntegerType(), True), True),
+            StructField(
+                "fav_colors",
+                StructType([
+                    StructField("red", IntegerType(), True),
+                    StructField("green", IntegerType(), True),
+                    StructField("blue", IntegerType(), True),
+                ]),
+            ),
+        ])
 
-        s2 = StructType(
-            [
-                StructField("name", StringType(), True, {"foo": "baz"}),
-                StructField("age", IntegerType(), True),
-                StructField("fav_number", IntegerType(), True),
-                StructField("fav_numbers", ArrayType(IntegerType(), True), True),
-                StructField(
-                    "fav_colors",
-                    StructType(
-                        [
-                            StructField("orange", IntegerType(), True),
-                            StructField("green", IntegerType(), True),
-                            StructField("yellow", IntegerType(), True),
-                        ]
-                    ),
-                ),
-            ]
-        )
+        s2 = StructType([
+            StructField("name", StringType(), True, {"foo": "baz"}),
+            StructField("age", IntegerType(), True),
+            StructField("fav_number", IntegerType(), True),
+            StructField("fav_numbers", ArrayType(IntegerType(), True), True),
+            StructField(
+                "fav_colors",
+                StructType([
+                    StructField("orange", IntegerType(), True),
+                    StructField("green", IntegerType(), True),
+                    StructField("yellow", IntegerType(), True),
+                ]),
+            ),
+        ])
 
-        result = create_schema_comparison_tree(
-            s1, s2, ignore_nullable=False, ignore_metadata=False
-        )
+        result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=False)
         assert repr(result) == expected
 
 
@@ -511,39 +429,19 @@ def describe_are_structfields_equal():
     def it_returns_false_when_metadata_differs():
         s1 = StructField("coords", StringType(), True, {"hi": "whatever"})
         s2 = StructField("coords", StringType(), True, {"hi": "no"})
-        assert (
-            are_structfields_equal(
-                s1, s2, ignore_nullability=True, ignore_metadata=False
-            )
-            is False
-        )
+        assert are_structfields_equal(s1, s2, ignore_nullability=True, ignore_metadata=False) is False
 
     def it_allows_metadata_to_be_ignored():
         s1 = StructField("coords", StringType(), True, {"hi": "whatever"})
         s2 = StructField("coords", StringType(), True, {"hi": "no"})
-        assert (
-            are_structfields_equal(
-                s1, s2, ignore_nullability=False, ignore_metadata=True
-            )
-            is True
-        )
+        assert are_structfields_equal(s1, s2, ignore_nullability=False, ignore_metadata=True) is True
 
     def it_allows_nullability_and_metadata_to_be_ignored():
         s1 = StructField("coords", StringType(), True, {"hi": "whatever"})
         s2 = StructField("coords", StringType(), False, {"hi": "no"})
-        assert (
-            are_structfields_equal(
-                s1, s2, ignore_nullability=True, ignore_metadata=True
-            )
-            is True
-        )
+        assert are_structfields_equal(s1, s2, ignore_nullability=True, ignore_metadata=True) is True
 
     def it_returns_true_when_metadata_is_the_same():
         s1 = StructField("coords", StringType(), True, {"hi": "whatever"})
         s2 = StructField("coords", StringType(), True, {"hi": "whatever"})
-        assert (
-            are_structfields_equal(
-                s1, s2, ignore_nullability=True, ignore_metadata=False
-            )
-            is True
-        )
+        assert are_structfields_equal(s1, s2, ignore_nullability=True, ignore_metadata=False) is True
