@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from pyspark.sql.types import ArrayType, DoubleType, IntegerType, StringType, StructField, StructType
+from pyspark.sql.types import ArrayType, DoubleType, IntegerType, StructField, StructType
 
 from chispa.structfield_comparer import are_structfields_equal
 
@@ -66,8 +66,7 @@ def describe_are_structfields_equal():
             "hi",
             ArrayType(
                 StructType([
-                    StructField("world", StringType(), True, {"comment": "Comment"}),
-                    StructField("sunshine", IntegerType(), True),
+                    StructField("world", IntegerType(), True, {"comment": "Comment"}),
                 ]),
                 True,
             ),
@@ -77,8 +76,7 @@ def describe_are_structfields_equal():
             "hi",
             ArrayType(
                 StructType([
-                    StructField("world", StringType(), True, {"comment": "Some other comment"}),
-                    StructField("sunshine", IntegerType(), True),
+                    StructField("world", IntegerType(), True, {"comment": "Some other comment"}),
                 ]),
                 True,
             ),
