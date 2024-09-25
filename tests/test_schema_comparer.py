@@ -88,7 +88,7 @@ def describe_tree_string():
 
         result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=False)
 
-        assert repr(result) == expected
+        assert repr(result) + "\n" == expected
 
     def it_prints_correctly_for_wide_schemas_multiple_nested_structs():
         with open("tests/data/tree_string/it_prints_correctly_for_wide_schemas_multiple_nested_structs.txt") as f:
@@ -152,7 +152,7 @@ def describe_tree_string():
         ])
 
         result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=False)
-        assert repr(result) == expected
+        assert repr(result) + "\n" == expected
 
     def it_prints_correctly_for_wide_schemas_ignore_nullable():
         with open("tests/data/tree_string/it_prints_correctly_for_wide_schemas_ignore_nullable.txt") as f:
@@ -190,7 +190,7 @@ def describe_tree_string():
 
         result = create_schema_comparison_tree(s1, s2, ignore_nullable=True, ignore_metadata=False)
 
-        assert repr(result) == expected
+        assert repr(result) + "\n" == expected
 
     def it_prints_correctly_for_wide_schemas_different_lengths():
         with open("tests/data/tree_string/it_prints_correctly_for_wide_schemas_different_lengths.txt") as f:
@@ -229,7 +229,7 @@ def describe_tree_string():
         ])
 
         result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=False)
-        assert repr(result) == expected
+        assert repr(result) + "\n" == expected
 
     def it_prints_correctly_for_wide_schemas_ignore_metadata():
         with open("tests/data/tree_string/it_prints_correctly_for_wide_schemas_ignore_metadata.txt") as f:
@@ -265,7 +265,7 @@ def describe_tree_string():
             ),
         ])
         result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=True)
-        assert repr(result) == expected
+        assert repr(result) + "\n" == expected
 
     def it_prints_correctly_for_wide_schemas_with_metadata():
         with open("tests/data/tree_string/it_prints_correctly_for_wide_schemas_with_metadata.txt") as f:
@@ -302,7 +302,7 @@ def describe_tree_string():
         ])
 
         result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=False)
-        assert repr(result) == expected
+        assert repr(result) + "\n" == expected
 
 
 def describe_assert_schema_equality_ignore_nullable():
