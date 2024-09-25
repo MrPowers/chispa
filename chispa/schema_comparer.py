@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import itertools
 import typing
 from itertools import zip_longest
 
@@ -102,7 +101,7 @@ def create_schema_comparison_table(
     s1, s2, ignore_nullable: bool, ignore_metadata: bool
 ):
     t = PrettyTable(["schema1", "schema2"])
-    zipped = list(itertools.zip_longest(s1, s2))
+    zipped = list(zip_longest(s1, s2))
     for sf1, sf2 in zipped:
         if are_structfields_equal(sf1, sf2, ignore_nullable, ignore_metadata):
             t.add_row([blue(str(sf1)), blue(str(sf2))])
