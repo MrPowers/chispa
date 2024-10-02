@@ -115,7 +115,7 @@ def are_datatypes_equal_ignore_nullable(dt1, dt2, ignore_metadata: bool = False)
     if dt1.typeName() == dt2.typeName():
         # Account for array types by inspecting elementType.
         if dt1.typeName() == "array":
-            return are_datatypes_equal_ignore_nullable(dt1.elementType, dt2.elementType)
+            return are_datatypes_equal_ignore_nullable(dt1.elementType, dt2.elementType, ignore_metadata)
         elif dt1.typeName() == "struct":
             return are_schemas_equal_ignore_nullable(dt1, dt2, ignore_metadata)
         else:
