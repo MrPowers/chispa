@@ -42,6 +42,14 @@ def blue(s: str) -> str:
     return bcolors.LightBlue + str(s) + bcolors.LightRed
 
 
+def line_blue(s: str) -> str:
+    return bcolors.LightBlue + s + bcolors.NC
+
+
+def line_red(s: str) -> str:
+    return bcolors.LightRed + s + bcolors.NC
+
+
 def underline_text(input_text: str) -> str:
     """
     Takes an input string and returns a white, underlined string (based on PrettyTable formatting)
