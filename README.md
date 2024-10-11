@@ -223,6 +223,46 @@ Here's the error message you'll see if you run `assert_df_equality(df1, df2)`, w
 
 ![ignore_column_order_false](https://raw.githubusercontent.com/MrPowers/chispa/main/images/ignore_column_order_false.png)
 
+### Ignore specific columns
+
+This section explains how to compare DataFrames, ignoring specific columns.
+
+Suppose you have the following `df1`:
+
+```
++------------+-------------+
+|    name    | clean_name  |
++------------+-------------+
+| "matt7"    |   "matt7"    |
+| "bill&"    |   "bill"    |
+| "isabela*" |   "isabela" |
+| "None"     |   "None"    |
++------------+-------------+
+```
+
+Here are the contents of `df2`:
+
+```
++------------+-------------+
+|    name    | clean_name  |
++------------+-------------+
+| "matt7"    |   "matt"    |
+| "bill&"    |   "bill"    |
+| "isabela*" |   "isabela" |
+| "None"     |   "None"    |
++------------+-------------+
+```
+
+Here's how to compare the equality of `df1` and `df2`, ignoring the column `clean_name`:
+
+```python
+assert_df_equality(df1, df2, ignore_columns=["clean_name"])
+```
+
+Here's the error message you'll see if you run `assert_df_equality(df1, df2)`, without ignoring the column `clean_name`.
+
+![ignore_columns_none](https://raw.githubusercontent.com/MrPowers/chispa/main/images/dfs_not_equal_error.png)
+
 ### Ignore nullability
 
 Each column in a schema has three properties: a name, data type, and nullable property.  The column can accept null values if `nullable` is set to true.
