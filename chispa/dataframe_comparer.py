@@ -119,11 +119,7 @@ def assert_approx_df_equality(
         )
     elif allow_nan_equality:
         assert_generic_rows_equality(
-            df1.collect(),
-            df2.collect(),
-            are_rows_equal_enhanced,
-            {"allow_nan_equality": True},
-            formats=formats
+            df1.collect(), df2.collect(), are_rows_equal_enhanced, {"allow_nan_equality": True}, formats=formats
         )
     else:
         assert_basic_rows_equality(df1.collect(), df2.collect(), formats=formats)
