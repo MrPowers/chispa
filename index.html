@@ -1,0 +1,1143 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="PySpark test helper methods with beautiful error messages.">
+      
+      
+        <meta name="author" content="Matthew Powers">
+      
+      
+        <link rel="canonical" href="https://mrpowers.github.io/chispa/">
+      
+      
+      
+        <link rel="next" href="reference/SUMMARY/">
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.29">
+    
+    
+      
+        <title>Chispa</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.76a95c52.min.css">
+      
+        
+        <link rel="stylesheet" href="assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chispa" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="." title="Chispa" class="md-header__button md-logo" aria-label="Chispa" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Chispa
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12c0-2.42-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12 20 8.69Z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/MrPowers/chispa" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    MrPowers/chispa
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Chispa" class="md-nav__button md-logo" aria-label="Chispa" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Chispa
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/MrPowers/chispa" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    MrPowers/chispa
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#column-equality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Column equality
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataframe-equality" class="md-nav__link">
+    <span class="md-ellipsis">
+      DataFrame equality
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DataFrame equality">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ignore-row-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ignore row order
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ignore-column-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ignore column order
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ignore-nullability" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ignore nullability
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#allow-nan-equality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Allow NaN equality
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customize-formatting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Customize formatting
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#approximate-column-equality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Approximate column equality
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#approximate-dataframe-equality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Approximate DataFrame equality
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#schema-mismatch-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Schema mismatch messages
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-pyspark-python-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Supported PySpark / Python versions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#benchmarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Benchmarks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#developing-chispa-on-your-local-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      Developing chispa on your local machine
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contributing
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="reference/SUMMARY/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    API Docs
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Installation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#column-equality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Column equality
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dataframe-equality" class="md-nav__link">
+    <span class="md-ellipsis">
+      DataFrame equality
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DataFrame equality">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ignore-row-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ignore row order
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ignore-column-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ignore column order
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ignore-nullability" class="md-nav__link">
+    <span class="md-ellipsis">
+      Ignore nullability
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#allow-nan-equality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Allow NaN equality
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#customize-formatting" class="md-nav__link">
+    <span class="md-ellipsis">
+      Customize formatting
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#approximate-column-equality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Approximate column equality
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#approximate-dataframe-equality" class="md-nav__link">
+    <span class="md-ellipsis">
+      Approximate DataFrame equality
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#schema-mismatch-messages" class="md-nav__link">
+    <span class="md-ellipsis">
+      Schema mismatch messages
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#supported-pyspark-python-versions" class="md-nav__link">
+    <span class="md-ellipsis">
+      Supported PySpark / Python versions
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#benchmarks" class="md-nav__link">
+    <span class="md-ellipsis">
+      Benchmarks
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#developing-chispa-on-your-local-machine" class="md-nav__link">
+    <span class="md-ellipsis">
+      Developing chispa on your local machine
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#contributing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Contributing
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  
+    <a href="https://github.com/MrPowers/chispa/edit/main/docs/index.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4v-2m10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1 2.1 2.1Z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="chispa">chispa<a class="headerlink" href="#chispa" title="Permanent link">&para;</a></h1>
+<p><img alt="![image](https://github.com/MrPowers/chispa/workflows/build/badge.svg)" src="https://github.com/MrPowers/chispa/actions/workflows/ci.yml/badge.svg" />
+<img alt="PyPI - Downloads" src="https://img.shields.io/pypi/dm/chispa" />
+<a href="https://badge.fury.io/py/chispa"><img alt="PyPI version" src="https://badge.fury.io/py/chispa.svg" /></a></p>
+<p>chispa provides fast PySpark test helper methods that output descriptive error messages.</p>
+<p>This library makes it easy to write high quality PySpark code.</p>
+<p>Fun fact: "chispa" means Spark in Spanish ;)</p>
+<h2 id="installation">Installation<a class="headerlink" href="#installation" title="Permanent link">&para;</a></h2>
+<p>Install the latest version with <code>pip install chispa</code>.</p>
+<p>If you use Poetry, add this library as a development dependency with <code>poetry add chispa -G dev</code>.</p>
+<h2 id="column-equality">Column equality<a class="headerlink" href="#column-equality" title="Permanent link">&para;</a></h2>
+<p>Suppose you have a function that removes the non-word characters in a string.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">remove_non_word_characters</span><span class="p">(</span><span class="n">col</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">F</span><span class="o">.</span><span class="n">regexp_replace</span><span class="p">(</span><span class="n">col</span><span class="p">,</span> <span class="s2">&quot;[^</span><span class="se">\\</span><span class="s2">w</span><span class="se">\\</span><span class="s2">s]+&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Create a <code>SparkSession</code> so you can create DataFrames.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+
+<span class="n">spark</span> <span class="o">=</span> <span class="p">(</span><span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span>
+  <span class="o">.</span><span class="n">master</span><span class="p">(</span><span class="s2">&quot;local&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;chispa&quot;</span><span class="p">)</span>
+  <span class="o">.</span><span class="n">getOrCreate</span><span class="p">())</span>
+</code></pre></div>
+<p>Create a DataFrame with a column that contains strings with non-word characters, run the <code>remove_non_word_characters</code> function, and check that all these characters are removed with the chispa <code>assert_column_equality</code> method.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">pytest</span>
+
+<span class="kn">from</span> <span class="nn">chispa.column_comparer</span> <span class="kn">import</span> <span class="n">assert_column_equality</span>
+<span class="kn">import</span> <span class="nn">pyspark.sql.functions</span> <span class="k">as</span> <span class="nn">F</span>
+
+<span class="k">def</span> <span class="nf">test_remove_non_word_characters_short</span><span class="p">():</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;jo&amp;&amp;se&quot;</span><span class="p">,</span> <span class="s2">&quot;jose&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;**li**&quot;</span><span class="p">,</span> <span class="s2">&quot;li&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;#::luisa&quot;</span><span class="p">,</span> <span class="s2">&quot;luisa&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;expected_name&quot;</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;clean_name&quot;</span><span class="p">,</span> <span class="n">remove_non_word_characters</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">))))</span>
+    <span class="n">assert_column_equality</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;clean_name&quot;</span><span class="p">,</span> <span class="s2">&quot;expected_name&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Let's write another test that'll fail to see how the descriptive error message lets you easily debug the underlying issue.</p>
+<p>Here's the failing test:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_remove_non_word_characters_nice_error</span><span class="p">():</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;matt7&quot;</span><span class="p">,</span> <span class="s2">&quot;matt&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;bill&amp;&quot;</span><span class="p">,</span> <span class="s2">&quot;bill&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;isabela*&quot;</span><span class="p">,</span> <span class="s2">&quot;isabela&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;expected_name&quot;</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;clean_name&quot;</span><span class="p">,</span> <span class="n">remove_non_word_characters</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">))))</span>
+    <span class="n">assert_column_equality</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;clean_name&quot;</span><span class="p">,</span> <span class="s2">&quot;expected_name&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>Here's the nicely formatted error message:</p>
+<p><img alt="ColumnsNotEqualError" src="https://raw.githubusercontent.com/MrPowers/chispa/main/images/columns_not_equal_error.png" /></p>
+<p>You can see the <code>matt7</code> / <code>matt</code> row of data is what's causing the error (note it's highlighted in red).  The other rows are colored blue because they're equal.</p>
+<h2 id="dataframe-equality">DataFrame equality<a class="headerlink" href="#dataframe-equality" title="Permanent link">&para;</a></h2>
+<p>We can also test the <code>remove_non_word_characters</code> method by creating two DataFrames and verifying that they're equal.</p>
+<p>Creating two DataFrames is slower and requires more code, but comparing entire DataFrames is necessary for some tests.</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">chispa.dataframe_comparer</span> <span class="kn">import</span> <span class="o">*</span>
+
+<span class="k">def</span> <span class="nf">test_remove_non_word_characters_long</span><span class="p">():</span>
+    <span class="n">source_data</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;jo&amp;&amp;se&quot;</span><span class="p">,),</span>
+        <span class="p">(</span><span class="s2">&quot;**li**&quot;</span><span class="p">,),</span>
+        <span class="p">(</span><span class="s2">&quot;#::luisa&quot;</span><span class="p">,),</span>
+        <span class="p">(</span><span class="kc">None</span><span class="p">,)</span>
+    <span class="p">]</span>
+    <span class="n">source_df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">source_data</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
+
+    <span class="n">actual_df</span> <span class="o">=</span> <span class="n">source_df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span>
+        <span class="s2">&quot;clean_name&quot;</span><span class="p">,</span>
+        <span class="n">remove_non_word_characters</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">))</span>
+    <span class="p">)</span>
+
+    <span class="n">expected_data</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;jo&amp;&amp;se&quot;</span><span class="p">,</span> <span class="s2">&quot;jose&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;**li**&quot;</span><span class="p">,</span> <span class="s2">&quot;li&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;#::luisa&quot;</span><span class="p">,</span> <span class="s2">&quot;luisa&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">expected_df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">expected_data</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;clean_name&quot;</span><span class="p">])</span>
+
+    <span class="n">assert_df_equality</span><span class="p">(</span><span class="n">actual_df</span><span class="p">,</span> <span class="n">expected_df</span><span class="p">)</span>
+</code></pre></div>
+<p>Let's write another test that'll return an error, so you can see the descriptive error message.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_remove_non_word_characters_long_error</span><span class="p">():</span>
+    <span class="n">source_data</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;matt7&quot;</span><span class="p">,),</span>
+        <span class="p">(</span><span class="s2">&quot;bill&amp;&quot;</span><span class="p">,),</span>
+        <span class="p">(</span><span class="s2">&quot;isabela*&quot;</span><span class="p">,),</span>
+        <span class="p">(</span><span class="kc">None</span><span class="p">,)</span>
+    <span class="p">]</span>
+    <span class="n">source_df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">source_data</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">])</span>
+
+    <span class="n">actual_df</span> <span class="o">=</span> <span class="n">source_df</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span>
+        <span class="s2">&quot;clean_name&quot;</span><span class="p">,</span>
+        <span class="n">remove_non_word_characters</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">))</span>
+    <span class="p">)</span>
+
+    <span class="n">expected_data</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;matt7&quot;</span><span class="p">,</span> <span class="s2">&quot;matt&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;bill&amp;&quot;</span><span class="p">,</span> <span class="s2">&quot;bill&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;isabela*&quot;</span><span class="p">,</span> <span class="s2">&quot;isabela&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">expected_df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">expected_data</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="s2">&quot;clean_name&quot;</span><span class="p">])</span>
+
+    <span class="n">assert_df_equality</span><span class="p">(</span><span class="n">actual_df</span><span class="p">,</span> <span class="n">expected_df</span><span class="p">)</span>
+</code></pre></div>
+<p>Here's the nicely formatted error message:</p>
+<p><img alt="DataFramesNotEqualError" src="https://raw.githubusercontent.com/MrPowers/chispa/main/images/dfs_not_equal_error.png" /></p>
+<h3 id="ignore-row-order">Ignore row order<a class="headerlink" href="#ignore-row-order" title="Permanent link">&para;</a></h3>
+<p>You can easily compare DataFrames, ignoring the order of the rows.  The content of the DataFrames is usually what matters, not the order of the rows.</p>
+<p>Here are the contents of <code>df1</code>:</p>
+<div class="highlight"><pre><span></span><code>+--------+
+|some_num|
++--------+
+|       1|
+|       2|
+|       3|
++--------+
+</code></pre></div>
+<p>Here are the contents of <code>df2</code>:</p>
+<div class="highlight"><pre><span></span><code>+--------+
+|some_num|
++--------+
+|       2|
+|       1|
+|       3|
++--------+
+</code></pre></div>
+<p>Here's how to confirm <code>df1</code> and <code>df2</code> are equal when the row order is ignored.</p>
+<div class="highlight"><pre><span></span><code><span class="n">assert_df_equality</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span> <span class="n">df2</span><span class="p">,</span> <span class="n">ignore_row_order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<p>If you don't specify to <code>ignore_row_order</code> then the test will error out with this message:</p>
+<p><img alt="ignore_row_order_false" src="https://raw.githubusercontent.com/MrPowers/chispa/main/images/ignore_row_order_false.png" /></p>
+<p>The rows aren't ordered by default because sorting slows down the function.</p>
+<h3 id="ignore-column-order">Ignore column order<a class="headerlink" href="#ignore-column-order" title="Permanent link">&para;</a></h3>
+<p>This section explains how to compare DataFrames, ignoring the order of the columns.</p>
+<p>Suppose you have the following <code>df1</code>:</p>
+<div class="highlight"><pre><span></span><code>+----+----+
+|num1|num2|
++----+----+
+|   1|   7|
+|   2|   8|
+|   3|   9|
++----+----+
+</code></pre></div>
+<p>Here are the contents of <code>df2</code>:</p>
+<div class="highlight"><pre><span></span><code>+----+----+
+|num2|num1|
++----+----+
+|   7|   1|
+|   8|   2|
+|   9|   3|
++----+----+
+</code></pre></div>
+<p>Here's how to compare the equality of <code>df1</code> and <code>df2</code>, ignoring the column order:</p>
+<div class="highlight"><pre><span></span><code><span class="n">assert_df_equality</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span> <span class="n">df2</span><span class="p">,</span> <span class="n">ignore_column_order</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<p>Here's the error message you'll see if you run <code>assert_df_equality(df1, df2)</code>, without ignoring the column order.</p>
+<p><img alt="ignore_column_order_false" src="https://raw.githubusercontent.com/MrPowers/chispa/main/images/ignore_column_order_false.png" /></p>
+<h3 id="ignore-nullability">Ignore nullability<a class="headerlink" href="#ignore-nullability" title="Permanent link">&para;</a></h3>
+<p>Each column in a schema has three properties: a name, data type, and nullable property.  The column can accept null values if <code>nullable</code> is set to true.</p>
+<p>You'll sometimes want to ignore the nullable property when making DataFrame comparisons.</p>
+<p>Suppose you have the following <code>df1</code>:</p>
+<div class="highlight"><pre><span></span><code>+-----+---+
+| name|age|
++-----+---+
+| juan|  7|
+|bruna|  8|
++-----+---+
+</code></pre></div>
+<p>And this <code>df2</code>:</p>
+<div class="highlight"><pre><span></span><code>+-----+---+
+| name|age|
++-----+---+
+| juan|  7|
+|bruna|  8|
++-----+---+
+</code></pre></div>
+<p>You might be surprised to find that in this example, <code>df1</code> and <code>df2</code> are not equal and will error out with this message:</p>
+<p><img alt="nullable_off_error" src="https://raw.githubusercontent.com/MrPowers/chispa/main/images/nullable_off_error.png" /></p>
+<p>Examine the code in this contrived example to better understand the error:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">ignore_nullable_property</span><span class="p">():</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">StructType</span><span class="p">([</span>
+       <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+       <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">)])</span>
+    <span class="n">df1</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([(</span><span class="s2">&quot;juan&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;bruna&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">)],</span> <span class="n">s1</span><span class="p">)</span>
+    <span class="n">s2</span> <span class="o">=</span> <span class="n">StructType</span><span class="p">([</span>
+       <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+       <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;age&quot;</span><span class="p">,</span> <span class="n">IntegerType</span><span class="p">(),</span> <span class="kc">False</span><span class="p">)])</span>
+    <span class="n">df2</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([(</span><span class="s2">&quot;juan&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;bruna&quot;</span><span class="p">,</span> <span class="mi">8</span><span class="p">)],</span> <span class="n">s2</span><span class="p">)</span>
+    <span class="n">assert_df_equality</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span> <span class="n">df2</span><span class="p">)</span>
+</code></pre></div>
+<p>You can ignore the nullable property when assessing equality by adding a flag:</p>
+<div class="highlight"><pre><span></span><code><span class="n">assert_df_equality</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span> <span class="n">df2</span><span class="p">,</span> <span class="n">ignore_nullable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<p>Elements contained within an <code>ArrayType()</code> also have a nullable property, in addition to the nullable property of the column schema. These are also ignored when passing <code>ignore_nullable=True</code>.</p>
+<p>Again, examine the following code to understand the error that <code>ignore_nullable=True</code> bypasses:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">ignore_nullable_property_array</span><span class="p">():</span>
+    <span class="n">s1</span> <span class="o">=</span> <span class="n">StructType</span><span class="p">([</span>
+        <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;coords&quot;</span><span class="p">,</span> <span class="n">ArrayType</span><span class="p">(</span><span class="n">DoubleType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span> <span class="kc">True</span><span class="p">),])</span>
+    <span class="n">df1</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([(</span><span class="s2">&quot;juan&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.42</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">]),</span> <span class="p">(</span><span class="s2">&quot;bruna&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mf">2.76</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">])],</span> <span class="n">s1</span><span class="p">)</span>
+    <span class="n">s2</span> <span class="o">=</span> <span class="n">StructType</span><span class="p">([</span>
+        <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">StringType</span><span class="p">(),</span> <span class="kc">True</span><span class="p">),</span>
+        <span class="n">StructField</span><span class="p">(</span><span class="s2">&quot;coords&quot;</span><span class="p">,</span> <span class="n">ArrayType</span><span class="p">(</span><span class="n">DoubleType</span><span class="p">(),</span> <span class="kc">False</span><span class="p">),</span> <span class="kc">True</span><span class="p">),])</span>
+    <span class="n">df2</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">([(</span><span class="s2">&quot;juan&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.42</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">]),</span> <span class="p">(</span><span class="s2">&quot;bruna&quot;</span><span class="p">,</span> <span class="p">[</span><span class="mf">2.76</span><span class="p">,</span> <span class="mf">3.2</span><span class="p">])],</span> <span class="n">s2</span><span class="p">)</span>
+    <span class="n">assert_df_equality</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span> <span class="n">df2</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="allow-nan-equality">Allow NaN equality<a class="headerlink" href="#allow-nan-equality" title="Permanent link">&para;</a></h3>
+<p>Python has NaN (not a number) values and two NaN values are not considered equal by default.  Create two NaN values, compare them, and confirm they're not considered equal by default.</p>
+<div class="highlight"><pre><span></span><code><span class="n">nan1</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">)</span>
+<span class="n">nan2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="s1">&#39;nan&#39;</span><span class="p">)</span>
+<span class="n">nan1</span> <span class="o">==</span> <span class="n">nan2</span> <span class="c1"># False</span>
+</code></pre></div>
+<p>pandas considers NaN values to be equal by default, but this library requires you to set a flag to consider two NaN values to be equal.</p>
+<div class="highlight"><pre><span></span><code><span class="n">assert_df_equality</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span> <span class="n">df2</span><span class="p">,</span> <span class="n">allow_nan_equality</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<h2 id="customize-formatting">Customize formatting<a class="headerlink" href="#customize-formatting" title="Permanent link">&para;</a></h2>
+<p>You can specify custom formats for the printed error messages as follows:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">chispa</span> <span class="kn">import</span> <span class="n">FormattingConfig</span>
+
+<span class="n">formats</span> <span class="o">=</span> <span class="n">FormattingConfig</span><span class="p">(</span>
+        <span class="n">mismatched_rows</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;light_yellow&quot;</span><span class="p">},</span>
+        <span class="n">matched_rows</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;cyan&quot;</span><span class="p">,</span> <span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="s2">&quot;bold&quot;</span><span class="p">},</span>
+        <span class="n">mismatched_cells</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;purple&quot;</span><span class="p">},</span>
+        <span class="n">matched_cells</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">},</span>
+    <span class="p">)</span>
+
+<span class="n">assert_basic_rows_equality</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">collect</span><span class="p">(),</span> <span class="n">df2</span><span class="o">.</span><span class="n">collect</span><span class="p">(),</span> <span class="n">formats</span><span class="o">=</span><span class="n">formats</span><span class="p">)</span>
+</code></pre></div>
+<p>or similarly:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">chispa</span> <span class="kn">import</span> <span class="n">FormattingConfig</span><span class="p">,</span> <span class="n">Color</span><span class="p">,</span> <span class="n">Style</span>
+
+<span class="n">formats</span> <span class="o">=</span> <span class="n">FormattingConfig</span><span class="p">(</span>
+        <span class="n">mismatched_rows</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">Color</span><span class="o">.</span><span class="n">LIGHT_YELLOW</span><span class="p">},</span>
+        <span class="n">matched_rows</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">Color</span><span class="o">.</span><span class="n">CYAN</span><span class="p">,</span> <span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="n">Style</span><span class="o">.</span><span class="n">BOLD</span><span class="p">},</span>
+        <span class="n">mismatched_cells</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">Color</span><span class="o">.</span><span class="n">PURPLE</span><span class="p">},</span>
+        <span class="n">matched_cells</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="n">Color</span><span class="o">.</span><span class="n">BLUE</span><span class="p">},</span>
+    <span class="p">)</span>
+
+<span class="n">assert_basic_rows_equality</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">collect</span><span class="p">(),</span> <span class="n">df2</span><span class="o">.</span><span class="n">collect</span><span class="p">(),</span> <span class="n">formats</span><span class="o">=</span><span class="n">formats</span><span class="p">)</span>
+</code></pre></div>
+<p>You can also define these formats in <code>conftest.py</code> and inject them via a fixture:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">fixture</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">chispa_formats</span><span class="p">():</span>
+    <span class="k">return</span> <span class="n">FormattingConfig</span><span class="p">(</span>
+        <span class="n">mismatched_rows</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;light_yellow&quot;</span><span class="p">},</span>
+        <span class="n">matched_rows</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;cyan&quot;</span><span class="p">,</span> <span class="s2">&quot;style&quot;</span><span class="p">:</span> <span class="s2">&quot;bold&quot;</span><span class="p">},</span>
+        <span class="n">mismatched_cells</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;purple&quot;</span><span class="p">},</span>
+        <span class="n">matched_cells</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;blue&quot;</span><span class="p">},</span>
+    <span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">test_shows_assert_basic_rows_equality</span><span class="p">(</span><span class="n">chispa_formats</span><span class="p">):</span>
+  <span class="o">...</span>
+  <span class="n">assert_basic_rows_equality</span><span class="p">(</span><span class="n">df1</span><span class="o">.</span><span class="n">collect</span><span class="p">(),</span> <span class="n">df2</span><span class="o">.</span><span class="n">collect</span><span class="p">(),</span> <span class="n">formats</span><span class="o">=</span><span class="n">chispa_formats</span><span class="p">)</span>
+</code></pre></div>
+<p><img alt="custom_formats" src="https://raw.githubusercontent.com/MrPowers/chispa/main/images/custom_formats.png" /></p>
+<h2 id="approximate-column-equality">Approximate column equality<a class="headerlink" href="#approximate-column-equality" title="Permanent link">&para;</a></h2>
+<p>We can check if columns are approximately equal, which is especially useful for floating number comparisons.</p>
+<p>Here's a test that creates a DataFrame with two floating point columns and verifies that the columns are approximately equal.  In this example, values are considered approximately equal if the difference is less than 0.1.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_approx_col_equality_same</span><span class="p">():</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">2.2</span><span class="p">,</span> <span class="mf">2.15</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">3.3</span><span class="p">,</span> <span class="mf">3.37</span><span class="p">),</span>
+        <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;num1&quot;</span><span class="p">,</span> <span class="s2">&quot;num2&quot;</span><span class="p">])</span>
+    <span class="n">assert_approx_column_equality</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;num1&quot;</span><span class="p">,</span> <span class="s2">&quot;num2&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+</code></pre></div>
+<p>Here's an example of a test with columns that are not approximately equal.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_approx_col_equality_different</span><span class="p">():</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">2.2</span><span class="p">,</span> <span class="mf">2.15</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">3.3</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">),</span>
+        <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;num1&quot;</span><span class="p">,</span> <span class="s2">&quot;num2&quot;</span><span class="p">])</span>
+    <span class="n">assert_approx_column_equality</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="s2">&quot;num1&quot;</span><span class="p">,</span> <span class="s2">&quot;num2&quot;</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+</code></pre></div>
+<p>This failing test will output a readable error message so the issue is easy to debug.</p>
+<p><img alt="ColumnsNotEqualError" src="https://raw.githubusercontent.com/MrPowers/chispa/main/images/columns_not_approx_equal.png" /></p>
+<h2 id="approximate-dataframe-equality">Approximate DataFrame equality<a class="headerlink" href="#approximate-dataframe-equality" title="Permanent link">&para;</a></h2>
+<p>Let's create two DataFrames and confirm they're approximately equal.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_approx_df_equality_same</span><span class="p">():</span>
+    <span class="n">data1</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">2.2</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">3.3</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">df1</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;num&quot;</span><span class="p">,</span> <span class="s2">&quot;letter&quot;</span><span class="p">])</span>
+
+    <span class="n">data2</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mf">1.05</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">2.13</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">3.3</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">df2</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">data2</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;num&quot;</span><span class="p">,</span> <span class="s2">&quot;letter&quot;</span><span class="p">])</span>
+
+    <span class="n">assert_approx_df_equality</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span> <span class="n">df2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+</code></pre></div>
+<p>The <code>assert_approx_df_equality</code> method is smart and will only perform approximate equality operations for floating point numbers in DataFrames.  It'll perform regular equality for strings and other types.</p>
+<p>Let's perform an approximate equality comparison for two DataFrames that are not equal.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_approx_df_equality_different</span><span class="p">():</span>
+    <span class="n">data1</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">2.2</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">3.3</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">df1</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;num&quot;</span><span class="p">,</span> <span class="s2">&quot;letter&quot;</span><span class="p">])</span>
+
+    <span class="n">data2</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mf">1.1</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mf">3.3</span><span class="p">,</span> <span class="s2">&quot;z&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">df2</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">data2</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;num&quot;</span><span class="p">,</span> <span class="s2">&quot;letter&quot;</span><span class="p">])</span>
+
+    <span class="n">assert_approx_df_equality</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span> <span class="n">df2</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">)</span>
+</code></pre></div>
+<p>Here's the pretty error message that's outputted:</p>
+<p><img alt="DataFramesNotEqualError" src="https://raw.githubusercontent.com/MrPowers/chispa/main/images/dfs_not_approx_equal.png" /></p>
+<h2 id="schema-mismatch-messages">Schema mismatch messages<a class="headerlink" href="#schema-mismatch-messages" title="Permanent link">&para;</a></h2>
+<p>DataFrame equality messages peform schema comparisons before analyzing the actual content of the DataFrames.  DataFrames that don't have the same schemas should error out as fast as possible.</p>
+<p>Let's compare a DataFrame that has a string column an integer column with a DataFrame that has two integer columns to observe the schema mismatch message.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">test_schema_mismatch_message</span><span class="p">():</span>
+    <span class="n">data1</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">df1</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">data1</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;num&quot;</span><span class="p">,</span> <span class="s2">&quot;letter&quot;</span><span class="p">])</span>
+
+    <span class="n">data2</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">7</span><span class="p">),</span>
+        <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span>
+        <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="p">]</span>
+    <span class="n">df2</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">createDataFrame</span><span class="p">(</span><span class="n">data2</span><span class="p">,</span> <span class="p">[</span><span class="s2">&quot;num&quot;</span><span class="p">,</span> <span class="s2">&quot;num2&quot;</span><span class="p">])</span>
+
+    <span class="n">assert_df_equality</span><span class="p">(</span><span class="n">df1</span><span class="p">,</span> <span class="n">df2</span><span class="p">)</span>
+</code></pre></div>
+<p>Here's the error message:</p>
+<p><img alt="SchemasNotEqualError" src="https://raw.githubusercontent.com/MrPowers/chispa/main/images/schemas_not_approx_equal.png" /></p>
+<h2 id="supported-pyspark-python-versions">Supported PySpark / Python versions<a class="headerlink" href="#supported-pyspark-python-versions" title="Permanent link">&para;</a></h2>
+<p>chispa currently supports PySpark 2.4+ and Python 3.5+.</p>
+<p>Use chispa v0.8.2 if you're using an older Python version.</p>
+<p>PySpark 2 support will be dropped when chispa 1.x is released.</p>
+<h2 id="benchmarks">Benchmarks<a class="headerlink" href="#benchmarks" title="Permanent link">&para;</a></h2>
+<p>TODO: Need to benchmark these methods vs. the spark-testing-base ones</p>
+<h2 id="developing-chispa-on-your-local-machine">Developing chispa on your local machine<a class="headerlink" href="#developing-chispa-on-your-local-machine" title="Permanent link">&para;</a></h2>
+<p>You are encouraged to clone and/or fork this repo.</p>
+<p>This project uses <a href="https://python-poetry.org/">Poetry</a> for packaging and dependency management.</p>
+<ul>
+<li>Setup the virtual environment with <code>poetry install</code></li>
+<li>Run the tests with <code>poetry run pytest tests</code></li>
+</ul>
+<p>Studying the codebase is a great way to learn about PySpark!</p>
+<h2 id="contributing">Contributing<a class="headerlink" href="#contributing" title="Permanent link">&para;</a></h2>
+<p>Anyone is encouraged to submit a pull request, open an issue, or submit a bug report.</p>
+<p>We're happy to promote folks to be library maintainers if they make good contributions.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+        
+          
+          <a href="reference/SUMMARY/" class="md-footer__link md-footer__link--next" aria-label="Next: API Docs">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                API Docs
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Maintained by <a href="https://github.com/MrPowers">Matthew</a>.
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://github.com/MrPowers/chispa" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+    
+    
+    
+    
+      
+      
+    
+    <a href="https://pypi.org/project/chispa/" target="_blank" rel="noopener" title="pypi.org" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.5.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.8 200.5c-7.7-30.9-22.3-54.2-53.4-54.2h-40.1v47.4c0 36.8-31.2 67.8-66.8 67.8H172.7c-29.2 0-53.4 25-53.4 54.3v101.8c0 29 25.2 46 53.4 54.3 33.8 9.9 66.3 11.7 106.8 0 26.9-7.8 53.4-23.5 53.4-54.3v-40.7H226.2v-13.6h160.2c31.1 0 42.6-21.7 53.4-54.2 11.2-33.5 10.7-65.7 0-108.6zM286.2 404c11.1 0 20.1 9.1 20.1 20.3 0 11.3-9 20.4-20.1 20.4-11 0-20.1-9.2-20.1-20.4.1-11.3 9.1-20.3 20.1-20.3zM167.8 248.1h106.8c29.7 0 53.4-24.5 53.4-54.3V91.9c0-29-24.4-50.7-53.4-55.6-35.8-5.9-74.7-5.6-106.8.1-45.2 8-53.4 24.7-53.4 55.6v40.7h106.9v13.6h-147c-31.1 0-58.3 18.7-66.8 54.2-9.8 40.7-10.2 66.1 0 108.6 7.6 31.6 25.7 54.2 56.8 54.2H101v-48.8c0-35.3 30.5-66.4 66.8-66.4zm-6.7-142.6c-11.1 0-20.1-9.1-20.1-20.3.1-11.3 9-20.4 20.1-20.4 11 0 20.1 9.2 20.1 20.4s-9 20.3-20.1 20.3z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["content.action.edit", "content.code.copy", "navigation.footer"], "search": "assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.fe8b6f2b.min.js"></script>
+      
+    
+  </body>
+</html>
