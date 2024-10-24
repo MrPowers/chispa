@@ -133,6 +133,21 @@ def describe_assert_df_equality():
         with pytest.raises(SchemasNotEqualError):
             assert_df_equality(df1, df2)
 
+    def it_can_ignore_columns():
+        data1 = [("bob", "jose"), ("li", "li"), ("luisa", "laura")]
+        df1 = spark.createDataFrame(data1, ["name", "expected_name"])
+        data2 = [("bob", "jose"), ("li", "boo"), ("luisa", "boo")]
+        df2 = spark.createDataFrame(data2, ["name", "expected_name"])
+        assert_df_equality(df1, df2, ignore_columns=["expected_name"])
+
+    def it_throws_when_dfs_are_not_same_with_ignored_columns():
+        data1 = [("bob", "jose"), ("li", "li"), ("luisa", "laura")]
+        df1 = spark.createDataFrame(data1, ["name", "expected_name"])
+        data2 = [("bob", "jose"), ("li", "boo"), ("luisa", "boo")]
+        df2 = spark.createDataFrame(data2, ["name", "expected_name"])
+        with pytest.raises(DataFramesNotEqualError):
+            assert assert_df_equality(df1, df2, ignore_columns=["name"])
+
 
 def describe_are_dfs_equal():
     def it_returns_false_with_schema_mismatches():
@@ -206,3 +221,18 @@ def describe_assert_approx_df_equality():
         ]
         df2 = spark.createDataFrame(data2, ["num", "expected_name"])
         assert_approx_df_equality(df1, df2, 0.1, allow_nan_equality=True)
+
+    def it_can_ignore_columns():
+        data1 = [("bob", "jose"), ("li", "li"), ("luisa", "laura")]
+        df1 = spark.createDataFrame(data1, ["name", "expected_name"])
+        data2 = [("bob", "jose"), ("li", "boo"), ("luisa", "boo")]
+        df2 = spark.createDataFrame(data2, ["name", "expected_name"])
+        assert_approx_df_equality(df1, df2, 0.1, ignore_columns=["expected_name"])
+
+    def it_throws_when_dfs_are_not_same_with_ignored_columns():
+        data1 = [("bob", "jose"), ("li", "li"), ("luisa", "laura")]
+        df1 = spark.createDataFrame(data1, ["name", "expected_name"])
+        data2 = [("bob", "jose"), ("li", "boo"), ("luisa", "boo")]
+        df2 = spark.createDataFrame(data2, ["name", "expected_name"])
+        with pytest.raises(DataFramesNotEqualError):
+            assert assert_approx_df_equality(df1, df2, 0.1, ignore_columns=["name"])
