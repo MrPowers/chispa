@@ -7,6 +7,7 @@ from prettytable import PrettyTable
 from pyspark.sql.types import StructField, StructType
 
 from chispa.bcolors import bcolors, line_blue, line_red
+from chispa.common_enums import OutputFormat, TypeName
 from chispa.formatting import blue
 
 
@@ -17,17 +18,17 @@ class SchemasNotEqualError(Exception):
 
 
 def print_schema_diff(
-    s1: StructType, s2: StructType, ignore_nullable: bool, ignore_metadata: bool, output_format: str = "table"
+        s1: StructType, s2: StructType, ignore_nullable: bool, ignore_metadata: bool,
+        output_format: str = OutputFormat.TABLE
 ) -> None:
-    valid_output_formats = ["table", "tree"]
-    if output_format == "table":
+    if output_format == OutputFormat.TABLE:
         schema_diff_table: PrettyTable = create_schema_comparison_table(s1, s2, ignore_nullable, ignore_metadata)
         print(schema_diff_table)
-    elif output_format == "tree":
+    elif output_format == OutputFormat.TREE:
         schema_diff_tree: str = create_schema_comparison_tree(s1, s2, ignore_nullable, ignore_metadata)
         print(schema_diff_tree)
     else:
-        raise ValueError(f"output_format must be one of {valid_output_formats}")
+        raise ValueError(f"output_format must be one of {OutputFormat}")
 
 
 def create_schema_comparison_tree(s1: StructType, s2: StructType, ignore_nullable: bool, ignore_metadata: bool) -> str:
@@ -44,7 +45,7 @@ def create_schema_comparison_tree(s1: StructType, s2: StructType, ignore_nullabl
 
             tree_lines += [f"{struct_prefix} {struct_as_string}"]
 
-            if not struct_field_type == "struct":
+            if not struct_field_type == TypeName.STRUCT.value:
                 fields += [struct_field]
                 continue
 
@@ -101,8 +102,8 @@ def create_schema_comparison_table(
 
 
 def check_if_schemas_are_wide(s1: StructType, s2: StructType) -> bool:
-    contains_nested_structs = any(sf.dataType.typeName() == "struct" for sf in s1) or any(
-        sf.dataType.typeName() == "struct" for sf in s2
+    contains_nested_structs = any(sf.dataType.typeName() == TypeName.STRUCT.value for sf in s1) or any(
+        sf.dataType.typeName() == TypeName.STRUCT.value for sf in s2
     )
     contains_many_columns = len(s1) > 10 or len(s2) > 10
     return contains_nested_structs or contains_many_columns
@@ -196,9 +197,9 @@ def are_datatypes_equal_ignore_nullable(dt1, dt2, ignore_metadata: bool = False)
     """
     if dt1.typeName() == dt2.typeName():
         # Account for array types by inspecting elementType.
-        if dt1.typeName() == "array":
+        if dt1.typeName() == TypeName.ARRAY.value:
             return are_datatypes_equal_ignore_nullable(dt1.elementType, dt2.elementType, ignore_metadata)
-        elif dt1.typeName() == "struct":
+        elif dt1.typeName() == TypeName.STRUCT.value:
             return are_schemas_equal_ignore_nullable(dt1, dt2, ignore_metadata)
         else:
             return True
