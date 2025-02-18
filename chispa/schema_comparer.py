@@ -18,8 +18,11 @@ class SchemasNotEqualError(Exception):
 
 
 def print_schema_diff(
-        s1: StructType, s2: StructType, ignore_nullable: bool, ignore_metadata: bool,
-        output_format: str = OutputFormat.TABLE
+    s1: StructType,
+    s2: StructType,
+    ignore_nullable: bool,
+    ignore_metadata: bool,
+    output_format: str = OutputFormat.TABLE,
 ) -> None:
     if output_format == OutputFormat.TABLE:
         schema_diff_table: PrettyTable = create_schema_comparison_table(s1, s2, ignore_nullable, ignore_metadata)
