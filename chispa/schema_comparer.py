@@ -22,7 +22,7 @@ def print_schema_diff(
     s2: StructType,
     ignore_nullable: bool,
     ignore_metadata: bool,
-    output_format: str = OutputFormat.TABLE,
+    output_format: OutputFormat = OutputFormat.TABLE,
 ) -> None:
     if output_format == OutputFormat.TABLE:
         schema_diff_table: PrettyTable = create_schema_comparison_table(s1, s2, ignore_nullable, ignore_metadata)
@@ -31,7 +31,7 @@ def print_schema_diff(
         schema_diff_tree: str = create_schema_comparison_tree(s1, s2, ignore_nullable, ignore_metadata)
         print(schema_diff_tree)
     else:
-        raise ValueError(f"output_format must be one of {OutputFormat}")
+        raise ValueError(f"output_format must be one of {OutputFormat.__members__}")
 
 
 def create_schema_comparison_tree(s1: StructType, s2: StructType, ignore_nullable: bool, ignore_metadata: bool) -> str:
@@ -200,9 +200,9 @@ def are_datatypes_equal_ignore_nullable(dt1, dt2, ignore_metadata: bool = False)
     """
     if dt1.typeName() == dt2.typeName():
         # Account for array types by inspecting elementType.
-        if dt1.typeName() == TypeName.ARRAY.value:
+        if dt1.typeName() == TypeName.ARRAY:
             return are_datatypes_equal_ignore_nullable(dt1.elementType, dt2.elementType, ignore_metadata)
-        elif dt1.typeName() == TypeName.STRUCT.value:
+        elif dt1.typeName() == TypeName.STRUCT:
             return are_schemas_equal_ignore_nullable(dt1, dt2, ignore_metadata)
         else:
             return True

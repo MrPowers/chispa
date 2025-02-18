@@ -3,11 +3,11 @@ from __future__ import annotations
 from enum import Enum
 
 
-class OutputFormat(Enum):
+class OutputFormat(str, Enum):
     TABLE = "table"
     TREE = "tree"
 
 
-class TypeName(Enum):
+class TypeName(str, Enum):
     ARRAY = "array"
     STRUCT = "struct"
