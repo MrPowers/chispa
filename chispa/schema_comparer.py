@@ -48,7 +48,7 @@ def create_schema_comparison_tree(s1: StructType, s2: StructType, ignore_nullabl
 
             tree_lines += [f"{struct_prefix} {struct_as_string}"]
 
-            if not struct_field_type == TypeName.STRUCT.value:
+            if not struct_field_type == TypeName.STRUCT:
                 fields += [struct_field]
                 continue
 
@@ -105,8 +105,8 @@ def create_schema_comparison_table(
 
 
 def check_if_schemas_are_wide(s1: StructType, s2: StructType) -> bool:
-    contains_nested_structs = any(sf.dataType.typeName() == TypeName.STRUCT.value for sf in s1) or any(
-        sf.dataType.typeName() == TypeName.STRUCT.value for sf in s2
+    contains_nested_structs = any(sf.dataType.typeName() == TypeName.STRUCT for sf in s1) or any(
+        sf.dataType.typeName() == TypeName.STRUCT for sf in s2
     )
     contains_many_columns = len(s1) > 10 or len(s2) > 10
     return contains_nested_structs or contains_many_columns
