@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import pytest
-from pyspark.sql.types import ArrayType, DoubleType, IntegerType, StringType, StructField, StructType
+from pyspark.sql.types import ArrayType, DecimalType, DoubleType, IntegerType, StringType, StructField, StructType
 
 from chispa.schema_comparer import (
     SchemasNotEqualError,
@@ -49,6 +49,48 @@ def describe_assert_schema_equality():
         ])
         with pytest.raises(SchemasNotEqualError):
             assert_schema_equality(s1, s2)
+
+    def it_throws_when_data_types_differ():
+        s1 = StructType([
+            StructField("name", StringType(), True),
+            StructField("age", IntegerType(), True),
+            StructField("height", DecimalType(10, 2), True),
+        ])
+        s2 = StructType([
+            StructField("name", StringType(), True),
+            StructField("age", IntegerType(), True),
+            StructField("height", DecimalType(10, 3), True),
+        ])
+        with pytest.raises(SchemasNotEqualError):
+            assert_schema_equality(s1, s2)
+
+    def it_throws_when_data_types_differ_with_enabled_ignore_nullability():
+        s1 = StructType([
+            StructField("name", StringType(), True),
+            StructField("age", IntegerType(), True),
+            StructField("height", DecimalType(10, 2), True),
+        ])
+        s2 = StructType([
+            StructField("name", StringType(), True),
+            StructField("age", IntegerType(), True),
+            StructField("height", DecimalType(10, 3), True),
+        ])
+        with pytest.raises(SchemasNotEqualError):
+            assert_schema_equality(s1, s2, ignore_nullable=True)
+
+    def it_throws_when_data_types_differ_with_enabled_ignore_metadata():
+        s1 = StructType([
+            StructField("name", StringType(), True),
+            StructField("age", IntegerType(), True),
+            StructField("height", DecimalType(10, 2), True),
+        ])
+        s2 = StructType([
+            StructField("name", StringType(), True),
+            StructField("age", IntegerType(), True),
+            StructField("height", DecimalType(10, 3), True),
+        ])
+        with pytest.raises(SchemasNotEqualError):
+            assert_schema_equality(s1, s2, ignore_metadata=True)
 
 
 def describe_tree_string():
