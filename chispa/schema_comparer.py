@@ -201,6 +201,8 @@ def are_datatypes_equal_ignore_nullable(dt1, dt2, ignore_metadata: bool = False)
         elif dt1.typeName() == "struct":
             return are_schemas_equal_ignore_nullable(dt1, dt2, ignore_metadata)
         else:
-            return True
+            # Some data types have additional attributes (e.g. precision and scale for Decimal),
+            # and the type equality check must also check for equality of these attributes.
+            return vars(dt1) == vars(dt2)
     else:
         return False
