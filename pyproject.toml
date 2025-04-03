@@ -31,7 +31,7 @@ classifiers = [
     "Topic :: Software Development :: Testing",
 ]
 include = [
-    { path = "py.typed", format = ["sdist", "wheel"] },
+    { path = "chispa/py.typed", format = ["sdist", "wheel"] },
 ]
 
 [tool.poetry.dependencies]
