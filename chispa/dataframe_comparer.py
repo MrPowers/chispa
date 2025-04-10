@@ -42,10 +42,10 @@ def assert_df_equality(
         transforms = []
     if ignore_column_order:
         transforms.append(lambda df: df.select(sorted(df.columns)))
-    if ignore_row_order:
-        transforms.append(lambda df: df.sort(df.columns))
     if ignore_columns:
         transforms.append(lambda df: df.drop(*ignore_columns))
+    if ignore_row_order:
+        transforms.append(lambda df: df.sort(df.columns))
 
     df1 = reduce(lambda acc, fn: fn(acc), transforms, df1)
     df2 = reduce(lambda acc, fn: fn(acc), transforms, df2)
@@ -99,10 +99,10 @@ def assert_approx_df_equality(
         transforms = []
     if ignore_column_order:
         transforms.append(lambda df: df.select(sorted(df.columns)))
-    if ignore_row_order:
-        transforms.append(lambda df: df.sort(df.columns))
     if ignore_columns:
         transforms.append(lambda df: df.drop(*ignore_columns))
+    if ignore_row_order:
+        transforms.append(lambda df: df.sort(df.columns))
 
     df1 = reduce(lambda acc, fn: fn(acc), transforms, df1)
     df2 = reduce(lambda acc, fn: fn(acc), transforms, df2)
