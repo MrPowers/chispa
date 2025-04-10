@@ -148,6 +148,13 @@ def describe_assert_df_equality():
         with pytest.raises(DataFramesNotEqualError):
             assert assert_df_equality(df1, df2, ignore_columns=["name"])
 
+    def it_works_when_sorting_and_dropping_columns():
+        data1 = [("b", "jose", 10), ("a", "jose", 20)]
+        df1 = spark.createDataFrame(data1, ["ignore_me", "name", "score"])
+        data2 = [("a", "jose", 10), ("b", "jose", 20)]
+        df2 = spark.createDataFrame(data2, ["ignore_me", "name", "score"])
+        assert_df_equality(df1, df2, ignore_columns=["ignore_me"], ignore_row_order=True)
+
 
 def describe_are_dfs_equal():
     def it_returns_false_with_schema_mismatches():
