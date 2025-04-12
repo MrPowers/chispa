@@ -30,9 +30,6 @@ classifiers = [
     "Topic :: Software Development :: Quality Assurance",
     "Topic :: Software Development :: Testing",
 ]
-include = [
-    { path = "chispa/py.typed", format = ["sdist", "wheel"] },
-]
 
 [tool.poetry.dependencies]
 python = ">=3.8,<4.0"
