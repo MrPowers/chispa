@@ -1,10 +1,14 @@
 # chispa
 
-![![image](https://github.com/MrPowers/chispa/workflows/build/badge.svg)](https://github.com/MrPowers/chispa/actions/workflows/ci.yml/badge.svg)
-![PyPI - Downloads](https://img.shields.io/pypi/dm/chispa)
-[![PyPI version](https://badge.fury.io/py/chispa.svg)](https://badge.fury.io/py/chispa)
 
-chispa provides fast PySpark test helper methods that output descriptive error messages.
+[![Release](https://img.shields.io/github/v/release/MrPowers/chispa)](https://pypi.org/project/chispa/)
+[![Build status](https://github.com/MrPowers/chispa/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/MrPowers/chispa/actions/workflows/ci.yml)
+[![Supported Python versions](https://img.shields.io/pypi/pyversions/chispa)](https://pypi.org/project/chispa/)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/chispa)](https://pypistats.org/packages/chispa)
+[![License](https://img.shields.io/github/license/MrPowers/chispa)](https://img.shields.io/github/license/MrPowers/chispa)
+
+
+*chispa* provides fast PySpark test helper methods that output descriptive error messages. 
 
 This library makes it easy to write high quality PySpark code.
 
@@ -12,9 +16,17 @@ Fun fact: "chispa" means Spark in Spanish ;)
 
 ## Installation
 
-Install the latest version with `pip install chispa`.
+Install the latest version with 
 
-If you use Poetry, add this library as a development dependency with `poetry add chispa -G dev`.
+```sh
+pip install chispa
+```
+
+Or if you use Poetry add this library as a development dependency with
+
+```sh
+poetry add chispa --group dev
+```
 
 ## Column equality
 
