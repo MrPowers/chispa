@@ -1,36 +1,8 @@
 from __future__ import annotations
 
-import os
-import sys
 from collections.abc import Callable
-from glob import glob
 
 from pyspark.sql import DataFrame
-
-# Add PySpark to the library path based on the value of SPARK_HOME if pyspark is not already in our path
-try:
-    from pyspark import context  # noqa: F401
-except ImportError:
-    # We need to add PySpark, try use findspark, or failback to the "manually" find it
-    try:
-        import findspark  # type: ignore[import-untyped]
-
-        findspark.init()
-    except ImportError:
-        try:
-            spark_home = os.environ["SPARK_HOME"]
-            sys.path.append(os.path.join(spark_home, "python"))
-            py4j_src_zip = glob(os.path.join(spark_home, "python", "lib", "py4j-*-src.zip"))
-            if len(py4j_src_zip) == 0:
-                raise ValueError(
-                    "py4j source archive not found in {}".format(os.path.join(spark_home, "python", "lib"))
-                )
-            else:
-                py4j_src_zip = sorted(py4j_src_zip)[::-1]
-                sys.path.append(py4j_src_zip[0])
-        except KeyError:
-            print("Can't find Apache Spark. Please set environment variable SPARK_HOME to root of installation!")
-            exit(-1)
 
 from chispa.default_formats import DefaultFormats
 from chispa.formatting import Color, Format, FormattingConfig, Style
