@@ -1,7 +1,7 @@
 from __future__ import annotations
 
+from collections.abc import Callable
 from functools import reduce
-from typing import Callable
 
 from pyspark.sql import DataFrame
 
