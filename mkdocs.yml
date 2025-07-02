@@ -23,8 +23,7 @@ plugins:
         python:
           options:
             docstring_style: google
-            docstring_options:
-              show_if_no_docstring: true
+            show_if_no_docstring: true
             show_source: true
 
 theme:
