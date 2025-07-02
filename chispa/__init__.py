@@ -86,17 +86,17 @@ class Chispa:
 
 
 __all__ = (
-    "DataFramesNotEqualError",
-    "assert_df_equality",
-    "assert_approx_df_equality",
-    "ColumnsNotEqualError",
-    "assert_column_equality",
-    "assert_approx_column_equality",
-    "assert_basic_rows_equality",
-    "Style",
-    "Color",
-    "FormattingConfig",
-    "Format",
     "Chispa",
+    "Color",
+    "ColumnsNotEqualError",
+    "DataFramesNotEqualError",
     "DefaultFormats",
+    "Format",
+    "FormattingConfig",
+    "Style",
+    "assert_approx_column_equality",
+    "assert_approx_df_equality",
+    "assert_basic_rows_equality",
+    "assert_column_equality",
+    "assert_df_equality",
 )
