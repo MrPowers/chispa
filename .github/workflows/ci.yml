@@ -27,22 +27,15 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
-        pyspark-version: ["3.4.3", "3.5.1"]
-        include:
-          - python-version: "3.8"
-            pyspark-version: "3.3.4"
-          - python-version: "3.9"
-            pyspark-version: "3.3.4"
-          - python-version: "3.10"
-            pyspark-version: "3.3.4"
+        python-version: ["3.10", "3.11", "3.12"]
+        pyspark-version: ["3.5.5", "4.0.0"]
       fail-fast: false
     defaults:
       run:
         shell: bash
     steps:
       - name: Check out
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up the environment
         uses: ./.github/actions/setup-poetry-env
@@ -57,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up the environment
         uses: ./.github/actions/setup-poetry-env
