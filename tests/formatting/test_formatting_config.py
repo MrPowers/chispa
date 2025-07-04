@@ -70,7 +70,7 @@ def test_invalid_style():
     with pytest.raises(ValueError) as exc_info:
         FormattingConfig(mismatched_rows={"style": ["invalid_style"]})
     assert str(exc_info.value) == (
-        "Invalid style name: invalid_style. Valid style names are " "['bold', 'underline', 'blink', 'invert', 'hide']"
+        "Invalid style name: invalid_style. Valid style names are ['bold', 'underline', 'blink', 'invert', 'hide']"
     )
 
 

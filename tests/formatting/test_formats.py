@@ -31,7 +31,7 @@ def test_format_from_dict_invalid_style():
     with pytest.raises(ValueError) as exc_info:
         Format.from_dict(format_dict)
     assert str(exc_info.value) == (
-        "Invalid style name: invalid_style. Valid style names are " "['bold', 'underline', 'blink', 'invert', 'hide']"
+        "Invalid style name: invalid_style. Valid style names are ['bold', 'underline', 'blink', 'invert', 'hide']"
     )
 
 
