@@ -43,6 +43,8 @@ jobs:
 
       - name: Set up the environment
         uses: ./.github/actions/setup-poetry-env
+        with:
+          with-docs: true
 
       - name: Deploy documentation
         run: poetry run mkdocs gh-deploy --force
