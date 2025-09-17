@@ -18,6 +18,7 @@ from .dataframe_comparer import (
     assert_df_equality,
 )
 from .rows_comparer import assert_basic_rows_equality
+from .schema_comparer import SchemasNotEqualError
 
 
 class Chispa:
@@ -65,6 +66,7 @@ __all__ = (
     "DefaultFormats",
     "Format",
     "FormattingConfig",
+    "SchemasNotEqualError",
     "Style",
     "assert_approx_column_equality",
     "assert_approx_df_equality",
