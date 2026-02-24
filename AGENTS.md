@@ -29,7 +29,7 @@ poetry install --all-groups --all-extras
 ### Linting & Type Checking
 - **Full Check:** `make check` (runs pre-commit hooks and mypy) (`pre-commit run --all-files`)
 - **Pre-commit hooks:** `poetry run pre-commit run -a`
-- **Ruff (Lint & Format):** 
+- **Ruff (Lint & Format):**
   - `poetry run ruff check .`
   - `poetry run ruff format .`
 - **Mypy (Type Check):** `poetry run mypy chispa`
@@ -65,7 +65,7 @@ poetry install --all-groups --all-extras
 - **Functions & Variables:** `snake_case` (e.g., `assert_df_equality`, `ignore_nullable`).
 - **Classes:** `PascalCase` (e.g., `DataFramesNotEqualError`, `FormattingConfig`).
 - **Constants:** `UPPER_SNAKE_CASE`.
-- **Test Functions:** 
+- **Test Functions:**
   - Use `pytest-describe` pattern.
   - Wrapper: `describe_<feature_name>()`
   - Test case: `it_<behavior_description>()`
@@ -85,7 +85,7 @@ poetry install --all-groups --all-extras
   ```python
   from .spark import spark
   ```
-- **Assertions:** 
+- **Assertions:**
   - Use `pytest.raises` to verify that expected exceptions are thrown.
   - Test both positive cases (equality) and negative cases (mismatch).
 - **Data for Tests:** Small, representative DataFrames created using `spark.createDataFrame()`.
