@@ -8,7 +8,7 @@
 [![License](https://img.shields.io/github/license/MrPowers/chispa)](https://img.shields.io/github/license/MrPowers/chispa)
 
 
-*chispa* provides fast PySpark test helper methods that output descriptive error messages. 
+*chispa* provides fast PySpark test helper methods that output descriptive error messages.
 
 This library makes it easy to write high quality PySpark code.
 
@@ -16,7 +16,7 @@ Fun fact: "chispa" means Spark in Spanish ;)
 
 ## Installation
 
-Install the latest version with 
+Install the latest version with
 
 ```sh
 pip install chispa
