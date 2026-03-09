@@ -3,7 +3,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from functools import reduce
 
-from pyspark.sql import DataFrame
+from pyspark.sql import Column, DataFrame
 from pyspark.sql import functions as F
 from pyspark.sql.types import ArrayType, MapType, StructType
 
@@ -35,7 +35,7 @@ def _sort_df_for_row_order_comparison(df: DataFrame) -> DataFrame:
     For struct/array/map columns, applies hash() before sorting since
     Spark cannot directly sort these complex types.
     """
-    hash_cols = _get_hashable_columns(df)
+    hash_cols: list[int | str | Column] = _get_hashable_columns(df)
     if not hash_cols:
         # No complex types, sort normally
         return df.sort(df.columns)
