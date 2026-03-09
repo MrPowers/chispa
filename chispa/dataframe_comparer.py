@@ -16,13 +16,13 @@ from chispa.rows_comparer import (
 from chispa.schema_comparer import assert_schema_equality
 
 
-def _get_hashable_columns(df: DataFrame) -> list[str]:
+def _get_hashable_columns(df: DataFrame) -> list[int | str | Column]:
     """Return list of column names that need hash() for sorting.
 
     Spark's sort() cannot order struct, array, or map types directly.
     These columns need to be hashed before sorting when ignore_row_order=True.
     """
-    hashable_cols = []
+    hashable_cols: list[int | str | Column] = []
     for field in df.schema.fields:
         if isinstance(field.dataType, StructType | ArrayType | MapType):
             hashable_cols.append(field.name)
@@ -35,10 +35,10 @@ def _sort_df_for_row_order_comparison(df: DataFrame) -> DataFrame:
     For struct/array/map columns, applies hash() before sorting since
     Spark cannot directly sort these complex types.
     """
-    hash_cols: list[int | str | Column] = _get_hashable_columns(df)
+    hash_cols = _get_hashable_columns(df)
     if not hash_cols:
         # No complex types, sort normally
-        return df.sort(df.columns)
+        return df.sort(*df.columns)
 
     # Build sort expressions: hash complex cols, sort primitive cols normally
     sort_exprs = []
