@@ -3,8 +3,8 @@
 When using `ignore_row_order=True` in chispa's `assert_df_equality`, DataFrames with struct-typed columns fail with:
 
 ```
-pyspark.errors.exceptions.captured.AnalysisException: [DATATYPE_MISMATCH.INVALID_ORDERING_TYPE] 
-Cannot resolve "my_col ASC NULLS FIRST" due to data type mismatch: 
+pyspark.errors.exceptions.captured.AnalysisException: [DATATYPE_MISMATCH.INVALID_ORDERING_TYPE]
+Cannot resolve "my_col ASC NULLS FIRST" due to data type mismatch:
 The `sortorder` does not support ordering on type STRUCT<...>
 ```
 
