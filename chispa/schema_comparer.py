@@ -4,7 +4,7 @@ import typing
 from itertools import zip_longest
 
 from prettytable import PrettyTable
-from pyspark.sql.types import StructField, StructType
+from pyspark.sql.types import StructField, StructType, ArrayType
 
 from chispa.bcolors import bcolors, line_blue, line_red
 from chispa.common_enums import OutputFormat, TypeName
@@ -36,27 +36,46 @@ def print_schema_diff(
 
 def create_schema_comparison_tree(s1: StructType, s2: StructType, ignore_nullable: bool, ignore_metadata: bool) -> str:
     def parse_schema_as_tree(s: StructType, indent: int) -> tuple[list[str], list[StructField]]:
-        tree_lines = []
-        fields = []
+        tree_lines: list[str] = []
+        fields: list[StructField | None] = []
 
         for struct_field in s:
             nullable = "(nullable = true)" if struct_field.nullable else "(nullable = false)"
-            struct_field_type = struct_field.dataType.typeName()
+            prefix = f"{indent * ' '}|{'-' * 2}"
+            dtype = struct_field.dataType
+            dtype_name = dtype.typeName()
 
-            struct_prefix = f"{indent * ' '}|{'-' * 2}"
-            struct_as_string = f"{struct_field.name}: {struct_field_type} {nullable}"
+            # top-level line for this field
+            tree_lines.append(f"{prefix} {struct_field.name}: {dtype_name} {nullable}")
+            fields.append(struct_field)  # align one field per line
 
-            tree_lines += [f"{struct_prefix} {struct_as_string}"]
-
-            if not struct_field_type == TypeName.STRUCT:
-                fields += [struct_field]
+            # ---- StructType ----
+            if isinstance(dtype, StructType):
+                nested_lines, nested_fields = parse_schema_as_tree(dtype, indent + 4)
+                tree_lines.extend(nested_lines)
+                fields.extend(nested_fields)
                 continue
 
-            tree_line_nested, fields_nested = parse_schema_as_tree(struct_field.dataType, indent + 4)  # type: ignore[arg-type]
+            # ---- ArrayType ----
+            if isinstance(dtype, ArrayType):
+                element_type = dtype.elementType
+                element_prefix = f"{(indent + 4) * ' '}|{'-' * 2}"
+                element_nullable = (
+                    "(containsNull = true)" if dtype.containsNull else "(containsNull = false)"
+                )
+                element_name = element_type.typeName()
+                tree_lines.append(f"{element_prefix} element: {element_name} {element_nullable}")
+                fields.append(None)  # placeholder to preserve index alignment
 
-            fields += [struct_field]
-            tree_lines += tree_line_nested
-            fields += fields_nested
+                # recurse for array<struct>
+                if isinstance(element_type, StructType):
+                    nested_lines, nested_fields = parse_schema_as_tree(element_type, indent + 8)
+                    tree_lines.extend(nested_lines)
+                    fields.extend(nested_fields)
+
+                continue
+
+            # primitives: nothing more to add
 
         return tree_lines, fields
 
