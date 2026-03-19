@@ -35,6 +35,27 @@ def describe_assert_df_equality():
         df2 = spark.createDataFrame(data2, ["num", "name"])
         assert_df_equality(df1, df2, ignore_row_order=True)
 
+    def it_can_work_with_struct_columns_and_ignore_row_order():
+        data1 = [((1, "jose"),), ((2, "li"),)]
+        df1 = spark.createDataFrame(data1, ["person"])
+        data2 = [((2, "li"),), ((1, "jose"),)]
+        df2 = spark.createDataFrame(data2, ["person"])
+        assert_df_equality(df1, df2, ignore_row_order=True)
+
+    def it_can_work_with_mixed_columns_and_ignore_row_order():
+        data1 = [((1, "jose"), 100), ((2, "li"), 200)]
+        df1 = spark.createDataFrame(data1, ["person", "score"])
+        data2 = [((2, "li"), 200), ((1, "jose"), 100)]
+        df2 = spark.createDataFrame(data2, ["person", "score"])
+        assert_df_equality(df1, df2, ignore_row_order=True)
+
+    def it_can_work_with_nested_struct_columns_and_ignore_row_order():
+        data1 = [(((1, "jose"), 30),), (((2, "li"), 40),)]
+        df1 = spark.createDataFrame(data1, ["nested_person"])
+        data2 = [(((2, "li"), 40),), (((1, "jose"), 30),)]
+        df2 = spark.createDataFrame(data2, ["nested_person"])
+        assert_df_equality(df1, df2, ignore_row_order=True)
+
     def it_can_work_with_different_row_and_column_orders():
         data1 = [(1, "jose"), (2, "li")]
         df1 = spark.createDataFrame(data1, ["num", "name"])
@@ -243,3 +264,10 @@ def describe_assert_approx_df_equality():
         df2 = spark.createDataFrame(data2, ["name", "expected_name"])
         with pytest.raises(DataFramesNotEqualError):
             assert assert_approx_df_equality(df1, df2, 0.1, ignore_columns=["name"])
+
+    def it_does_not_throw_with_struct_columns_and_ignore_row_order():
+        data1 = [((1.0, "jose"),), ((1.1, "li"),)]
+        df1 = spark.createDataFrame(data1, ["person"])
+        data2 = [((1.1, "li"),), ((1.0, "jose"),)]
+        df2 = spark.createDataFrame(data2, ["person"])
+        assert_approx_df_equality(df1, df2, 0.1, ignore_row_order=True)

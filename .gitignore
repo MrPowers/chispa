@@ -108,3 +108,8 @@ cython_debug/
 .idea*
 .aider*
 *~
+
+# Agents
+.claude
+.qwen
+.opencode

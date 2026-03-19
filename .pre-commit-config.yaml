@@ -1,7 +1,7 @@
 repos:
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: "v4.6.0"
+    rev: "v6.0.0"
     hooks:
       - id: check-case-conflict
       - id: check-merge-conflict
@@ -12,7 +12,7 @@ repos:
         args: [--markdown-linebreak-ext=md]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: "v0.12.1"
+    rev: "v0.15.5"
     hooks:
       - id: ruff
         args: [--exit-non-zero-on-fix]
