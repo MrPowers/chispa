@@ -83,3 +83,26 @@ def describe_are_structfields_equal():
             True,
         )
         assert are_structfields_equal(sf1, sf2, ignore_metadata=True) is True
+
+    def it_returns_true_when_inner_array_metadata_is_different_with_both_flags():
+        sf1 = StructField(
+            "hi",
+            ArrayType(
+                StructType([
+                    StructField("world", IntegerType(), True, {"comment": "Comment"}),
+                ]),
+                True,
+            ),
+            True,
+        )
+        sf2 = StructField(
+            "hi",
+            ArrayType(
+                StructType([
+                    StructField("world", IntegerType(), True, {"comment": "Different comment"}),
+                ]),
+                True,
+            ),
+            True,
+        )
+        assert are_structfields_equal(sf1, sf2, ignore_nullability=True, ignore_metadata=True) is True
