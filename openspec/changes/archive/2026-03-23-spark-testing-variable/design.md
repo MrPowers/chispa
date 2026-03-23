@@ -58,7 +58,7 @@ Tests import this via `from tests.spark import spark`. This prevents setting `SP
 
 - **Risk:** Some test may rely on spark module being loaded for side effects.
   - **Mitigation:** The SparkSession is created eagerly when the module loads. Moving to fixture delays creation to first test use, but this is acceptable for tests.
-  
+
 - **Risk:** Tests that modify `spark` state (e.g., `spark.stop()`) could break other tests.
   - **Mitigation:** Document that tests must not call `spark.stop()`. Session-scoped fixture shares the same session across tests.
 
