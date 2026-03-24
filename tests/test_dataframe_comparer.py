@@ -124,6 +124,29 @@ def describe_assert_df_equality():
         with pytest.raises(DataFramesNotEqualError):
             assert_df_equality(df1, df2, allow_nan_equality=False)
 
+    def it_can_consider_nan_values_equal_in_array_fields(spark: SparkSession):
+        data1 = [([1.0, float("nan"), 3.0], "jose"), ([4.0, 5.0], "li")]
+        df1 = spark.createDataFrame(data1, ["nums", "name"])
+        data2 = [([1.0, float("nan"), 3.0], "jose"), ([4.0, 5.0], "li")]
+        df2 = spark.createDataFrame(data2, ["nums", "name"])
+        assert_df_equality(df1, df2, allow_nan_equality=True)
+
+    def it_raises_when_array_nan_positions_are_different_with_allow_nan_equality(spark: SparkSession):
+        data1 = [([1.0, float("nan"), 3.0], "jose"), ([4.0, 5.0], "li")]
+        df1 = spark.createDataFrame(data1, ["nums", "name"])
+        data2 = [([float("nan"), 1.0, 3.0], "jose"), ([4.0, 5.0], "li")]
+        df2 = spark.createDataFrame(data2, ["nums", "name"])
+        with pytest.raises(DataFramesNotEqualError):
+            assert_df_equality(df1, df2, allow_nan_equality=True)
+
+    def it_does_not_consider_nan_values_equal_in_array_fields_by_default(spark: SparkSession):
+        data1 = [([1.0, float("nan"), 3.0], "jose"), ([4.0, 5.0], "li")]
+        df1 = spark.createDataFrame(data1, ["nums", "name"])
+        data2 = [([1.0, float("nan"), 3.0], "jose"), ([4.0, 5.0], "li")]
+        df2 = spark.createDataFrame(data2, ["nums", "name"])
+        with pytest.raises(DataFramesNotEqualError):
+            assert_df_equality(df1, df2, allow_nan_equality=False)
+
     def it_can_ignore_metadata(spark: SparkSession):
         rows_data = [("jose", 1), ("li", 2), ("luisa", 3)]
         schema1 = StructType([
