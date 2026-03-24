@@ -1,7 +1,16 @@
 from __future__ import annotations
 
 import pytest
-from pyspark.sql.types import ArrayType, DecimalType, DoubleType, IntegerType, StringType, StructField, StructType
+from pyspark.sql.types import (
+    ArrayType,
+    DecimalType,
+    DoubleType,
+    IntegerType,
+    MapType,
+    StringType,
+    StructField,
+    StructType,
+)
 
 from chispa.schema_comparer import (
     SchemasNotEqualError,
@@ -562,3 +571,13 @@ def describe_are_structfields_equal():
         s1 = StructField("coords", StringType(), True, {"hi": "whatever"})
         s2 = StructField("coords", StringType(), True, {"hi": "whatever"})
         assert are_structfields_equal(s1, s2, ignore_nullability=True, ignore_metadata=False) is True
+
+    def it_returns_true_when_only_nullable_flag_is_different_for_map_values():
+        s1 = StructField("coords", MapType(StringType(), DoubleType(), True), True)
+        s2 = StructField("coords", MapType(StringType(), DoubleType(), False), True)
+        assert are_structfields_equal(s1, s2, ignore_metadata=True) is True
+
+    def it_returns_false_when_only_nullable_flag_is_different():
+        s1 = StructField("coords", MapType(StringType(), DoubleType(), True), True)
+        s2 = StructField("coords", MapType(StringType(), DoubleType(), False), True)
+        assert are_structfields_equal(s1, s2) is False

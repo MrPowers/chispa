@@ -11,3 +11,4 @@ class OutputFormat(str, Enum):
 class TypeName(str, Enum):
     ARRAY = "array"
     STRUCT = "struct"
+    MAP = "map"
