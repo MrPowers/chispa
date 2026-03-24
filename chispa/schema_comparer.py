@@ -207,8 +207,9 @@ def are_datatypes_equal_ignore_nullable(dt1, dt2, ignore_metadata: bool = False)
         elif dt1.typeName() == TypeName.MAP:
             if not ignore_metadata and dt1.valueContainsNull != dt2.valueContainsNull:
                 return False
-            return are_datatypes_equal_ignore_nullable(dt1.keyType, dt2.keyType, ignore_metadata) and \
-                   are_datatypes_equal_ignore_nullable(dt1.valueType, dt2.valueType, ignore_metadata)
+            return are_datatypes_equal_ignore_nullable(
+                dt1.keyType, dt2.keyType, ignore_metadata
+            ) and are_datatypes_equal_ignore_nullable(dt1.valueType, dt2.valueType, ignore_metadata)
         else:
             # Some data types have additional attributes (e.g. precision and scale for Decimal),
             # and the type equality check must also check for equality of these attributes.

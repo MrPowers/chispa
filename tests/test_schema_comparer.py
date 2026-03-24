@@ -1,7 +1,16 @@
 from __future__ import annotations
 
 import pytest
-from pyspark.sql.types import ArrayType, DecimalType, DoubleType, IntegerType, StringType, StructField, StructType, MapType
+from pyspark.sql.types import (
+    ArrayType,
+    DecimalType,
+    DoubleType,
+    IntegerType,
+    MapType,
+    StringType,
+    StructField,
+    StructType,
+)
 
 from chispa.schema_comparer import (
     SchemasNotEqualError,
