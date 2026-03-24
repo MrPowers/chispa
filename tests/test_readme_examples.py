@@ -8,13 +8,13 @@ from pyspark.sql.types import ArrayType, DoubleType, IntegerType, StringType, St
 from chispa import (
     ColumnsNotEqualError,
     DataFramesNotEqualError,
+    SchemasNotEqualError,
     assert_approx_column_equality,
     assert_approx_df_equality,
     assert_basic_rows_equality,
     assert_column_equality,
     assert_df_equality,
 )
-from chispa.schema_comparer import SchemasNotEqualError
 
 
 def remove_non_word_characters(col):
