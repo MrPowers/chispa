@@ -657,12 +657,8 @@ def describe_are_schemas_equal():
         assert are_schemas_equal(s1, s2, ignore_nullable=True) is True
 
     def it_returns_false_when_nested_struct_nullable_differs_with_only_ignore_metadata():
-        s1 = StructType([
-            StructField("s", StructType([StructField("x", IntegerType(), True)]), True)
-        ])
-        s2 = StructType([
-            StructField("s", StructType([StructField("x", IntegerType(), False)]), True)
-        ])
+        s1 = StructType([StructField("s", StructType([StructField("x", IntegerType(), True)]), True)])
+        s2 = StructType([StructField("s", StructType([StructField("x", IntegerType(), False)]), True)])
         assert are_schemas_equal(s1, s2, ignore_metadata=True) is False
 
     def it_returns_false_when_map_valueContainsNull_differs_with_only_ignore_metadata():

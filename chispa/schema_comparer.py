@@ -215,9 +215,9 @@ def are_datatypes_equal(dt1, dt2, ignore_nullable: bool = False, ignore_metadata
     elif dt1.typeName() == TypeName.MAP:
         if not ignore_nullable and dt1.valueContainsNull != dt2.valueContainsNull:
             return False
-        return are_datatypes_equal(
-            dt1.keyType, dt2.keyType, ignore_nullable, ignore_metadata
-        ) and are_datatypes_equal(dt1.valueType, dt2.valueType, ignore_nullable, ignore_metadata)
+        return are_datatypes_equal(dt1.keyType, dt2.keyType, ignore_nullable, ignore_metadata) and are_datatypes_equal(
+            dt1.valueType, dt2.valueType, ignore_nullable, ignore_metadata
+        )
     else:
         return vars(dt1) == vars(dt2)
 
