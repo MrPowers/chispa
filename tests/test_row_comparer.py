@@ -19,6 +19,22 @@ def test_are_rows_equal_enhanced():
     assert are_rows_equal_enhanced(Row(n1="bob", n2="jose"), Row(n1="li", n2="li"), True) is False
     assert are_rows_equal_enhanced(Row(n1=float("nan"), n2="jose"), Row(n1=float("nan"), n2="jose"), True) is True
     assert are_rows_equal_enhanced(Row(n1=float("nan"), n2="jose"), Row(n1="hi", n2="jose"), True) is False
+    assert (
+        are_rows_equal_enhanced(
+            Row(nested=[[1.0, float("nan")], [3.0, 4.0]], name="jose"),
+            Row(nested=[[1.0, float("nan")], [3.0, 4.0]], name="jose"),
+            True,
+        )
+        is True
+    )
+    assert (
+        are_rows_equal_enhanced(
+            Row(nested=[[1.0, float("nan")], [3.0, 4.0]], name="jose"),
+            Row(nested=[[float("nan"), 1.0], [3.0, 4.0]], name="jose"),
+            True,
+        )
+        is False
+    )
 
 
 def test_are_rows_approx_equal():

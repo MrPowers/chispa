@@ -1,7 +1,16 @@
 from __future__ import annotations
 
 import pytest
-from pyspark.sql.types import ArrayType, DecimalType, DoubleType, IntegerType, StringType, StructField, StructType
+from pyspark.sql.types import (
+    ArrayType,
+    DecimalType,
+    DoubleType,
+    IntegerType,
+    MapType,
+    StringType,
+    StructField,
+    StructType,
+)
 
 from chispa.schema_comparer import (
     SchemasNotEqualError,
@@ -437,6 +446,81 @@ def describe_are_schemas_equal_ignore_nullable():
         assert are_schemas_equal_ignore_nullable(s1, s2) is False
 
 
+def describe_are_schemas_equal_ignore_nullable_and_ignore_metadata():
+    def it_returns_true_when_nullable_flag_is_different_within_array_element_with_both_flags():
+        s1 = StructType([StructField("coords", ArrayType(DoubleType(), True), True)])
+        s2 = StructType([StructField("coords", ArrayType(DoubleType(), False), True)])
+        assert are_schemas_equal_ignore_nullable(s1, s2, ignore_metadata=True) is True
+
+    def it_returns_true_when_metadata_is_different_on_field_containing_array_with_both_flags():
+        s1 = StructType([StructField("coords", ArrayType(DoubleType(), True), True, {"foo": "bar"})])
+        s2 = StructType([StructField("coords", ArrayType(DoubleType(), True), True, {"foo": "baz"})])
+        assert are_schemas_equal_ignore_nullable(s1, s2, ignore_metadata=True) is True
+
+    def it_returns_true_when_metadata_is_different_on_struct_fields_within_array_with_both_flags():
+        s1 = StructType([
+            StructField(
+                "people",
+                ArrayType(
+                    StructType([
+                        StructField("name", StringType(), True, {"comment": "first"}),
+                        StructField("age", IntegerType(), True),
+                    ]),
+                    True,
+                ),
+                True,
+            )
+        ])
+        s2 = StructType([
+            StructField(
+                "people",
+                ArrayType(
+                    StructType([
+                        StructField("name", StringType(), True, {"comment": "second"}),
+                        StructField("age", IntegerType(), True),
+                    ]),
+                    True,
+                ),
+                True,
+            )
+        ])
+        assert are_schemas_equal_ignore_nullable(s1, s2, ignore_metadata=True) is True
+
+    def it_returns_true_when_metadata_is_different_on_field_containing_nested_array_with_both_flags():
+        s1 = StructType([StructField("matrix", ArrayType(ArrayType(IntegerType(), True), True), True, {"foo": "bar"})])
+        s2 = StructType([StructField("matrix", ArrayType(ArrayType(IntegerType(), True), True), True, {"foo": "baz"})])
+        assert are_schemas_equal_ignore_nullable(s1, s2, ignore_metadata=True) is True
+
+    def it_returns_true_when_nullable_is_different_on_struct_fields_within_array_with_both_flags():
+        s1 = StructType([
+            StructField(
+                "people",
+                ArrayType(
+                    StructType([
+                        StructField("name", StringType(), True),
+                        StructField("age", IntegerType(), True),
+                    ]),
+                    True,
+                ),
+                True,
+            )
+        ])
+        s2 = StructType([
+            StructField(
+                "people",
+                ArrayType(
+                    StructType([
+                        StructField("name", StringType(), False),
+                        StructField("age", IntegerType(), True),
+                    ]),
+                    True,
+                ),
+                True,
+            )
+        ])
+        assert are_schemas_equal_ignore_nullable(s1, s2, ignore_metadata=True) is True
+
+
 def describe_are_structfields_equal():
     def it_returns_true_when_only_nullable_flag_is_different_within_array_element():
         s1 = StructField("coords", ArrayType(DoubleType(), True), True)
@@ -487,3 +571,13 @@ def describe_are_structfields_equal():
         s1 = StructField("coords", StringType(), True, {"hi": "whatever"})
         s2 = StructField("coords", StringType(), True, {"hi": "whatever"})
         assert are_structfields_equal(s1, s2, ignore_nullability=True, ignore_metadata=False) is True
+
+    def it_returns_true_when_only_nullable_flag_is_different_for_map_values():
+        s1 = StructField("coords", MapType(StringType(), DoubleType(), True), True)
+        s2 = StructField("coords", MapType(StringType(), DoubleType(), False), True)
+        assert are_structfields_equal(s1, s2, ignore_metadata=True) is True
+
+    def it_returns_false_when_only_nullable_flag_is_different():
+        s1 = StructField("coords", MapType(StringType(), DoubleType(), True), True)
+        s2 = StructField("coords", MapType(StringType(), DoubleType(), False), True)
+        assert are_structfields_equal(s1, s2) is False

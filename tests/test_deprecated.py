@@ -4,13 +4,12 @@ import warnings
 from dataclasses import dataclass
 
 import pytest
+from pyspark.sql import SparkSession
 
 from chispa import DataFramesNotEqualError, assert_basic_rows_equality
 from chispa.bcolors import bcolors, blue, underline_text
 from chispa.default_formats import DefaultFormats
 from chispa.formatting import FormattingConfig
-
-from .spark import spark
 
 
 def test_default_formats_deprecation_warning():
@@ -22,7 +21,7 @@ def test_default_formats_deprecation_warning():
         assert "DefaultFormats is deprecated" in str(w[-1].message)
 
 
-def test_that_default_formats_still_works():
+def test_that_default_formats_still_works(spark: SparkSession):
     data1 = [(1, "jose"), (2, "li"), (3, "laura")]
     df1 = spark.createDataFrame(data1, ["num", "expected_name"])
     data2 = [("bob", "jose"), ("li", "li"), ("luisa", "laura")]
@@ -31,7 +30,7 @@ def test_that_default_formats_still_works():
         assert_basic_rows_equality(df1.collect(), df2.collect(), formats=DefaultFormats())
 
 
-def test_deprecated_arbitrary_dataclass():
+def test_deprecated_arbitrary_dataclass(spark: SparkSession):
     data1 = [(1, "jose"), (2, "li"), (3, "laura")]
     df1 = spark.createDataFrame(data1, ["num", "expected_name"])
     data2 = [("bob", "jose"), ("li", "li"), ("luisa", "laura")]

@@ -8,7 +8,7 @@
 [![License](https://img.shields.io/github/license/MrPowers/chispa)](https://img.shields.io/github/license/MrPowers/chispa)
 
 
-*chispa* provides fast PySpark test helper methods that output descriptive error messages. 
+*chispa* provides fast PySpark test helper methods that output descriptive error messages.
 
 This library makes it easy to write high quality PySpark code.
 
@@ -16,7 +16,7 @@ Fun fact: "chispa" means Spark in Spanish ;)
 
 ## Installation
 
-Install the latest version with 
+Install the latest version with
 
 ```sh
 pip install chispa
@@ -53,7 +53,7 @@ Create a DataFrame with a column that contains strings with non-word characters,
 ```python
 import pytest
 
-from chispa.column_comparer import assert_column_equality
+from chispa import assert_column_equality
 import pyspark.sql.functions as F
 
 def test_remove_non_word_characters_short():
@@ -98,7 +98,7 @@ We can also test the `remove_non_word_characters` method by creating two DataFra
 Creating two DataFrames is slower and requires more code, but comparing entire DataFrames is necessary for some tests.
 
 ```python
-from chispa.dataframe_comparer import *
+from chispa import assert_df_equality
 
 def test_remove_non_word_characters_long():
     source_data = [
@@ -328,6 +328,26 @@ You can ignore the nullable property when assessing equality by adding a flag:
 assert_df_equality(df1, df2, ignore_nullable=True)
 ```
 
+### Other public DataFrame comparison options
+
+`assert_df_equality` also supports additional public options that are useful in real-world test suites:
+
+- `ignore_metadata=True` ignores schema metadata differences when data and field types are otherwise equivalent.
+- `transforms=[...]` applies the same transform pipeline to both DataFrames before comparison.
+- `underline_cells=True` highlights mismatched cells in error output for faster debugging.
+
+Example:
+
+```python
+assert_df_equality(
+    actual_df,
+    expected_df,
+    transforms=[lambda df: df.orderBy("id")],
+    ignore_metadata=True,
+    underline_cells=True,
+)
+```
+
 Elements contained within an `ArrayType()` also have a nullable property, in addition to the nullable property of the column schema. These are also ignored when passing `ignore_nullable=True`.
 
 Again, examine the following code to understand the error that `ignore_nullable=True` bypasses:
@@ -347,7 +367,7 @@ def ignore_nullable_property_array():
 
 ### Allow NaN equality
 
-Python has NaN (not a number) values and two NaN values are not considered equal by default.  Create two NaN values, compare them, and confirm they're not considered equal by default.
+Python has NaN (not a number) values and two NaN values are not considered equal by default. Create two NaN values, compare them, and confirm they're not considered equal by default.
 
 ```python
 nan1 = float('nan')
@@ -358,6 +378,10 @@ nan1 == nan2 # False
 pandas considers NaN values to be equal by default, but this library requires you to set a flag to consider two NaN values to be equal.
 
 ```python
+# default behavior remains strict (NaN != NaN)
+assert_df_equality(df1, df2)
+
+# opt in to treat NaN values as equal
 assert_df_equality(df1, df2, allow_nan_equality=True)
 ```
 
@@ -535,15 +559,12 @@ Here's the error message:
 
 ## Supported PySpark / Python versions
 
-chispa currently supports PySpark 2.4+ and Python 3.5+.
+chispa requires Python `>=3.10,<4.0`.
 
-Use chispa v0.8.2 if you're using an older Python version.
+The CI matrix currently tests chispa against:
 
-PySpark 2 support will be dropped when chispa 1.x is released.
-
-## Benchmarks
-
-TODO: Need to benchmark these methods vs. the spark-testing-base ones
+- Python 3.10, 3.11, and 3.12
+- PySpark 3.5.x, 4.0.x, and 4.1.x
 
 ## Developing chispa on your local machine
 
