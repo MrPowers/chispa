@@ -355,6 +355,153 @@ def describe_tree_string():
         result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=False)
         assert repr(result) + "\n" == expected
 
+    def it_shows_diff_for_array_element_type_mismatch():
+        with open("tests/data/tree_string/array_element_type_mismatch.txt") as f:
+            expected = f.read()
+
+        s1 = StructType([
+            StructField("id", IntegerType(), True),
+            StructField("scores", ArrayType(IntegerType(), True), True),
+        ])
+        s2 = StructType([
+            StructField("id", IntegerType(), True),
+            StructField("scores", ArrayType(DoubleType(), True), True),
+        ])
+        result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=False)
+        assert repr(result) + "\n" == expected
+
+    def it_shows_diff_for_array_containsNull_mismatch():
+        with open("tests/data/tree_string/array_containsNull_mismatch.txt") as f:
+            expected = f.read()
+
+        s1 = StructType([
+            StructField("id", IntegerType(), True),
+            StructField("tags", ArrayType(StringType(), True), True),
+        ])
+        s2 = StructType([
+            StructField("id", IntegerType(), True),
+            StructField("tags", ArrayType(StringType(), False), True),
+        ])
+        result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=False)
+        assert repr(result) + "\n" == expected
+
+    def it_shows_diff_for_array_of_structs():
+        with open("tests/data/tree_string/array_of_structs_diff.txt") as f:
+            expected = f.read()
+
+        s1 = StructType([
+            StructField("id", IntegerType(), True),
+            StructField(
+                "people",
+                ArrayType(
+                    StructType([
+                        StructField("name", StringType(), True),
+                        StructField("age", IntegerType(), True),
+                    ]),
+                    True,
+                ),
+                True,
+            ),
+        ])
+        s2 = StructType([
+            StructField("id", IntegerType(), True),
+            StructField(
+                "people",
+                ArrayType(
+                    StructType([
+                        StructField("name", StringType(), True),
+                        StructField("height", DoubleType(), True),
+                    ]),
+                    True,
+                ),
+                True,
+            ),
+        ])
+        result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=False)
+        assert repr(result) + "\n" == expected
+
+    def it_shows_diff_for_map_value_type_mismatch():
+        with open("tests/data/tree_string/map_value_type_mismatch.txt") as f:
+            expected = f.read()
+
+        s1 = StructType([
+            StructField("id", IntegerType(), True),
+            StructField("props", MapType(StringType(), IntegerType(), True), True),
+        ])
+        s2 = StructType([
+            StructField("id", IntegerType(), True),
+            StructField("props", MapType(StringType(), DoubleType(), True), True),
+        ])
+        result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=False)
+        assert repr(result) + "\n" == expected
+
+    def it_shows_diff_for_map_valueContainsNull_mismatch():
+        with open("tests/data/tree_string/map_valueContainsNull_mismatch.txt") as f:
+            expected = f.read()
+
+        s1 = StructType([
+            StructField("id", IntegerType(), True),
+            StructField("props", MapType(StringType(), IntegerType(), True), True),
+        ])
+        s2 = StructType([
+            StructField("id", IntegerType(), True),
+            StructField("props", MapType(StringType(), IntegerType(), False), True),
+        ])
+        result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=False)
+        assert repr(result) + "\n" == expected
+
+    def it_shows_diff_for_map_with_struct_values():
+        with open("tests/data/tree_string/map_with_struct_values_diff.txt") as f:
+            expected = f.read()
+
+        s1 = StructType([
+            StructField("id", IntegerType(), True),
+            StructField(
+                "data",
+                MapType(
+                    StringType(),
+                    StructType([
+                        StructField("x", IntegerType(), True),
+                        StructField("y", IntegerType(), True),
+                    ]),
+                    True,
+                ),
+                True,
+            ),
+        ])
+        s2 = StructType([
+            StructField("id", IntegerType(), True),
+            StructField(
+                "data",
+                MapType(
+                    StringType(),
+                    StructType([
+                        StructField("x", IntegerType(), True),
+                        StructField("z", DoubleType(), True),
+                    ]),
+                    True,
+                ),
+                True,
+            ),
+        ])
+        result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=False)
+        assert repr(result) + "\n" == expected
+
+    def it_shows_diff_for_nested_array_of_arrays():
+        with open("tests/data/tree_string/nested_array_of_arrays_diff.txt") as f:
+            expected = f.read()
+
+        s1 = StructType([
+            StructField("id", IntegerType(), True),
+            StructField("matrix", ArrayType(ArrayType(IntegerType(), True), True), True),
+        ])
+        s2 = StructType([
+            StructField("id", IntegerType(), True),
+            StructField("matrix", ArrayType(ArrayType(DoubleType(), False), True), True),
+        ])
+        result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=False)
+        assert repr(result) + "\n" == expected
+
 
 def describe_assert_schema_equality_ignore_nullable():
     def it_has_good_error_messages_for_different_sized_schemas():
