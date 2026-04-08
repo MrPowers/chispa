@@ -18,6 +18,9 @@ class SchemasNotEqualError(Exception):
     pass
 
 
+_COMPLEX_TYPES = frozenset({TypeName.STRUCT, TypeName.ARRAY, TypeName.MAP})
+
+
 def print_schema_diff(
     s1: StructType,
     s2: StructType,
@@ -48,15 +51,12 @@ def create_schema_comparison_tree(s1: StructType, s2: StructType, ignore_nullabl
     min_gap = len("schema1") + tree_space
     schema_gap = max(widest_left + tree_space, min_gap)
 
-    tree = "\nschema1".ljust(schema_gap) + "schema2\n"
+    parts = ["\nschema1".ljust(schema_gap) + "schema2"]
     for left, right, is_equal in lines:
         tree_line = left.ljust(schema_gap) + right
-        if is_equal:
-            tree += line_blue(tree_line) + "\n"
-        else:
-            tree += line_red(tree_line) + "\n"
-    tree += bcolors.NC
-    return tree
+        parts.append(line_blue(tree_line) if is_equal else line_red(tree_line))
+    parts.append(bcolors.NC)
+    return "\n".join(parts)
 
 
 def _format_nullable(nullable: bool) -> str:
@@ -149,13 +149,7 @@ def _are_fields_shallow_equal(
     return sf1.dataType.typeName() == sf2.dataType.typeName()
 
 
-def _expand_single_datatype(
-    dt: typing.Any,
-    ignore_nullable: bool,
-    ignore_metadata: bool,
-    indent: int,
-    side: str,
-) -> list[str]:
+def _expand_single_datatype(dt: typing.Any, indent: int) -> list[str]:
     """Expand a single complex datatype into tree lines (for one side only)."""
     result: list[str] = []
     tn = dt.typeName()
@@ -163,17 +157,17 @@ def _expand_single_datatype(
         for sf in dt:
             pfx = _prefix(indent)
             result.append(f"{pfx} {sf.name}: {_format_type(sf.dataType)} {_format_nullable(sf.nullable)}")
-            result.extend(_expand_single_datatype(sf.dataType, ignore_nullable, ignore_metadata, indent + 4, side))
+            result.extend(_expand_single_datatype(sf.dataType, indent + 4))
     elif tn == TypeName.ARRAY:
         pfx = _prefix(indent)
         result.append(f"{pfx} element: {_format_type(dt.elementType)} {_format_contains_null(dt.containsNull)}")
-        result.extend(_expand_single_datatype(dt.elementType, ignore_nullable, ignore_metadata, indent + 4, side))
+        result.extend(_expand_single_datatype(dt.elementType, indent + 4))
     elif tn == TypeName.MAP:
         pfx = _prefix(indent)
         result.append(f"{pfx} key: {_format_type(dt.keyType)}")
-        result.extend(_expand_single_datatype(dt.keyType, ignore_nullable, ignore_metadata, indent + 4, side))
+        result.extend(_expand_single_datatype(dt.keyType, indent + 4))
         result.append(f"{pfx} value: {_format_type(dt.valueType)} {_format_value_contains_null(dt.valueContainsNull)}")
-        result.extend(_expand_single_datatype(dt.valueType, ignore_nullable, ignore_metadata, indent + 4, side))
+        result.extend(_expand_single_datatype(dt.valueType, indent + 4))
     return result
 
 
@@ -189,10 +183,8 @@ def _compare_datatypes(
     tn1 = dt1.typeName() if dt1 else None
     tn2 = dt2.typeName() if dt2 else None
 
-    _COMPLEX = {TypeName.STRUCT, TypeName.ARRAY, TypeName.MAP}
-
     # If both sides are the same complex kind, do a paired comparison
-    if tn1 == tn2 and tn1 in _COMPLEX:
+    if tn1 == tn2 and tn1 in _COMPLEX_TYPES:
         if tn1 == TypeName.STRUCT:
             _compare_struct_fields(dt1, dt2, ignore_nullable, ignore_metadata, indent, lines)
         elif tn1 == TypeName.ARRAY:
@@ -202,16 +194,8 @@ def _compare_datatypes(
         return
 
     # Mismatched complex kinds or one side is None/leaf — expand each side independently
-    left_lines = (
-        _expand_single_datatype(dt1, ignore_nullable, ignore_metadata, indent, "left")
-        if dt1 and tn1 in _COMPLEX
-        else []
-    )
-    right_lines = (
-        _expand_single_datatype(dt2, ignore_nullable, ignore_metadata, indent, "right")
-        if dt2 and tn2 in _COMPLEX
-        else []
-    )
+    left_lines = _expand_single_datatype(dt1, indent) if dt1 and tn1 in _COMPLEX_TYPES else []
+    right_lines = _expand_single_datatype(dt2, indent) if dt2 and tn2 in _COMPLEX_TYPES else []
 
     if left_lines or right_lines:
         for l_line, r_line in zip_longest(left_lines, right_lines, fillvalue=""):
