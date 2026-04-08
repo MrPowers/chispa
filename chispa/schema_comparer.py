@@ -357,7 +357,7 @@ def are_structfields_equal(
             return False
         if not ignore_metadata and sf1.metadata != sf2.metadata:
             return False
-        return are_datatypes_equal(  # type: ignore[no-any-return]
+        return are_datatypes_equal(
             sf1.dataType,
             sf2.dataType,
             ignore_nullable=ignore_nullability,
@@ -365,8 +365,9 @@ def are_structfields_equal(
         )
 
 
-@typing.no_type_check
-def are_datatypes_equal(dt1, dt2, ignore_nullable: bool = False, ignore_metadata: bool = False) -> bool:
+def are_datatypes_equal(
+    dt1: typing.Any, dt2: typing.Any, ignore_nullable: bool = False, ignore_metadata: bool = False
+) -> bool:
     """Checks if datatypes are equal, descending into structs, arrays and maps,
     optionally ignoring nullability and/or metadata.
     """
@@ -385,11 +386,10 @@ def are_datatypes_equal(dt1, dt2, ignore_nullable: bool = False, ignore_metadata
             dt1.valueType, dt2.valueType, ignore_nullable, ignore_metadata
         )
     else:
-        return vars(dt1) == vars(dt2)
+        return bool(vars(dt1) == vars(dt2))
 
 
-@typing.no_type_check
-def are_datatypes_equal_ignore_nullable(dt1, dt2, ignore_metadata: bool = False) -> bool:
+def are_datatypes_equal_ignore_nullable(dt1: typing.Any, dt2: typing.Any, ignore_metadata: bool = False) -> bool:
     """Deprecated: use are_datatypes_equal instead."""
     warnings.warn(
         "are_datatypes_equal_ignore_nullable is deprecated. Use `are_datatypes_equal(dt1, dt2, ignore_nullable=True)` instead.",
