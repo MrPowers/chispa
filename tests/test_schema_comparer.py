@@ -561,6 +561,54 @@ def describe_tree_string():
         result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=False)
         assert repr(result) + "\n" == expected
 
+    def it_handles_empty_vs_nonempty_schema():
+        with open("tests/data/tree_string/empty_vs_nonempty_schema.txt") as f:
+            expected = f.read()
+
+        s1 = StructType([])
+        s2 = StructType([
+            StructField("name", StringType(), True),
+            StructField("age", IntegerType(), True),
+        ])
+        result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=False)
+        assert repr(result) + "\n" == expected
+
+    def it_shows_diff_for_mismatched_complex_kinds():
+        with open("tests/data/tree_string/mismatched_complex_kinds.txt") as f:
+            expected = f.read()
+
+        s1 = StructType([
+            StructField("id", IntegerType(), True),
+            StructField(
+                "data",
+                ArrayType(
+                    StructType([
+                        StructField("x", IntegerType(), True),
+                        StructField("y", IntegerType(), True),
+                    ]),
+                    True,
+                ),
+                True,
+            ),
+        ])
+        s2 = StructType([
+            StructField("id", IntegerType(), True),
+            StructField(
+                "data",
+                MapType(
+                    StringType(),
+                    StructType([
+                        StructField("a", DoubleType(), True),
+                        StructField("b", DoubleType(), True),
+                    ]),
+                    True,
+                ),
+                True,
+            ),
+        ])
+        result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=False)
+        assert repr(result) + "\n" == expected
+
 
 def describe_assert_schema_equality_ignore_nullable():
     def it_has_good_error_messages_for_different_sized_schemas():
