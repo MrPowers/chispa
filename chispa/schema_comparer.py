@@ -74,6 +74,31 @@ def _prefix(indent: int) -> str:
     return f"{indent * ' '}|--"
 
 
+def _format_type(dt: typing.Any) -> str:
+    """Format a datatype for display: use typeName() for complex types, simpleString() for leaves."""
+    tn: str = dt.typeName()
+    if tn in (TypeName.STRUCT, TypeName.ARRAY, TypeName.MAP):
+        return tn
+    return str(dt.simpleString())
+
+
+def _are_leaf_types_equal(dt1: typing.Any, dt2: typing.Any) -> bool:
+    """Compare two non-complex datatypes including parameterized attributes (e.g. precision/scale)."""
+    if dt1.typeName() != dt2.typeName():
+        return False
+    return bool(vars(dt1) == vars(dt2))
+
+
+def _are_element_types_shallow_equal(dt1: typing.Any, dt2: typing.Any) -> bool:
+    """Shallow-compare two datatypes: full attribute check for leaves, typeName only for complex types."""
+    tn1: str = dt1.typeName()
+    if tn1 != dt2.typeName():
+        return False
+    if tn1 in (TypeName.STRUCT, TypeName.ARRAY, TypeName.MAP):
+        return True  # children compared on separate lines
+    return bool(vars(dt1) == vars(dt2))
+
+
 def _compare_struct_fields(
     s1: StructType,
     s2: StructType,
@@ -86,8 +111,8 @@ def _compare_struct_fields(
     pfx = _prefix(indent)
     for sf1, sf2 in zip_longest(s1, s2):
         # Format the field line for each side
-        left = f"{pfx} {sf1.name}: {sf1.dataType.typeName()} {_format_nullable(sf1.nullable)}" if sf1 else ""
-        right = f"{pfx} {sf2.name}: {sf2.dataType.typeName()} {_format_nullable(sf2.nullable)}" if sf2 else ""
+        left = f"{pfx} {sf1.name}: {_format_type(sf1.dataType)} {_format_nullable(sf1.nullable)}" if sf1 else ""
+        right = f"{pfx} {sf2.name}: {_format_type(sf2.dataType)} {_format_nullable(sf2.nullable)}" if sf2 else ""
 
         # Shallow equality: name, type name, nullable, metadata (not children)
         is_equal = _are_fields_shallow_equal(sf1, sf2, ignore_nullable, ignore_metadata)
@@ -112,18 +137,15 @@ def _are_fields_shallow_equal(
         return False
     if sf1.name != sf2.name:
         return False
-    if sf1.dataType.typeName() != sf2.dataType.typeName():
-        return False
     if not ignore_nullable and sf1.nullable != sf2.nullable:
         return False
     if not ignore_metadata and sf1.metadata != sf2.metadata:
         return False
-    # For non-complex types, also compare type attributes (e.g. DecimalType precision/scale)
+    # For non-complex types, compare full type attributes (e.g. DecimalType precision/scale)
     type_name = sf1.dataType.typeName()
     if type_name not in (TypeName.STRUCT, TypeName.ARRAY, TypeName.MAP):
-        if vars(sf1.dataType) != vars(sf2.dataType):
-            return False
-    return True
+        return _are_leaf_types_equal(sf1.dataType, sf2.dataType)
+    return sf1.dataType.typeName() == sf2.dataType.typeName()
 
 
 def _compare_datatypes(
@@ -176,17 +198,17 @@ def _compare_array_types(
     """Expand array types showing 'element: <type> (containsNull = ...)'."""
     pfx = _prefix(indent)
 
-    left = f"{pfx} element: {dt1.elementType.typeName()} {_format_contains_null(dt1.containsNull)}" if dt1 else ""
-    right = f"{pfx} element: {dt2.elementType.typeName()} {_format_contains_null(dt2.containsNull)}" if dt2 else ""
+    left = f"{pfx} element: {_format_type(dt1.elementType)} {_format_contains_null(dt1.containsNull)}" if dt1 else ""
+    right = f"{pfx} element: {_format_type(dt2.elementType)} {_format_contains_null(dt2.containsNull)}" if dt2 else ""
 
-    # Element line equality: element type name and containsNull
+    # Element line equality: element type and containsNull
     is_equal = True
     if dt1 is None or dt2 is None:
         is_equal = dt1 is None and dt2 is None
     else:
-        if dt1.elementType.typeName() != dt2.elementType.typeName():
+        if not ignore_nullable and dt1.containsNull != dt2.containsNull:
             is_equal = False
-        elif not ignore_nullable and dt1.containsNull != dt2.containsNull:
+        elif not _are_element_types_shallow_equal(dt1.elementType, dt2.elementType):
             is_equal = False
     lines.append((left, right, is_equal))
 
@@ -208,12 +230,12 @@ def _compare_map_types(
     pfx = _prefix(indent)
 
     # Key line
-    left_key = f"{pfx} key: {dt1.keyType.typeName()}" if dt1 else ""
-    right_key = f"{pfx} key: {dt2.keyType.typeName()}" if dt2 else ""
+    left_key = f"{pfx} key: {_format_type(dt1.keyType)}" if dt1 else ""
+    right_key = f"{pfx} key: {_format_type(dt2.keyType)}" if dt2 else ""
     key_equal = True
     if dt1 is None or dt2 is None:
         key_equal = dt1 is None and dt2 is None
-    elif dt1.keyType.typeName() != dt2.keyType.typeName():
+    elif not _are_element_types_shallow_equal(dt1.keyType, dt2.keyType):
         key_equal = False
     lines.append((left_key, right_key, key_equal))
 
@@ -224,18 +246,22 @@ def _compare_map_types(
 
     # Value line
     left_val = (
-        f"{pfx} value: {dt1.valueType.typeName()} {_format_value_contains_null(dt1.valueContainsNull)}" if dt1 else ""
+        f"{pfx} value: {_format_type(dt1.valueType)} {_format_value_contains_null(dt1.valueContainsNull)}"
+        if dt1
+        else ""
     )
     right_val = (
-        f"{pfx} value: {dt2.valueType.typeName()} {_format_value_contains_null(dt2.valueContainsNull)}" if dt2 else ""
+        f"{pfx} value: {_format_type(dt2.valueType)} {_format_value_contains_null(dt2.valueContainsNull)}"
+        if dt2
+        else ""
     )
     val_equal = True
     if dt1 is None or dt2 is None:
         val_equal = dt1 is None and dt2 is None
     else:
-        if dt1.valueType.typeName() != dt2.valueType.typeName():
+        if not ignore_nullable and dt1.valueContainsNull != dt2.valueContainsNull:
             val_equal = False
-        elif not ignore_nullable and dt1.valueContainsNull != dt2.valueContainsNull:
+        elif not _are_element_types_shallow_equal(dt1.valueType, dt2.valueType):
             val_equal = False
     lines.append((left_val, right_val, val_equal))
 
@@ -251,7 +277,7 @@ def create_schema_comparison_table(
     t = PrettyTable(["schema1", "schema2"])
     zipped = list(zip_longest(s1, s2))
     for sf1, sf2 in zipped:
-        if are_structfields_equal(sf1, sf2, ignore_nullable, ignore_metadata):
+        if are_structfields_equal(sf1, sf2, ignore_nullability=ignore_nullable, ignore_metadata=ignore_metadata):
             t.add_row([blue(str(sf1)), blue(str(sf2))])
         else:
             t.add_row([sf1, sf2])
@@ -295,7 +321,9 @@ def assert_schema_equality_full(
             return False
         zipped = list(zip_longest(s1, s2))
         for sf1, sf2 in zipped:
-            if not are_structfields_equal(sf1, sf2, ignore_nullable, ignore_metadata):
+            if not are_structfields_equal(
+                sf1, sf2, ignore_nullability=ignore_nullable, ignore_metadata=ignore_metadata
+            ):
                 return False
         return True
 

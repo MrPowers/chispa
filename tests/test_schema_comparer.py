@@ -502,6 +502,65 @@ def describe_tree_string():
         result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=False)
         assert repr(result) + "\n" == expected
 
+    def it_shows_diff_for_decimal_precision_in_array_and_map_of_structs():
+        with open("tests/data/tree_string/decimal_precision_in_array_and_map.txt") as f:
+            expected = f.read()
+
+        s1 = StructType([
+            StructField("id", IntegerType(), True),
+            StructField(
+                "items",
+                ArrayType(
+                    StructType([
+                        StructField("name", StringType(), True),
+                        StructField("price", DecimalType(10, 2), True),
+                    ]),
+                    True,
+                ),
+                True,
+            ),
+            StructField(
+                "totals",
+                MapType(
+                    StringType(),
+                    StructType([
+                        StructField("amount", DecimalType(10, 2), True),
+                        StructField("tax", DecimalType(8, 2), True),
+                    ]),
+                    True,
+                ),
+                True,
+            ),
+        ])
+        s2 = StructType([
+            StructField("id", IntegerType(), True),
+            StructField(
+                "items",
+                ArrayType(
+                    StructType([
+                        StructField("name", StringType(), True),
+                        StructField("price", DecimalType(12, 4), True),
+                    ]),
+                    True,
+                ),
+                True,
+            ),
+            StructField(
+                "totals",
+                MapType(
+                    StringType(),
+                    StructType([
+                        StructField("amount", DecimalType(10, 2), True),
+                        StructField("tax", DecimalType(10, 4), True),
+                    ]),
+                    True,
+                ),
+                True,
+            ),
+        ])
+        result = create_schema_comparison_tree(s1, s2, ignore_nullable=False, ignore_metadata=False)
+        assert repr(result) + "\n" == expected
+
 
 def describe_assert_schema_equality_ignore_nullable():
     def it_has_good_error_messages_for_different_sized_schemas():
