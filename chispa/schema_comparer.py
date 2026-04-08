@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import typing
+import warnings
 from itertools import zip_longest
 
 from prettytable import PrettyTable
@@ -157,19 +158,30 @@ def assert_basic_schema_equality(s1: StructType, s2: StructType) -> None:
 
 # deprecate this.  ignore_nullable should be a flag.
 def assert_schema_equality_ignore_nullable(s1: StructType, s2: StructType) -> None:
-    if not are_schemas_equal_ignore_nullable(s1, s2):
+    if not are_schemas_equal(s1, s2, ignore_nullable=True):
         handle_schemas_not_equal(s1, s2, ignore_nullable=True, ignore_metadata=False)
 
 
-# deprecate this.  ignore_nullable should be a flag.
-def are_schemas_equal_ignore_nullable(s1: StructType, s2: StructType, ignore_metadata: bool = False) -> bool:
+def are_schemas_equal(
+    s1: StructType, s2: StructType, ignore_nullable: bool = False, ignore_metadata: bool = False
+) -> bool:
     if len(s1) != len(s2):
         return False
     zipped = list(zip_longest(s1, s2))
     for sf1, sf2 in zipped:
-        if not are_structfields_equal(sf1, sf2, True, ignore_metadata):
+        if not are_structfields_equal(sf1, sf2, ignore_nullability=ignore_nullable, ignore_metadata=ignore_metadata):
             return False
     return True
+
+
+def are_schemas_equal_ignore_nullable(s1: StructType, s2: StructType, ignore_metadata: bool = False) -> bool:
+    """Deprecated: use are_schemas_equal instead."""
+    warnings.warn(
+        "are_schemas_equal_ignore_nullable is deprecated. Use `are_schemas_equal(s1, s2, ignore_nullable=True)` instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return are_schemas_equal(s1, s2, ignore_nullable=True, ignore_metadata=ignore_metadata)
 
 
 # "ignore_nullability" should be "ignore_nullable" for consistent terminology
@@ -186,33 +198,47 @@ def are_structfields_equal(
                 return False
         if sf1.name != sf2.name:
             return False
+        if not ignore_nullability and sf1.nullable != sf2.nullable:
+            return False
         if not ignore_metadata and sf1.metadata != sf2.metadata:
             return False
-        else:
-            return are_datatypes_equal_ignore_nullable(sf1.dataType, sf2.dataType, ignore_metadata)  # type: ignore[no-any-return, no-untyped-call]
+        return are_datatypes_equal(  # type: ignore[no-any-return, no-untyped-call]
+            sf1.dataType,
+            sf2.dataType,
+            ignore_nullable=ignore_nullability,
+            ignore_metadata=ignore_metadata,
+        )
 
 
-# deprecate this
+@typing.no_type_check
+def are_datatypes_equal(dt1, dt2, ignore_nullable: bool = False, ignore_metadata: bool = False) -> bool:
+    """Checks if datatypes are equal, descending into structs, arrays and maps,
+    optionally ignoring nullability and/or metadata.
+    """
+    if dt1.typeName() != dt2.typeName():
+        return False
+    if dt1.typeName() == TypeName.ARRAY:
+        if not ignore_nullable and dt1.containsNull != dt2.containsNull:
+            return False
+        return are_datatypes_equal(dt1.elementType, dt2.elementType, ignore_nullable, ignore_metadata)
+    elif dt1.typeName() == TypeName.STRUCT:
+        return are_schemas_equal(dt1, dt2, ignore_nullable, ignore_metadata)
+    elif dt1.typeName() == TypeName.MAP:
+        if not ignore_nullable and dt1.valueContainsNull != dt2.valueContainsNull:
+            return False
+        return are_datatypes_equal(dt1.keyType, dt2.keyType, ignore_nullable, ignore_metadata) and are_datatypes_equal(
+            dt1.valueType, dt2.valueType, ignore_nullable, ignore_metadata
+        )
+    else:
+        return vars(dt1) == vars(dt2)
+
+
 @typing.no_type_check
 def are_datatypes_equal_ignore_nullable(dt1, dt2, ignore_metadata: bool = False) -> bool:
-    """Checks if datatypes are equal, descending into structs, arrays and maps to
-    ignore nullability.
-    """
-    if dt1.typeName() == dt2.typeName():
-        # Account for array types by inspecting elementType.
-        if dt1.typeName() == TypeName.ARRAY:
-            return are_datatypes_equal_ignore_nullable(dt1.elementType, dt2.elementType, ignore_metadata)
-        elif dt1.typeName() == TypeName.STRUCT:
-            return are_schemas_equal_ignore_nullable(dt1, dt2, ignore_metadata)
-        elif dt1.typeName() == TypeName.MAP:
-            if not ignore_metadata and dt1.valueContainsNull != dt2.valueContainsNull:
-                return False
-            return are_datatypes_equal_ignore_nullable(
-                dt1.keyType, dt2.keyType, ignore_metadata
-            ) and are_datatypes_equal_ignore_nullable(dt1.valueType, dt2.valueType, ignore_metadata)
-        else:
-            # Some data types have additional attributes (e.g. precision and scale for Decimal),
-            # and the type equality check must also check for equality of these attributes.
-            return vars(dt1) == vars(dt2)
-    else:
-        return False
+    """Deprecated: use are_datatypes_equal instead."""
+    warnings.warn(
+        "are_datatypes_equal_ignore_nullable is deprecated. Use `are_datatypes_equal(dt1, dt2, ignore_nullable=True)` instead.",
+        DeprecationWarning,
+        stacklevel=2,
+    )
+    return are_datatypes_equal(dt1, dt2, ignore_nullable=True, ignore_metadata=ignore_metadata)
