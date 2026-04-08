@@ -126,10 +126,9 @@ def _are_fields_shallow_equal(
     return True
 
 
-@typing.no_type_check
 def _compare_datatypes(
-    dt1,
-    dt2,
+    dt1: typing.Any,
+    dt2: typing.Any,
     ignore_nullable: bool,
     ignore_metadata: bool,
     indent: int,
@@ -166,10 +165,9 @@ def _compare_datatypes(
         )
 
 
-@typing.no_type_check
 def _compare_array_types(
-    dt1,
-    dt2,
+    dt1: typing.Any,
+    dt2: typing.Any,
     ignore_nullable: bool,
     ignore_metadata: bool,
     indent: int,
@@ -198,10 +196,9 @@ def _compare_array_types(
     _compare_datatypes(elem1, elem2, ignore_nullable, ignore_metadata, indent + 4, lines)
 
 
-@typing.no_type_check
 def _compare_map_types(
-    dt1,
-    dt2,
+    dt1: typing.Any,
+    dt2: typing.Any,
     ignore_nullable: bool,
     ignore_metadata: bool,
     indent: int,
@@ -360,7 +357,7 @@ def are_structfields_equal(
             return False
         if not ignore_metadata and sf1.metadata != sf2.metadata:
             return False
-        return are_datatypes_equal(  # type: ignore[no-any-return, no-untyped-call]
+        return are_datatypes_equal(  # type: ignore[no-any-return]
             sf1.dataType,
             sf2.dataType,
             ignore_nullable=ignore_nullability,
