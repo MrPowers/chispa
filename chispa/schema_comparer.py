@@ -146,14 +146,24 @@ def _compare_datatypes(
         _compare_struct_fields(s1, s2, ignore_nullable, ignore_metadata, indent, lines)
 
     elif tn1 == TypeName.ARRAY or tn2 == TypeName.ARRAY:
-        _compare_array_types(dt1 if tn1 == TypeName.ARRAY else None,
-                             dt2 if tn2 == TypeName.ARRAY else None,
-                             ignore_nullable, ignore_metadata, indent, lines)
+        _compare_array_types(
+            dt1 if tn1 == TypeName.ARRAY else None,
+            dt2 if tn2 == TypeName.ARRAY else None,
+            ignore_nullable,
+            ignore_metadata,
+            indent,
+            lines,
+        )
 
     elif tn1 == TypeName.MAP or tn2 == TypeName.MAP:
-        _compare_map_types(dt1 if tn1 == TypeName.MAP else None,
-                           dt2 if tn2 == TypeName.MAP else None,
-                           ignore_nullable, ignore_metadata, indent, lines)
+        _compare_map_types(
+            dt1 if tn1 == TypeName.MAP else None,
+            dt2 if tn2 == TypeName.MAP else None,
+            ignore_nullable,
+            ignore_metadata,
+            indent,
+            lines,
+        )
 
 
 @typing.no_type_check
@@ -216,8 +226,12 @@ def _compare_map_types(
     _compare_datatypes(k1, k2, ignore_nullable, ignore_metadata, indent + 4, lines)
 
     # Value line
-    left_val = f"{pfx} value: {dt1.valueType.typeName()} {_format_value_contains_null(dt1.valueContainsNull)}" if dt1 else ""
-    right_val = f"{pfx} value: {dt2.valueType.typeName()} {_format_value_contains_null(dt2.valueContainsNull)}" if dt2 else ""
+    left_val = (
+        f"{pfx} value: {dt1.valueType.typeName()} {_format_value_contains_null(dt1.valueContainsNull)}" if dt1 else ""
+    )
+    right_val = (
+        f"{pfx} value: {dt2.valueType.typeName()} {_format_value_contains_null(dt2.valueContainsNull)}" if dt2 else ""
+    )
     val_equal = True
     if dt1 is None or dt2 is None:
         val_equal = dt1 is None and dt2 is None
