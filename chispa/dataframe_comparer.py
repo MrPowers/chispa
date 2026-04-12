@@ -124,8 +124,8 @@ def assert_approx_df_equality(
     allow_nan_equality: bool = False,
     ignore_column_order: bool = False,
     ignore_row_order: bool = False,
-    ignore_columns: list[str] | None = None,
     ignore_metadata: bool = False,
+    ignore_columns: list[str] | None = None,
     formats: FormattingConfig | None = None,
 ) -> None:
     if not formats:
