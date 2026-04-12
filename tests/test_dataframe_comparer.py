@@ -287,6 +287,19 @@ def describe_assert_approx_df_equality():
         with pytest.raises(DataFramesNotEqualError):
             assert assert_approx_df_equality(df1, df2, 0.1, ignore_columns=["name"])
 
+    def it_can_ignore_metadata(spark: SparkSession):
+        schema1 = StructType([
+            StructField("num", IntegerType(), True, {"comment": "a"}),
+            StructField("name", StringType(), True),
+        ])
+        schema2 = StructType([
+            StructField("num", IntegerType(), True, {"comment": "b"}),
+            StructField("name", StringType(), True),
+        ])
+        df1 = spark.createDataFrame([(1, "jose"), (2, "li")], schema=schema1)
+        df2 = spark.createDataFrame([(1, "jose"), (2, "li")], schema=schema2)
+        assert_approx_df_equality(df1, df2, 0.1, ignore_metadata=True)
+
     def it_does_not_throw_with_struct_columns_and_ignore_row_order(spark: SparkSession):
         data1 = [((1.0, "jose"),), ((1.1, "li"),)]
         df1 = spark.createDataFrame(data1, ["person"])

@@ -124,6 +124,7 @@ def assert_approx_df_equality(
     allow_nan_equality: bool = False,
     ignore_column_order: bool = False,
     ignore_row_order: bool = False,
+    ignore_metadata: bool = False,
     ignore_columns: list[str] | None = None,
     formats: FormattingConfig | None = None,
 ) -> None:
@@ -144,7 +145,7 @@ def assert_approx_df_equality(
     df1 = reduce(lambda acc, fn: fn(acc), transforms, df1)
     df2 = reduce(lambda acc, fn: fn(acc), transforms, df2)
 
-    assert_schema_equality(df1.schema, df2.schema, ignore_nullable)
+    assert_schema_equality(df1.schema, df2.schema, ignore_nullable, ignore_metadata)
 
     if precision != 0:
         assert_generic_rows_equality(
