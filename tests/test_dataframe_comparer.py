@@ -4,7 +4,7 @@ import math
 
 import pytest
 from pyspark.sql import SparkSession
-from pyspark.sql.types import IntegerType, StringType, StructField, StructType
+from pyspark.sql.types import ArrayType, IntegerType, MapType, StringType, StructField, StructType
 
 from chispa import DataFramesNotEqualError, assert_approx_df_equality, assert_df_equality
 from chispa.dataframe_comparer import are_dfs_equal
@@ -53,6 +53,42 @@ def describe_assert_df_equality():
         df1 = spark.createDataFrame(data1, ["nested_person"])
         data2 = [(((2, "li"), 40),), (((1, "jose"), 30),)]
         df2 = spark.createDataFrame(data2, ["nested_person"])
+        assert_df_equality(df1, df2, ignore_row_order=True)
+
+    def it_can_work_with_map_columns_and_ignore_row_order(spark: SparkSession):
+        schema = StructType([
+            StructField("id", IntegerType()),
+            StructField("props", MapType(StringType(), IntegerType())),
+        ])
+        df1 = spark.createDataFrame([(1, {"a": 10}), (2, {"b": 20})], schema=schema)
+        df2 = spark.createDataFrame([(2, {"b": 20}), (1, {"a": 10})], schema=schema)
+        assert_df_equality(df1, df2, ignore_row_order=True)
+
+    def it_can_work_with_struct_containing_map_and_ignore_row_order(spark: SparkSession):
+        schema = StructType([
+            StructField(
+                "s",
+                StructType([
+                    StructField("name", StringType()),
+                    StructField("props", MapType(StringType(), IntegerType())),
+                ]),
+            )
+        ])
+        df1 = spark.createDataFrame(
+            [({"name": "a", "props": {"k": 1}},), ({"name": "b", "props": {"k": 2}},)], schema=schema
+        )
+        df2 = spark.createDataFrame(
+            [({"name": "b", "props": {"k": 2}},), ({"name": "a", "props": {"k": 1}},)], schema=schema
+        )
+        assert_df_equality(df1, df2, ignore_row_order=True)
+
+    def it_can_work_with_array_of_maps_and_ignore_row_order(spark: SparkSession):
+        schema = StructType([
+            StructField("id", IntegerType()),
+            StructField("items", ArrayType(MapType(StringType(), IntegerType()))),
+        ])
+        df1 = spark.createDataFrame([(1, [{"a": 1}]), (2, [{"b": 2}])], schema=schema)
+        df2 = spark.createDataFrame([(2, [{"b": 2}]), (1, [{"a": 1}])], schema=schema)
         assert_df_equality(df1, df2, ignore_row_order=True)
 
     def it_can_work_with_different_row_and_column_orders(spark: SparkSession):
