@@ -16,37 +16,43 @@ from chispa.rows_comparer import (
 from chispa.schema_comparer import assert_schema_equality
 
 
-def _get_hashable_columns(df: DataFrame) -> list[int | str | Column]:
-    """Return list of column names that need hash() for sorting.
-
-    Spark's sort() cannot order struct, array, or map types directly.
-    These columns need to be hashed before sorting when ignore_row_order=True.
-    """
-    hashable_cols: list[int | str | Column] = []
-    for field in df.schema.fields:
-        if isinstance(field.dataType, StructType | ArrayType | MapType):
-            hashable_cols.append(field.name)
-    return hashable_cols
+def _contains_map_type(dt: ArrayType | MapType | StructType) -> bool:
+    """Return True if the data type contains a MapType anywhere in its tree."""
+    if isinstance(dt, MapType):
+        return True
+    if isinstance(dt, ArrayType):
+        return isinstance(dt.elementType, (StructType, ArrayType, MapType)) and _contains_map_type(dt.elementType)
+    if isinstance(dt, StructType):
+        return any(
+            isinstance(f.dataType, (StructType, ArrayType, MapType)) and _contains_map_type(f.dataType)
+            for f in dt.fields
+        )
+    return False
 
 
 def _sort_df_for_row_order_comparison(df: DataFrame) -> DataFrame:
     """Sort DataFrame for row-order-insensitive comparison.
 
     For struct/array/map columns, applies hash() before sorting since
-    Spark cannot directly sort these complex types.
+    Spark cannot directly sort these complex types. Columns containing
+    MapType anywhere in their type tree use to_json() before hashing,
+    because Spark's hash() does not support MapType.
     """
-    hash_cols = _get_hashable_columns(df)
-    if not hash_cols:
-        # No complex types, sort normally
-        return df.sort(*df.columns)
-
-    # Build sort expressions: hash complex cols, sort primitive cols normally
-    sort_exprs = []
-    for col_name in df.columns:
-        if col_name in hash_cols:
-            sort_exprs.append(F.hash(F.col(col_name)))
+    sort_exprs: list[Column] = []
+    has_complex = False
+    for field in df.schema.fields:
+        col = F.col(field.name)
+        if isinstance(field.dataType, (StructType, ArrayType, MapType)):
+            has_complex = True
+            if _contains_map_type(field.dataType):
+                sort_exprs.append(F.hash(F.to_json(col)))
+            else:
+                sort_exprs.append(F.hash(col))
         else:
-            sort_exprs.append(F.col(col_name))
+            sort_exprs.append(col)
+
+    if not has_complex:
+        return df.sort(*df.columns)
 
     return df.sort(*sort_exprs)
 
