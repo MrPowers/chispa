@@ -33,10 +33,9 @@ def _contains_map_type(dt: ArrayType | MapType | StructType) -> bool:
 def _sort_df_for_row_order_comparison(df: DataFrame) -> DataFrame:
     """Sort DataFrame for row-order-insensitive comparison.
 
-    For struct/array/map columns, applies hash() before sorting since
-    Spark cannot directly sort these complex types. Columns containing
-    MapType anywhere in their type tree use to_json() before hashing,
-    because Spark's hash() does not support MapType.
+    Struct/array columns use hash() for efficient sorting. Columns containing
+    MapType anywhere in their type tree use to_json() instead, because Spark's
+    hash() does not support MapType.
     """
     sort_exprs: list[Column] = []
     has_complex = False
@@ -45,7 +44,7 @@ def _sort_df_for_row_order_comparison(df: DataFrame) -> DataFrame:
         if isinstance(field.dataType, (StructType, ArrayType, MapType)):
             has_complex = True
             if _contains_map_type(field.dataType):
-                sort_exprs.append(F.hash(F.to_json(col)))
+                sort_exprs.append(F.to_json(col))
             else:
                 sort_exprs.append(F.hash(col))
         else:

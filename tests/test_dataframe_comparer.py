@@ -64,6 +64,21 @@ def describe_assert_df_equality():
         df2 = spark.createDataFrame([(2, {"b": 20}), (1, {"a": 10})], schema=schema)
         assert_df_equality(df1, df2, ignore_row_order=True)
 
+    def it_can_work_with_multi_entry_map_columns_and_ignore_row_order(spark: SparkSession):
+        schema = StructType([
+            StructField("id", IntegerType()),
+            StructField("props", MapType(StringType(), IntegerType())),
+        ])
+        df1 = spark.createDataFrame(
+            [(1, {"a": 10, "b": 20}), (2, {"x": 30, "y": 40})],
+            schema=schema,
+        )
+        df2 = spark.createDataFrame(
+            [(2, {"y": 40, "x": 30}), (1, {"b": 20, "a": 10})],
+            schema=schema,
+        )
+        assert_df_equality(df1, df2, ignore_row_order=True)
+
     def it_can_work_with_struct_containing_map_and_ignore_row_order(spark: SparkSession):
         schema = StructType([
             StructField(
