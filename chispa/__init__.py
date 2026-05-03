@@ -17,6 +17,7 @@ from .dataframe_comparer import (
     assert_approx_df_equality,
     assert_df_equality,
 )
+from .flatten import flatten_dataframe
 from .rows_comparer import assert_basic_rows_equality
 from .schema_comparer import SchemasNotEqualError
 
@@ -73,4 +74,5 @@ __all__ = (
     "assert_basic_rows_equality",
     "assert_column_equality",
     "assert_df_equality",
+    "flatten_dataframe",
 )
