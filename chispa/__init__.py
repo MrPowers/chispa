@@ -4,6 +4,7 @@ from collections.abc import Callable
 
 from pyspark.sql import DataFrame
 
+from chispa.dataframe_transformer import flatten_dataframe
 from chispa.default_formats import DefaultFormats
 from chispa.formatting import Color, Format, FormattingConfig, Style
 
@@ -73,4 +74,5 @@ __all__ = (
     "assert_basic_rows_equality",
     "assert_column_equality",
     "assert_df_equality",
+    "flatten_dataframe",
 )
