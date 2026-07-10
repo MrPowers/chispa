@@ -42,6 +42,7 @@ class Chispa:
         underline_cells: bool = False,
         ignore_metadata: bool = False,
         ignore_columns: list[str] | None = None,
+        full_log: bool = True,
     ) -> None:
         return assert_df_equality(
             df1,
@@ -55,6 +56,7 @@ class Chispa:
             ignore_metadata,
             ignore_columns,
             self.formats,
+            full_log,
         )
 
 

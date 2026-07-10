@@ -157,6 +157,15 @@ Here's the nicely formatted error message:
 
 ![DataFramesNotEqualError](https://raw.githubusercontent.com/MrPowers/chispa/main/images/dfs_not_equal_error.png)
 
+### Disable the full diff log
+
+If your DataFrames are large and the diff table is too noisy for your test output, set `full_log=False` to raise a compact error without printing the row-level diff.
+
+```python
+assert_df_equality(actual_df, expected_df, full_log=False)
+assert_approx_df_equality(actual_df, expected_df, 0.01, full_log=False)
+```
+
 ### Ignore row order
 
 You can easily compare DataFrames, ignoring the order of the rows.  The content of the DataFrames is usually what matters, not the order of the rows.

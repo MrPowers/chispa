@@ -152,6 +152,20 @@ def describe_assert_df_equality():
         with pytest.raises(DataFramesNotEqualError):
             assert_df_equality(df1, df2)
 
+    def it_can_raise_without_the_full_diff_log(spark: SparkSession):
+        data1 = [("jose", "jose"), ("li", "li")]
+        df1 = spark.createDataFrame(data1, ["name", "expected_name"])
+        data2 = [("bob", "jose"), ("li", "li")]
+        df2 = spark.createDataFrame(data2, ["name", "expected_name"])
+
+        with pytest.raises(DataFramesNotEqualError) as exc_info:
+            assert_df_equality(df1, df2, full_log=False)
+
+        message = str(exc_info.value)
+        assert message == "DataFrames are not equal"
+        assert "bob" not in message
+        assert "PrettyTable" not in message
+
     def it_throws_with_length_mismatches(spark: SparkSession):
         data1 = [("jose", "jose"), ("li", "li"), ("laura", "laura")]
         df1 = spark.createDataFrame(data1, ["name", "expected_name"])
@@ -281,6 +295,19 @@ def describe_assert_approx_df_equality():
         df2 = spark.createDataFrame(data2, ["num", "expected_name"])
         with pytest.raises(DataFramesNotEqualError):
             assert_approx_df_equality(df1, df2, 0.1)
+
+    def it_can_raise_approx_without_the_full_diff_log(spark: SparkSession):
+        data1 = [(1.0, "jose"), (1.1, "li")]
+        df1 = spark.createDataFrame(data1, ["num", "expected_name"])
+        data2 = [(1.0, "jose"), (9.9, "li")]
+        df2 = spark.createDataFrame(data2, ["num", "expected_name"])
+
+        with pytest.raises(DataFramesNotEqualError) as exc_info:
+            assert_approx_df_equality(df1, df2, 0.1, full_log=False)
+
+        message = str(exc_info.value)
+        assert message == "DataFrames are not equal"
+        assert "9.9" not in message
 
     def it_throws_with_with_length_mismatch(spark: SparkSession):
         data1 = [(1.0, "jose"), (1.1, "li"), (1.2, "laura"), (None, None)]
