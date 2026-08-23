@@ -271,6 +271,26 @@ def describe_assert_df_equality():
         df2 = spark.createDataFrame(data2, ["ignore_me", "name", "score"])
         assert_df_equality(df1, df2, ignore_columns=["ignore_me"], ignore_row_order=True)
 
+    def it_shows_the_full_diff_table_by_default(spark: SparkSession):
+        data1 = [(1, "jose"), (2, "li")]
+        df1 = spark.createDataFrame(data1, ["num", "name"])
+        data2 = [(1, "jose"), (2, "lima")]
+        df2 = spark.createDataFrame(data2, ["num", "name"])
+        with pytest.raises(DataFramesNotEqualError) as exc_info:
+            assert_df_equality(df1, df2)
+        assert "lima" in str(exc_info.value)
+
+    def it_hides_the_diff_table_when_full_log_is_false(spark: SparkSession):
+        data1 = [(1, "jose"), (2, "li")]
+        df1 = spark.createDataFrame(data1, ["num", "name"])
+        data2 = [(1, "jose"), (2, "lima")]
+        df2 = spark.createDataFrame(data2, ["num", "name"])
+        with pytest.raises(DataFramesNotEqualError) as exc_info:
+            assert_df_equality(df1, df2, full_log=False)
+        message = str(exc_info.value)
+        assert "lima" not in message
+        assert "DataFrames are not equal" in message
+
 
 def describe_are_dfs_equal():
     def it_returns_false_with_schema_mismatches(spark: SparkSession):
@@ -412,6 +432,22 @@ def describe_assert_approx_df_equality():
         df2 = spark.createDataFrame([(float("nan"), "li")], ["num", "expected_name"])
         with pytest.raises(DataFramesNotEqualError):
             assert_approx_df_equality(df1, df2, 0, allow_nan_equality=True)
+
+    def it_shows_the_full_diff_table_by_default(spark: SparkSession):
+        df1 = spark.createDataFrame([(1.0, "jose")], ["num", "expected_name"])
+        df2 = spark.createDataFrame([(1.1, "jose")], ["num", "expected_name"])
+        with pytest.raises(DataFramesNotEqualError) as exc_info:
+            assert_approx_df_equality(df1, df2, 0)
+        assert "jose" in str(exc_info.value)
+
+    def it_hides_the_diff_table_when_full_log_is_false(spark: SparkSession):
+        df1 = spark.createDataFrame([(1.0, "jose")], ["num", "expected_name"])
+        df2 = spark.createDataFrame([(1.1, "jose")], ["num", "expected_name"])
+        with pytest.raises(DataFramesNotEqualError) as exc_info:
+            assert_approx_df_equality(df1, df2, 0, full_log=False)
+        message = str(exc_info.value)
+        assert "jose" not in message
+        assert "DataFrames are not equal" in message
 
 
 def describe_contains_map_type():

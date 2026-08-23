@@ -335,6 +335,7 @@ assert_df_equality(df1, df2, ignore_nullable=True)
 - `ignore_metadata=True` ignores schema metadata differences when data and field types are otherwise equivalent.
 - `transforms=[...]` applies the same transform pipeline to both DataFrames before comparison.
 - `underline_cells=True` highlights mismatched cells in error output for faster debugging.
+- `full_log=False` raises `DataFramesNotEqualError` with a short message instead of the full row-by-row diff table, useful when the DataFrames are large and the table would be too long to read. Defaults to `True`, so existing behavior is unchanged unless you opt in.
 
 Example:
 

@@ -74,6 +74,7 @@ def assert_df_equality(
     ignore_metadata: bool = False,
     ignore_columns: list[str] | None = None,
     formats: FormattingConfig | None = None,
+    full_log: bool = True,
 ) -> None:
     if not formats:
         formats = FormattingConfig()
@@ -102,6 +103,7 @@ def assert_df_equality(
             {"allow_nan_equality": True},
             underline_cells=underline_cells,
             formats=formats,
+            full_log=full_log,
         )
     else:
         assert_basic_rows_equality(
@@ -109,6 +111,7 @@ def assert_df_equality(
             df2.collect(),
             underline_cells=underline_cells,
             formats=formats,
+            full_log=full_log,
         )
 
 
@@ -131,6 +134,7 @@ def assert_approx_df_equality(
     ignore_row_order: bool = False,
     ignore_columns: list[str] | None = None,
     formats: FormattingConfig | None = None,
+    full_log: bool = True,
 ) -> None:
     if not formats:
         formats = FormattingConfig()
@@ -158,10 +162,16 @@ def assert_approx_df_equality(
             are_rows_approx_equal,
             {"precision": precision, "allow_nan_equality": allow_nan_equality},
             formats=formats,
+            full_log=full_log,
         )
     elif allow_nan_equality:
         assert_generic_rows_equality(
-            df1.collect(), df2.collect(), are_rows_equal_enhanced, {"allow_nan_equality": True}, formats=formats
+            df1.collect(),
+            df2.collect(),
+            are_rows_equal_enhanced,
+            {"allow_nan_equality": True},
+            formats=formats,
+            full_log=full_log,
         )
     else:
-        assert_basic_rows_equality(df1.collect(), df2.collect(), formats=formats)
+        assert_basic_rows_equality(df1.collect(), df2.collect(), formats=formats, full_log=full_log)
