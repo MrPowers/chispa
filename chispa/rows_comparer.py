@@ -12,7 +12,11 @@ from chispa.formatting import FormattingConfig, format_string
 
 
 def assert_basic_rows_equality(
-    rows1: list[Row], rows2: list[Row], underline_cells: bool = False, formats: FormattingConfig | None = None
+    rows1: list[Row],
+    rows2: list[Row],
+    underline_cells: bool = False,
+    formats: FormattingConfig | None = None,
+    full_log: bool = True,
 ) -> None:
     if not formats:
         formats = FormattingConfig()
@@ -48,7 +52,13 @@ def assert_basic_rows_equality(
 
                 t.add_row([r1_res, r2_res])
         if all_rows_equal is False:
-            raise chispa.DataFramesNotEqualError("\n" + t.get_string())
+            raise chispa.DataFramesNotEqualError(_build_error_message(t, full_log=full_log))
+
+
+def _build_error_message(table: PrettyTable, full_log: bool) -> str:
+    if full_log:
+        return "\n" + table.get_string()
+    return "DataFrames are not equal. Set full_log=True to see the row-by-row diff."
 
 
 def assert_generic_rows_equality(
@@ -58,6 +68,7 @@ def assert_generic_rows_equality(
     row_equality_fun_args: dict[str, Any],
     underline_cells: bool = False,
     formats: FormattingConfig | None = None,
+    full_log: bool = True,
 ) -> None:
     if not formats:
         formats = FormattingConfig()
@@ -103,4 +114,4 @@ def assert_generic_rows_equality(
 
             t.add_row([r1_res, r2_res])
     if all_rows_equal is False:
-        raise chispa.DataFramesNotEqualError("\n" + t.get_string())
+        raise chispa.DataFramesNotEqualError(_build_error_message(t, full_log=full_log))
