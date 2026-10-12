@@ -254,6 +254,23 @@ def describe_assert_df_equality():
         with pytest.raises(DataFramesNotEqualError):
             assert assert_df_equality(df1, df2, ignore_columns=["name"])
 
+    def it_does_not_modify_the_given_transforms(spark: SparkSession):
+        df1 = spark.createDataFrame([("bob", "jose"), ("li", "li")], ["name", "expected_name"])
+        df2 = spark.createDataFrame([("li", "li"), ("bob", "jose")], ["name", "expected_name"])
+        transforms = [lambda df: df]
+        assert_df_equality(
+            df1, df2, transforms=transforms, ignore_columns=["name"], ignore_column_order=True, ignore_row_order=True
+        )
+        assert len(transforms) == 1
+
+    def it_does_not_reuse_ignore_columns_from_an_earlier_call(spark: SparkSession):
+        df1 = spark.createDataFrame([(1, 2, 3)], ["a", "b", "c"])
+        df2 = spark.createDataFrame([(9, 2, 3)], ["a", "b", "c"])
+        transforms: list = []  # type: ignore[type-arg]
+        assert_df_equality(df1, df2, transforms=transforms, ignore_columns=["a"])
+        with pytest.raises(DataFramesNotEqualError):
+            assert_df_equality(df1, df2, transforms=transforms, ignore_columns=["b"])
+
     def it_converts_an_arbitrary_dataclass_to_a_formatting_config(spark: SparkSession):
         df1 = spark.createDataFrame([(1, "jose"), (2, "li")], ["num", "expected_name"])
         df2 = spark.createDataFrame([(1, "jose"), (2, "laura")], ["num", "expected_name"])
@@ -379,6 +396,29 @@ def describe_assert_approx_df_equality():
         df2 = spark.createDataFrame(data2, ["name", "expected_name"])
         with pytest.raises(DataFramesNotEqualError):
             assert assert_approx_df_equality(df1, df2, 0.1, ignore_columns=["name"])
+
+    def it_does_not_modify_the_given_transforms(spark: SparkSession):
+        df1 = spark.createDataFrame([("bob", "jose"), ("li", "li")], ["name", "expected_name"])
+        df2 = spark.createDataFrame([("li", "li"), ("bob", "jose")], ["name", "expected_name"])
+        transforms = [lambda df: df]
+        assert_approx_df_equality(
+            df1,
+            df2,
+            0.1,
+            transforms=transforms,
+            ignore_columns=["name"],
+            ignore_column_order=True,
+            ignore_row_order=True,
+        )
+        assert len(transforms) == 1
+
+    def it_does_not_reuse_ignore_columns_from_an_earlier_call(spark: SparkSession):
+        df1 = spark.createDataFrame([(1, 2, 3)], ["a", "b", "c"])
+        df2 = spark.createDataFrame([(9, 2, 3)], ["a", "b", "c"])
+        transforms: list = []  # type: ignore[type-arg]
+        assert_approx_df_equality(df1, df2, 0.1, transforms=transforms, ignore_columns=["a"])
+        with pytest.raises(DataFramesNotEqualError):
+            assert_approx_df_equality(df1, df2, 0.1, transforms=transforms, ignore_columns=["b"])
 
     def it_does_not_throw_with_struct_columns_and_ignore_row_order(spark: SparkSession):
         data1 = [((1.0, "jose"),), ((1.1, "li"),)]

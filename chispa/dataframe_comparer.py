@@ -81,8 +81,7 @@ def assert_df_equality(
     elif not isinstance(formats, FormattingConfig):
         formats = FormattingConfig._from_arbitrary_dataclass(formats)
 
-    if transforms is None:
-        transforms = []
+    transforms = [] if transforms is None else list(transforms)
     if ignore_column_order:
         transforms.append(lambda df: df.select(sorted(df.columns)))
     if ignore_columns:
@@ -141,8 +140,7 @@ def assert_approx_df_equality(
     elif not isinstance(formats, FormattingConfig):
         formats = FormattingConfig._from_arbitrary_dataclass(formats)
 
-    if transforms is None:
-        transforms = []
+    transforms = [] if transforms is None else list(transforms)
     if ignore_column_order:
         transforms.append(lambda df: df.select(sorted(df.columns)))
     if ignore_columns:
