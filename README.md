@@ -231,6 +231,8 @@ Here's how to compare the equality of `df1` and `df2`, ignoring the column order
 assert_df_equality(df1, df2, ignore_column_order=True)
 ```
 
+The order of the fields inside struct columns is ignored as well, including structs nested in arrays and maps.
+
 Here's the error message you'll see if you run `assert_df_equality(df1, df2)`, without ignoring the column order.
 
 ![ignore_column_order_false](https://raw.githubusercontent.com/MrPowers/chispa/main/images/ignore_column_order_false.png)
