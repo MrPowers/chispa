@@ -125,6 +125,79 @@ def describe_assert_df_equality():
         df2 = spark.createDataFrame(data2, ["name", "num"])
         assert_df_equality(df1, df2, ignore_row_order=True, ignore_column_order=True)
 
+    def it_ignores_the_order_of_fields_in_nested_structs(spark: SparkSession):
+        schema1 = StructType([
+            StructField("id", IntegerType()),
+            StructField("owner", StructType([StructField("a", StringType()), StructField("b", StringType())])),
+        ])
+        schema2 = StructType([
+            StructField("id", IntegerType()),
+            StructField("owner", StructType([StructField("b", StringType()), StructField("a", StringType())])),
+        ])
+        df1 = spark.createDataFrame([(1, ("x", "y")), (2, None)], schema=schema1)
+        df2 = spark.createDataFrame([(1, ("y", "x")), (2, None)], schema=schema2)
+        assert_df_equality(df1, df2, ignore_column_order=True)
+
+    def it_ignores_the_order_of_fields_in_structs_inside_arrays_and_maps(spark: SparkSession):
+        def schema(first: str, second: str) -> StructType:
+            item = StructType([StructField(first, StringType()), StructField(second, StringType())])
+            return StructType([
+                StructField("reps", ArrayType(item)),
+                StructField("by_key", MapType(StringType(), item)),
+            ])
+
+        df1 = spark.createDataFrame([([("x", "y")], {"k": ("x", "y")})], schema=schema("a", "b"))
+        df2 = spark.createDataFrame([([("y", "x")], {"k": ("y", "x")})], schema=schema("b", "a"))
+        assert_df_equality(df1, df2, ignore_column_order=True)
+
+    def it_ignores_the_order_of_fields_in_struct_map_keys(spark: SparkSession):
+        def schema(first: str, second: str) -> StructType:
+            key = StructType([StructField(first, StringType()), StructField(second, StringType())])
+            return StructType([StructField("by_key", MapType(key, StringType()))])
+
+        df1 = spark.createDataFrame([({("x", "y"): "v"},)], schema=schema("a", "b"))
+        df2 = spark.createDataFrame([({("y", "x"): "v"},)], schema=schema("b", "a"))
+        assert_df_equality(df1, df2, ignore_column_order=True)
+
+    def it_leaves_nested_columns_without_structs_alone(spark: SparkSession):
+        schema = StructType([
+            StructField(
+                "owner",
+                StructType([
+                    StructField("tags", ArrayType(StringType())),
+                    StructField("scores", MapType(StringType(), IntegerType())),
+                    StructField("name", StringType()),
+                ]),
+            ),
+        ])
+        df1 = spark.createDataFrame([((["x"], {"k": 1}, "n"),)], schema=schema)
+        df2 = spark.createDataFrame([((["x"], {"k": 1}, "n"),)], schema=schema)
+        assert_df_equality(df1, df2, ignore_column_order=True)
+
+    def it_still_raises_for_nested_structs_with_different_values(spark: SparkSession):
+        schema1 = StructType([
+            StructField("owner", StructType([StructField("a", StringType()), StructField("b", StringType())]))
+        ])
+        schema2 = StructType([
+            StructField("owner", StructType([StructField("b", StringType()), StructField("a", StringType())]))
+        ])
+        df1 = spark.createDataFrame([(("x", "y"),)], schema=schema1)
+        df2 = spark.createDataFrame([(("x", "y"),)], schema=schema2)  # a and b are swapped compared to df1
+        with pytest.raises(DataFramesNotEqualError):
+            assert_df_equality(df1, df2, ignore_column_order=True)
+
+    def it_does_not_ignore_the_order_of_nested_struct_fields_by_default(spark: SparkSession):
+        schema1 = StructType([
+            StructField("owner", StructType([StructField("a", StringType()), StructField("b", StringType())]))
+        ])
+        schema2 = StructType([
+            StructField("owner", StructType([StructField("b", StringType()), StructField("a", StringType())]))
+        ])
+        df1 = spark.createDataFrame([(("x", "y"),)], schema=schema1)
+        df2 = spark.createDataFrame([(("y", "x"),)], schema=schema2)
+        with pytest.raises(SchemasNotEqualError):
+            assert_df_equality(df1, df2)
+
     def it_raises_for_row_insensitive_with_diff_content(spark: SparkSession):
         data1 = [(1, "XXXX"), (2, "li")]
         df1 = spark.createDataFrame(data1, ["num", "name"])
@@ -488,6 +561,17 @@ def describe_assert_approx_df_equality():
         message = str(exc_info.value)
         assert "jose" not in message
         assert "DataFrames are not equal" in message
+
+    def it_ignores_the_order_of_fields_in_nested_structs(spark: SparkSession):
+        schema1 = StructType([
+            StructField("owner", StructType([StructField("a", StringType()), StructField("b", StringType())]))
+        ])
+        schema2 = StructType([
+            StructField("owner", StructType([StructField("b", StringType()), StructField("a", StringType())]))
+        ])
+        df1 = spark.createDataFrame([(("x", "y"),)], schema=schema1)
+        df2 = spark.createDataFrame([(("y", "x"),)], schema=schema2)
+        assert_approx_df_equality(df1, df2, 0.1, ignore_column_order=True)
 
 
 def describe_contains_map_type():
