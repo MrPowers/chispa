@@ -1,0 +1,7 @@
+name: chispa
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12  # Match your project's python version
+  - pip
+  - poetry
