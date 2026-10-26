@@ -578,6 +578,16 @@ This project uses [Poetry](https://python-poetry.org/) for packaging and depende
 * Setup the virtual environment with `poetry install`
 * Run the tests with `poetry run pytest tests`
 
+If you prefer to use Conda, run these commands from the repository root:
+
+```sh
+conda env create --file environment.yml
+conda activate chispa
+poetry install
+```
+
+The Conda environment provides Python and Poetry; `poetry install` installs the project dependencies. Run the tests with `poetry run pytest tests`.
+
 Studying the codebase is a great way to learn about PySpark!
 
 ## Contributing
