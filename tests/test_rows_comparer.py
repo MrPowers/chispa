@@ -45,13 +45,6 @@ def describe_assert_basic_rows_equality():
         df2 = spark.createDataFrame(data2, ["name", "expected_name"])
         assert_basic_rows_equality(df1.collect(), df2.collect())
 
-    @pytest.mark.xfail(
-        strict=True,
-        reason=(
-            "Known bug: fields are zipped positionally but looked up by name, so with duplicate "
-            "column names every lookup returns the first match and real differences go unreported."
-        ),
-    )
     def it_throws_when_duplicate_column_names_hide_a_mismatch(spark: SparkSession):
         df1 = spark.createDataFrame([(1, 2)], ["a", "a"])
         df2 = spark.createDataFrame([(1, 999)], ["a", "a"])
@@ -101,3 +94,12 @@ def describe_assert_generic_rows_equality():
         assert Color.PURPLE.value in message
         assert Color.CYAN.value in message
         assert Color.RED.value not in message
+
+    def it_throws_when_duplicate_column_names_hide_a_mismatch(spark: SparkSession):
+        df1 = spark.createDataFrame([(1, 2)], ["a", "a"])
+        df2 = spark.createDataFrame([(1, 999)], ["a", "a"])
+        with pytest.raises(DataFramesNotEqualError) as exc_info:
+            assert_generic_rows_equality(
+                df1.collect(), df2.collect(), are_rows_equal_enhanced, {"allow_nan_equality": True}
+            )
+        assert "a=999" in str(exc_info.value)

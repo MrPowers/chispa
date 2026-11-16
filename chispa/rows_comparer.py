@@ -26,33 +26,29 @@ def assert_basic_rows_equality(
     if rows1 != rows2:
         t = PrettyTable(["df1", "df2"])
         zipped = list(zip_longest(rows1, rows2))
-        all_rows_equal = True
 
         for r1, r2 in zipped:
             if r1 is None and r2 is not None:
                 t.add_row([None, format_string(str(r2), formats.mismatched_rows)])
-                all_rows_equal = False
             elif r1 is not None and r2 is None:
                 t.add_row([format_string(str(r1), formats.mismatched_rows), None])
-                all_rows_equal = False
             else:
-                r_zipped = list(zip_longest(r1.__fields__, r2.__fields__))
+                # read values by position: a lookup by name returns the first of several columns with that name
+                r_zipped = list(zip_longest(zip(r1.__fields__, r1), zip(r2.__fields__, r2)))
                 r1_string = []
                 r2_string = []
-                for r1_field, r2_field in r_zipped:
-                    if r1[r1_field] != r2[r2_field]:
-                        all_rows_equal = False
-                        r1_string.append(format_string(f"{r1_field}={r1[r1_field]}", formats.mismatched_cells))
-                        r2_string.append(format_string(f"{r2_field}={r2[r2_field]}", formats.mismatched_cells))
+                for (r1_field, r1_value), (r2_field, r2_value) in r_zipped:
+                    if r1_value != r2_value:
+                        r1_string.append(format_string(f"{r1_field}={r1_value}", formats.mismatched_cells))
+                        r2_string.append(format_string(f"{r2_field}={r2_value}", formats.mismatched_cells))
                     else:
-                        r1_string.append(format_string(f"{r1_field}={r1[r1_field]}", formats.matched_cells))
-                        r2_string.append(format_string(f"{r2_field}={r2[r2_field]}", formats.matched_cells))
+                        r1_string.append(format_string(f"{r1_field}={r1_value}", formats.matched_cells))
+                        r2_string.append(format_string(f"{r2_field}={r2_value}", formats.matched_cells))
                 r1_res = ", ".join(r1_string)
                 r2_res = ", ".join(r2_string)
 
                 t.add_row([r1_res, r2_res])
-        if all_rows_equal is False:
-            raise chispa.DataFramesNotEqualError(_build_error_message(t, full_log=full_log))
+        raise chispa.DataFramesNotEqualError(_build_error_message(t, full_log=full_log))
 
 
 def _build_error_message(table: PrettyTable, full_log: bool) -> str:
@@ -90,25 +86,26 @@ def assert_generic_rows_equality(
             ])
         # rows are equal
         elif row_equality_fun(r1, r2, **row_equality_fun_args):
-            r1_string = ", ".join(map(lambda f: f"{f}={r1[f]}", r1.__fields__))
-            r2_string = ", ".join(map(lambda f: f"{f}={r2[f]}", r2.__fields__))
+            r1_string = ", ".join(f"{f}={v}" for f, v in zip(r1.__fields__, r1))
+            r2_string = ", ".join(f"{f}={v}" for f, v in zip(r2.__fields__, r2))
             t.add_row([
                 format_string(r1_string, formats.matched_rows),
                 format_string(r2_string, formats.matched_rows),
             ])
         # otherwise, rows aren't equal
         else:
-            r_zipped = list(zip_longest(r1.__fields__, r2.__fields__))
+            # read values by position: a lookup by name returns the first of several columns with that name
+            r_zipped = list(zip_longest(zip(r1.__fields__, r1), zip(r2.__fields__, r2)))
             r1_string_list: list[str] = []
             r2_string_list: list[str] = []
-            for r1_field, r2_field in r_zipped:
-                if r1[r1_field] != r2[r2_field]:
+            for (r1_field, r1_value), (r2_field, r2_value) in r_zipped:
+                if r1_value != r2_value:
                     all_rows_equal = False
-                    r1_string_list.append(format_string(f"{r1_field}={r1[r1_field]}", formats.mismatched_cells))
-                    r2_string_list.append(format_string(f"{r2_field}={r2[r2_field]}", formats.mismatched_cells))
+                    r1_string_list.append(format_string(f"{r1_field}={r1_value}", formats.mismatched_cells))
+                    r2_string_list.append(format_string(f"{r2_field}={r2_value}", formats.mismatched_cells))
                 else:
-                    r1_string_list.append(format_string(f"{r1_field}={r1[r1_field]}", formats.matched_cells))
-                    r2_string_list.append(format_string(f"{r2_field}={r2[r2_field]}", formats.matched_cells))
+                    r1_string_list.append(format_string(f"{r1_field}={r1_value}", formats.matched_cells))
+                    r2_string_list.append(format_string(f"{r2_field}={r2_value}", formats.matched_cells))
             r1_res = ", ".join(r1_string_list)
             r2_res = ", ".join(r2_string_list)
 

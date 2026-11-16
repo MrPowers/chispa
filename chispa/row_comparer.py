@@ -28,13 +28,9 @@ def are_rows_equal_enhanced(r1: Row | None, r2: Row | None, allow_nan_equality: 
         return True
     if r1 is None or r2 is None:
         return False
-    d1 = r1.asDict()
-    d2 = r2.asDict()
     if allow_nan_equality:
-        for key in d1.keys() & d2.keys():
-            if not (_nan_safe_deep_equality(d1[key], d2[key])):
-                return False
-        return True
+        # compare by position: asDict() keeps only the last of several columns with the same name
+        return _nan_safe_deep_equality(r1, r2)
     else:
         return r1 == r2
 
@@ -44,17 +40,18 @@ def are_rows_approx_equal(r1: Row | None, r2: Row | None, precision: float, allo
         return True
     if r1 is None or r2 is None:
         return False
-    d1 = r1.asDict()
-    d2 = r2.asDict()
+    if len(r1) != len(r2):
+        return False
     allEqual = True
-    for key in d1.keys() & d2.keys():
-        if isinstance(d1[key], float) and isinstance(d2[key], float):
-            if allow_nan_equality and not (nan_safe_approx_equality(d1[key], d2[key], precision)):
+    # compare by position: asDict() keeps only the last of several columns with the same name
+    for v1, v2 in zip(r1, r2):
+        if isinstance(v1, float) and isinstance(v2, float):
+            if allow_nan_equality and not (nan_safe_approx_equality(v1, v2, precision)):
                 allEqual = False
-            elif not (allow_nan_equality) and math.isnan(abs(d1[key] - d2[key])):
+            elif not (allow_nan_equality) and math.isnan(abs(v1 - v2)):
                 allEqual = False
-            elif abs(d1[key] - d2[key]) > precision:
+            elif abs(v1 - v2) > precision:
                 allEqual = False
-        elif d1[key] != d2[key]:
+        elif v1 != v2:
             allEqual = False
     return allEqual
