@@ -24,6 +24,16 @@ runs:
       with:
         python-version: ${{ inputs.python-version }}
 
+    # Pin the JDK instead of relying on the runner image default. Java 17 is the only
+    # LTS supported by every pyspark in the matrix (3.5.x: 8/11/17, 4.x: 17/21).
+    # Java 24+ removed Subject.getSubject, which breaks the Hadoop client bundled with
+    # pyspark < 4.1 ("getSubject is not supported").
+    - name: Set up Java
+      uses: actions/setup-java@v6
+      with:
+        distribution: temurin
+        java-version: "17"
+
     - name: Install Poetry
       env:
         # renovate: datasource=pypi depName=poetry
