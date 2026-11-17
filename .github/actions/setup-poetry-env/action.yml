@@ -20,7 +20,7 @@ runs:
   steps:
     - name: Set up python
       id: setup-python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v7
       with:
         python-version: ${{ inputs.python-version }}
 
@@ -51,7 +51,7 @@ runs:
 
     - name: Load cached venv
       id: cached-poetry-dependencies
-      uses: actions/cache@v3
+      uses: actions/cache@v6
       with:
         path: .venv
         # Key on the resolved patch version, not the `3.11` input. A venv symlinks
