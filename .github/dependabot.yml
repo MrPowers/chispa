@@ -1,0 +1,14 @@
+version: 2
+updates:
+  # Keep GitHub Actions up to date. "/" covers .github/workflows; the composite
+  # actions under .github/actions are not scanned by default and must be listed.
+  - package-ecosystem: "github-actions"
+    directories:
+      - "/"
+      - "/.github/actions/*"
+    schedule:
+      interval: "weekly"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
