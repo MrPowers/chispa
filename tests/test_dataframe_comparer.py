@@ -245,6 +245,14 @@ def describe_assert_df_equality():
         with pytest.raises(DataFramesNotEqualError):
             assert_df_equality(df1, df2)
 
+    def it_throws_when_columns_with_the_same_name_differ(spark: SparkSession):
+        df1 = spark.createDataFrame([(1, 10, 20)], ["k", "v", "v"])
+        df2 = spark.createDataFrame([(1, 10, 99)], ["k", "v", "v"])
+        with pytest.raises(DataFramesNotEqualError):
+            assert_df_equality(df1, df2)
+        with pytest.raises(DataFramesNotEqualError):
+            assert_df_equality(df1, df2, allow_nan_equality=True)
+
     def it_can_consider_nan_values_equal(spark: SparkSession):
         data1 = [(float("nan"), "jose"), (2.0, "li")]
         df1 = spark.createDataFrame(data1, ["num", "name"])
@@ -521,6 +529,12 @@ def describe_assert_approx_df_equality():
         df1 = spark.createDataFrame(data, ["num", "expected_name"])
         df2 = spark.createDataFrame([(v, n) for n, v in data], ["expected_name", "num"])
         assert_approx_df_equality(df1, df2, 0.1, transforms=[lambda df: df.select(sorted(df.columns))])
+
+    def it_throws_when_columns_with_the_same_name_differ(spark: SparkSession):
+        df1 = spark.createDataFrame([(1.0, 1.0, 2.0)], ["k", "v", "v"])
+        df2 = spark.createDataFrame([(1.0, 1.0, 9.0)], ["k", "v", "v"])
+        with pytest.raises(DataFramesNotEqualError):
+            assert_approx_df_equality(df1, df2, 0.1)
 
     def it_falls_back_to_exact_comparison_with_zero_precision(spark: SparkSession):
         data = [(1.0, "jose"), (1.1, "li")]

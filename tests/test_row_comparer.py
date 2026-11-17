@@ -54,6 +54,7 @@ def test_are_rows_equal(r1, r2, expected):
             False,
             id="nested lists with nans in different positions",
         ),
+        pytest.param(Row("a", "a")(1.0, 2.0), Row("a", "a")(999.0, 2.0), True, False, id="duplicate field names"),
     ],
 )
 def test_are_rows_equal_enhanced(r1, r2, allow_nan_equality, expected):
@@ -99,6 +100,8 @@ def test_are_rows_equal_enhanced(r1, r2, allow_nan_equality, expected):
             id="nan vs number",
         ),
         pytest.param(Row(first_name="Alex"), Row(first_name="El"), 0.1, False, False, id="different strings"),
+        pytest.param(Row("a", "a")(1.0, 2.0), Row("a", "a")(999.0, 2.0), 0.1, False, False, id="duplicate field names"),
+        pytest.param(Row(num=1.0), Row(num=1.0, first_name="li"), 0.1, False, False, id="different lengths"),
     ],
 )
 def test_are_rows_approx_equal(r1, r2, precision, allow_nan_equality, expected):
