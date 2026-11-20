@@ -20,6 +20,10 @@ def _nan_safe_deep_equality(left: object, right: object) -> bool:
         if len(left) != len(right):
             return False
         return all(_nan_safe_deep_equality(left_item, right_item) for left_item, right_item in zip(left, right))
+    if isinstance(left, dict) and isinstance(right, dict):
+        if left.keys() != right.keys():
+            return False
+        return all(_nan_safe_deep_equality(left[key], right[key]) for key in left)
     return (left == right) or (isnan(left) and isnan(right))
 
 

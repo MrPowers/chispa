@@ -5,7 +5,7 @@ from dataclasses import dataclass, field
 
 import pytest
 from pyspark.sql import SparkSession
-from pyspark.sql.types import ArrayType, IntegerType, MapType, StringType, StructField, StructType
+from pyspark.sql.types import ArrayType, DoubleType, IntegerType, MapType, StringType, StructField, StructType
 
 from chispa import DataFramesNotEqualError, assert_approx_df_equality, assert_df_equality
 from chispa.dataframe_comparer import _contains_map_type, are_dfs_equal
@@ -290,6 +290,47 @@ def describe_assert_df_equality():
         df2 = spark.createDataFrame(data2, ["nums", "name"])
         with pytest.raises(DataFramesNotEqualError):
             assert_df_equality(df1, df2, allow_nan_equality=False)
+
+    def it_can_consider_nan_values_equal_in_map_fields(spark: SparkSession):
+        schema = StructType([
+            StructField("nums", MapType(StringType(), DoubleType())),
+            StructField("name", StringType()),
+        ])
+        df1 = spark.createDataFrame([({"a": 1.0, "b": float("nan")}, "jose"), ({"c": 4.0}, "li")], schema)
+        df2 = spark.createDataFrame([({"a": 1.0, "b": float("nan")}, "jose"), ({"c": 4.0}, "li")], schema)
+        assert_df_equality(df1, df2, allow_nan_equality=True)
+        assert_approx_df_equality(df1, df2, 0, allow_nan_equality=True)
+
+    def it_can_consider_nan_values_equal_in_maps_inside_arrays(spark: SparkSession):
+        schema = StructType([StructField("nums", ArrayType(MapType(StringType(), DoubleType())))])
+        df1 = spark.createDataFrame([([{"a": float("nan")}, {"b": 2.0}],)], schema)
+        df2 = spark.createDataFrame([([{"a": float("nan")}, {"b": 2.0}],)], schema)
+        assert_df_equality(df1, df2, allow_nan_equality=True)
+
+    @pytest.mark.parametrize(
+        "nums",
+        [
+            {"a": 1.0, "c": float("nan")},
+            {"a": 1.0},
+            {"a": 1.0, "b": float("nan"), "c": float("nan")},
+            {"a": 2.0, "b": float("nan")},
+            {"a": float("nan"), "b": 1.0},
+        ],
+        ids=["different-key", "missing-key", "extra-key", "different-value", "nan-moved-to-another-key"],
+    )
+    def it_raises_when_map_fields_differ_with_allow_nan_equality(spark: SparkSession, nums):
+        schema = StructType([StructField("nums", MapType(StringType(), DoubleType()))])
+        df1 = spark.createDataFrame([({"a": 1.0, "b": float("nan")},)], schema)
+        df2 = spark.createDataFrame([(nums,)], schema)
+        with pytest.raises(DataFramesNotEqualError):
+            assert_df_equality(df1, df2, allow_nan_equality=True)
+
+    def it_does_not_consider_nan_values_equal_in_map_fields_by_default(spark: SparkSession):
+        schema = StructType([StructField("nums", MapType(StringType(), DoubleType()))])
+        df1 = spark.createDataFrame([({"a": float("nan")},)], schema)
+        df2 = spark.createDataFrame([({"a": float("nan")},)], schema)
+        with pytest.raises(DataFramesNotEqualError):
+            assert_df_equality(df1, df2)
 
     def it_can_ignore_metadata(spark: SparkSession):
         rows_data = [("jose", 1), ("li", 2), ("luisa", 3)]
