@@ -56,6 +56,10 @@ def are_rows_approx_equal(r1: Row | None, r2: Row | None, precision: float, allo
                 allEqual = False
             elif abs(v1 - v2) > precision:
                 allEqual = False
+        elif allow_nan_equality:
+            # arrays, maps and structs can hold NaN too
+            if not _nan_safe_deep_equality(v1, v2):
+                allEqual = False
         elif v1 != v2:
             allEqual = False
     return allEqual
