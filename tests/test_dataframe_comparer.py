@@ -601,6 +601,48 @@ def describe_assert_approx_df_equality():
         with pytest.raises(DataFramesNotEqualError):
             assert_approx_df_equality(df1, df2, 0, allow_nan_equality=True)
 
+    @pytest.mark.parametrize(
+        ("data_type", "value"),
+        [
+            (ArrayType(DoubleType()), [1.0, float("nan")]),
+            (MapType(StringType(), DoubleType()), {"a": float("nan")}),
+            (StructType([StructField("x", DoubleType()), StructField("y", DoubleType())]), (1.0, float("nan"))),
+        ],
+        ids=["array", "map", "struct"],
+    )
+    def it_can_consider_nan_values_equal_in_nested_fields(spark: SparkSession, data_type, value):
+        schema = StructType([StructField("nums", data_type), StructField("name", StringType())])
+        df1 = spark.createDataFrame([(value, "jose")], schema)
+        df2 = spark.createDataFrame([(value, "jose")], schema)
+        assert_approx_df_equality(df1, df2, 0.1, allow_nan_equality=True)
+
+    @pytest.mark.parametrize(
+        ("data_type", "value1", "value2"),
+        [
+            (ArrayType(DoubleType()), [1.0, float("nan")], [float("nan"), 1.0]),
+            (MapType(StringType(), DoubleType()), {"a": float("nan")}, {"b": float("nan")}),
+            (
+                StructType([StructField("x", DoubleType()), StructField("y", DoubleType())]),
+                (1.0, float("nan")),
+                (2.0, float("nan")),
+            ),
+        ],
+        ids=["array-nan-moved", "map-different-key", "struct-different-value"],
+    )
+    def it_throws_when_nested_fields_differ_with_nan_equality(spark: SparkSession, data_type, value1, value2):
+        schema = StructType([StructField("nums", data_type)])
+        df1 = spark.createDataFrame([(value1,)], schema)
+        df2 = spark.createDataFrame([(value2,)], schema)
+        with pytest.raises(DataFramesNotEqualError):
+            assert_approx_df_equality(df1, df2, 0.1, allow_nan_equality=True)
+
+    def it_does_not_consider_nan_values_equal_in_nested_fields_by_default(spark: SparkSession):
+        schema = StructType([StructField("nums", ArrayType(DoubleType()))])
+        df1 = spark.createDataFrame([([float("nan")],)], schema)
+        df2 = spark.createDataFrame([([float("nan")],)], schema)
+        with pytest.raises(DataFramesNotEqualError):
+            assert_approx_df_equality(df1, df2, 0.1)
+
     def it_shows_the_full_diff_table_by_default(spark: SparkSession):
         df1 = spark.createDataFrame([(1.0, "jose")], ["num", "expected_name"])
         df2 = spark.createDataFrame([(1.1, "jose")], ["num", "expected_name"])
