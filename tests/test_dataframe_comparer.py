@@ -24,6 +24,30 @@ class ArbitraryFormats:
 
 
 def describe_assert_df_equality():
+    def it_compares_nested_arrays_containing_null_and_nan(spark: SparkSession):
+        schema = StructType([StructField("values", ArrayType(ArrayType(DoubleType())))])
+        left = spark.createDataFrame([([[None, float("nan")], [1.0]],)], schema)
+        right = spark.createDataFrame([([[None, float("nan")], [1.0]],)], schema)
+        assert_df_equality(left, right, allow_nan_equality=True)
+        with pytest.raises(DataFramesNotEqualError):
+            assert_df_equality(left, right)
+
+    @pytest.mark.parametrize(
+        "values",
+        [
+            [[float("nan"), None], [1.0]],
+            [[None, None], [1.0]],
+            [[None, float("nan")], [1.0, None]],
+        ],
+        ids=["null-and-nan-swapped", "nan-replaced-by-null", "extra-null-element"],
+    )
+    def it_rejects_nested_array_null_mismatches_with_nan_equality(spark: SparkSession, values):
+        schema = StructType([StructField("values", ArrayType(ArrayType(DoubleType())))])
+        left = spark.createDataFrame([([[None, float("nan")], [1.0]],)], schema)
+        right = spark.createDataFrame([(values,)], schema)
+        with pytest.raises(DataFramesNotEqualError):
+            assert_df_equality(left, right, allow_nan_equality=True)
+
     def it_throws_with_schema_mismatches(spark: SparkSession):
         data1 = [(1, "jose"), (2, "li"), (3, "laura")]
         df1 = spark.createDataFrame(data1, ["num", "expected_name"])
