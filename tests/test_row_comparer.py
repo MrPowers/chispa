@@ -102,6 +102,12 @@ def test_are_rows_equal_enhanced(r1, r2, allow_nan_equality, expected):
         pytest.param(Row(first_name="Alex"), Row(first_name="El"), 0.1, False, False, id="different strings"),
         pytest.param(Row("a", "a")(1.0, 2.0), Row("a", "a")(999.0, 2.0), 0.1, False, False, id="duplicate field names"),
         pytest.param(Row(num=1.0), Row(num=1.0, first_name="li"), 0.1, False, False, id="different lengths"),
+        pytest.param(Row(num=float("inf")), Row(num=float("inf")), 0.1, False, True, id="matching infinities"),
+        pytest.param(
+            Row(num=float("-inf")), Row(num=float("-inf")), 0.1, True, True, id="matching infinities with nan equality"
+        ),
+        pytest.param(Row(num=float("inf")), Row(num=float("-inf")), 0.1, False, False, id="opposite infinities"),
+        pytest.param(Row(num=float("inf")), Row(num=1.0), 0.1, True, False, id="infinity vs number"),
     ],
 )
 def test_are_rows_approx_equal(r1, r2, precision, allow_nan_equality, expected):

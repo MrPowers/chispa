@@ -44,8 +44,8 @@ def assert_approx_column_equality(df: DataFrame, col_name1: str, col_name2: str,
         # when both are None, they're equal
         elif elements[0] is None and elements[1] is None:
             t.add_row([first, second])
-        # when the diff is less than the threshhold, they're approximately equal
-        elif abs(elements[0] - elements[1]) < precision:
+        # when they're equal (inf - inf is nan) or the diff is less than the threshhold, they're approximately equal
+        elif elements[0] == elements[1] or abs(elements[0] - elements[1]) < precision:
             t.add_row([first, second])
         # otherwise, they're not equal
         else:

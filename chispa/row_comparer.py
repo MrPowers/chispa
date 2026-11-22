@@ -50,6 +50,9 @@ def are_rows_approx_equal(r1: Row | None, r2: Row | None, precision: float, allo
     # compare by position: asDict() keeps only the last of several columns with the same name
     for v1, v2 in zip(r1, r2):
         if isinstance(v1, float) and isinstance(v2, float):
+            # equal infinities: inf - inf is nan, so check equality first
+            if v1 == v2:
+                continue
             if allow_nan_equality and not (nan_safe_approx_equality(v1, v2, precision)):
                 allEqual = False
             elif not (allow_nan_equality) and math.isnan(abs(v1 - v2)):

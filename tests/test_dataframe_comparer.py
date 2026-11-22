@@ -643,6 +643,18 @@ def describe_assert_approx_df_equality():
         with pytest.raises(DataFramesNotEqualError):
             assert_approx_df_equality(df1, df2, 0.1)
 
+    @pytest.mark.parametrize("allow_nan_equality", [False, True])
+    def it_considers_matching_infinities_equal(spark: SparkSession, allow_nan_equality):
+        df1 = spark.createDataFrame([(float("inf"), 1.0), (float("-inf"), 2.0)], ["num1", "num2"])
+        df2 = spark.createDataFrame([(float("inf"), 1.05), (float("-inf"), 2.01)], ["num1", "num2"])
+        assert_approx_df_equality(df1, df2, 0.1, allow_nan_equality=allow_nan_equality)
+
+    def it_throws_when_infinities_differ(spark: SparkSession):
+        df1 = spark.createDataFrame([(float("inf"), 1.0)], ["num1", "num2"])
+        df2 = spark.createDataFrame([(float("-inf"), 1.0)], ["num1", "num2"])
+        with pytest.raises(DataFramesNotEqualError):
+            assert_approx_df_equality(df1, df2, 0.1)
+
     def it_shows_the_full_diff_table_by_default(spark: SparkSession):
         df1 = spark.createDataFrame([(1.0, "jose")], ["num", "expected_name"])
         df2 = spark.createDataFrame([(1.1, "jose")], ["num", "expected_name"])

@@ -47,3 +47,14 @@ def describe_assert_approx_column_equality():
         df = spark.createDataFrame(data, ["num1", "num2"])
         with pytest.raises(ColumnsNotEqualError):
             assert_approx_column_equality(df, "num1", "num2", 0.1)
+
+    def it_works_with_matching_infinities(spark: SparkSession):
+        data = [(float("inf"), float("inf")), (float("-inf"), float("-inf")), (1.0, 1.05)]
+        df = spark.createDataFrame(data, ["num1", "num2"])
+        assert_approx_column_equality(df, "num1", "num2", 0.1)
+
+    def it_throws_when_infinities_differ(spark: SparkSession):
+        data = [(float("inf"), float("-inf")), (1.0, 1.0)]
+        df = spark.createDataFrame(data, ["num1", "num2"])
+        with pytest.raises(ColumnsNotEqualError):
+            assert_approx_column_equality(df, "num1", "num2", 0.1)

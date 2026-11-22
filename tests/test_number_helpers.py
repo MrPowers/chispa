@@ -16,3 +16,6 @@ def test_nan_safe_approx_equality():
     # nan - nan is nan, so only the isnan check can make these equal
     assert nan_safe_approx_equality(float("nan"), float("nan"), 5.0) is True
     assert nan_safe_approx_equality(float("nan"), 5, 5.0) is False
+    # inf - inf is nan too, but equal infinities are equal
+    assert nan_safe_approx_equality(float("inf"), float("inf"), 5.0) is True
+    assert nan_safe_approx_equality(float("inf"), float("-inf"), 5.0) is False
