@@ -17,4 +17,5 @@ def nan_safe_equality(x: int | float, y: int | float | Decimal) -> bool:
 
 
 def nan_safe_approx_equality(x: int | float, y: int | float, precision: float | Decimal) -> bool:
-    return (abs(x - y) <= precision) or (isnan(x) and isnan(y))
+    # equal infinities: inf - inf is nan, so check equality first
+    return (x == y) or (abs(x - y) <= precision) or (isnan(x) and isnan(y))
