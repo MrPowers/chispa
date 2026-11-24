@@ -125,6 +125,21 @@ def describe_assert_df_equality():
         df2 = spark.createDataFrame(data2, ["name", "num"])
         assert_df_equality(df1, df2, ignore_row_order=True, ignore_column_order=True)
 
+    def it_can_work_with_dots_and_backticks_in_column_names_and_ignore_row_order(spark: SparkSession):
+        df1 = spark.createDataFrame([(1, "jose", (1, "x")), (2, "li", (2, "y"))], ["a.b", "c`d", "e.f"])
+        df2 = spark.createDataFrame([(2, "li", (2, "y")), (1, "jose", (1, "x"))], ["a.b", "c`d", "e.f"])
+        df3 = spark.createDataFrame([((2, "y"), "li", 2), ((1, "x"), "jose", 1)], ["e.f", "c`d", "a.b"])
+        assert_df_equality(df1, df2, ignore_row_order=True)
+        assert_df_equality(df1, df3, ignore_row_order=True, ignore_column_order=True)
+
+    def it_throws_with_dots_in_column_names_and_ignore_row_order(spark: SparkSession):
+        df1 = spark.createDataFrame([(1, "jose"), (2, "li")], ["a.b", "name"])
+        df2 = spark.createDataFrame([(2, "li"), (1, "laura")], ["a.b", "name"])
+        with pytest.raises(DataFramesNotEqualError):
+            assert_df_equality(df1, df2, ignore_row_order=True)
+        with pytest.raises(DataFramesNotEqualError):
+            assert_df_equality(df1, df2, ignore_column_order=True)
+
     def it_ignores_the_order_of_fields_in_nested_structs(spark: SparkSession):
         schema1 = StructType([
             StructField("id", IntegerType()),
@@ -548,6 +563,13 @@ def describe_assert_approx_df_equality():
         data2 = [((1.1, "li"),), ((1.0, "jose"),)]
         df2 = spark.createDataFrame(data2, ["person"])
         assert_approx_df_equality(df1, df2, 0.1, ignore_row_order=True)
+
+    def it_does_not_throw_with_dots_in_column_names_and_ignore_row_order(spark: SparkSession):
+        df1 = spark.createDataFrame([(1.0, "jose", (1.0, "x")), (1.1, "li", (1.1, "y"))], ["a.b", "name", "e.f"])
+        df2 = spark.createDataFrame([("li", 1.05, (1.1, "y")), ("jose", 1.0, (1.0, "x"))], ["name", "a.b", "e.f"])
+        assert_approx_df_equality(df1, df2, 0.1, ignore_row_order=True, ignore_column_order=True)
+        with pytest.raises(DataFramesNotEqualError):
+            assert_approx_df_equality(df1, df2, 0.01, ignore_row_order=True, ignore_column_order=True)
 
     def it_converts_an_arbitrary_dataclass_to_a_formatting_config(spark: SparkSession):
         df1 = spark.createDataFrame([(1.0, "jose"), (2.0, "li")], ["num", "expected_name"])
