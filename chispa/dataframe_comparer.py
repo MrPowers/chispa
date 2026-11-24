@@ -17,6 +17,11 @@ from chispa.rows_comparer import (
 from chispa.schema_comparer import assert_schema_equality
 
 
+def _col_by_name(name: str) -> Column:
+    """Return the top-level column with this exact name, so a dot in the name isn't read as a struct field."""
+    return F.col("`" + name.replace("`", "``") + "`")
+
+
 def _contains_map_type(dt: ArrayType | MapType | StructType) -> bool:
     """Return True if the data type contains a MapType anywhere in its tree."""
     if isinstance(dt, MapType):
@@ -67,9 +72,9 @@ def _sort_columns_for_column_order_comparison(df: DataFrame) -> DataFrame:
     """Sort the columns of the DataFrame by name, including the fields of nested structs."""
     fields = sorted(df.schema.fields, key=lambda f: f.name)
     return df.select(*[
-        _sort_nested_fields(F.col(f.name), f.dataType).alias(f.name)
+        _sort_nested_fields(_col_by_name(f.name), f.dataType).alias(f.name)
         if _contains_struct_type(f.dataType)
-        else F.col(f.name)
+        else _col_by_name(f.name)
         for f in fields
     ])
 
@@ -84,7 +89,7 @@ def _sort_df_for_row_order_comparison(df: DataFrame) -> DataFrame:
     sort_exprs: list[Column] = []
     has_complex = False
     for field in df.schema.fields:
-        col = F.col(field.name)
+        col = _col_by_name(field.name)
         if isinstance(field.dataType, (StructType, ArrayType, MapType)):
             has_complex = True
             if _contains_map_type(field.dataType):
@@ -95,7 +100,7 @@ def _sort_df_for_row_order_comparison(df: DataFrame) -> DataFrame:
             sort_exprs.append(col)
 
     if not has_complex:
-        return df.sort(*df.columns)
+        return df.sort(*[_col_by_name(name) for name in df.columns])
 
     return df.sort(*sort_exprs)
 
